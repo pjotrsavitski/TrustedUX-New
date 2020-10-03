@@ -1,0 +1,139 @@
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from formtools.wizard.views import SessionWizardView
+from django.forms.fields import Field
+from datetime import date
+from django.core.exceptions import ValidationError
+from django.utils.safestring import mark_safe
+from djrichtextfield.widgets import RichTextWidget
+from django_toggle_switch_widget.widgets import DjangoToggleSwitchWidget
+from .models import AnonyData, sort_countries
+from django.utils.translation import  ugettext_lazy as _
+
+
+setattr(Field, 'is_checkbox', lambda self: isinstance(self.widget, forms.CheckboxInput ))
+
+
+from django.contrib import admin
+from django import forms
+from .models import Project
+from django.forms import ModelForm
+#from django.db.models import Count
+#from django.utils.encoding import python_2_unicode_compatible
+class contactforms(forms.Form):
+    Project_Name=forms.ChoiceField(choices=[])
+    class Meta:
+        model = Project
+        exclude= ('user','questionnaire_type','test_project','project_type','project_status','archived','closed','project_name')
+    def __init__(self, user, *args, **kwargs):
+        super(contactforms,self).__init__(*args,**kwargs)
+        #self.fields['Project_Name'].choices = [(yr, yr) for yr in Project.objects.values_list('project_name', flat=True)]
+        self.fields['Project_Name'].choices = [(yr, yr) for yr in Project.objects.values_list('project_name',flat=True).filter(user=user)]
+
+
+project_choices = [(1,'Individual'),(2,'Comparision A and B'),(3, 'Comparision A, B and C'),(4, 'Comparision A, B, C and D'),(5, 'Comparision A, B, C, D and E')]
+industry_choices = [('Agriculture','Agriculture'),('Automobile','Automobile'),('Building system engineering','Building system engineering'),('Chemical industry','Chemical industry'),('Clothing industory','Clothing industory'),('Consulting','Consulting'),('Crafts','Crafts'),('Electronics','Electronics'),('Energy industry','Energy industry'),('Finance','Finance'),('IT','IT'),('Marketing','Marketing'),('Media','Media'),('Medical','Medical'),('Other','Other'),('Production','Production'),('Retail','Retail'),('Services','Services'),('Sports','Sports'),('Telecommunications','Telecommunications'),('Tourism','Tourism')]
+type_choices = [('Accounting sysetm','Accounting system'),('Consumer Electronics','Consumer Electronics'),('Enterprise resource planning system','Enterprise resource planning system'),('Logistic Systems','Logistic Systems'),('Medical devices','Medical devices'),('Office applications','Office applications'),('Order picking systems','Order picking systems'),('Other','Other'),('Production machinery','Production machinery'),('Smart home applications','Smart home applications'),('Telecommunications','Telecommunications'),('Web applications','Web applications'),('Website','Website')]
+
+
+
+
+class CreateForm1(forms.Form):
+
+    type_questionnaire = forms.CharField(label="Type of Questionnaire",widget=forms.Select(choices=[('TrUX','TrustedUX')],attrs={'class':'form-control'}))
+    project_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}),max_length=100)
+    project_type = forms.CharField(widget=forms.Select(choices=project_choices,attrs={'class':'form-control'}))
+    #test_project = forms.BooleanField(required=False,widget=forms.CheckboxInput(attrs={'class':'form-check-input'}))
+    new = forms.BooleanField(widget=forms.HiddenInput(),required=False)
+    project_id = forms.IntegerField(widget=forms.HiddenInput(),required=False)
+
+
+
+class CreateForm2(forms.Form):
+
+    start_date = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control','type':'date'}))
+    end_date = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control','type':'date'}))
+    name_of_survey = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}),max_length=100)
+    product_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}),max_length=100)
+    product_type = forms.CharField(widget=forms.Select(choices=type_choices,attrs={'class':'form-control'}),max_length=100)
+    product_industry = forms.CharField(widget=forms.Select(choices=industry_choices,attrs={'class':'form-control'}))
+
+    def clean_start_date(self):
+        start_date = self.cleaned_data['start_date']
+        if start_date < date.today():
+            raise ValidationError('You can not choose start date in past.')
+        else:
+            return start_date
+
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get('start_date')
+        end_date = cleaned_data.get('end_date')
+
+        if start_date and end_date:
+            if start_date > end_date:
+                raise ValidationError('Project end date must be after the start date.')
+
+
+
+
+
+class CreateForm3(forms.Form):
+    CHOICES = [('A','anonymous participation')]
+    type_of_participation=forms.CharField( widget=forms.Select(choices=CHOICES,attrs={'class':'form-control'}))
+
+
+class CreateForm4(forms.Form):
+    CHOICES = [('En','English'),('Pt','Portugese'),('Est','Estonian')]
+    questionnaire_language=forms.CharField( widget=forms.Select(choices=CHOICES,attrs={'class':'form-control'}))
+    title = forms.CharField(initial="Assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control'}),max_length=100)
+    subtitle = forms.CharField(initial="Welcome to the assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control'}),max_length=100)
+    paragraph = forms.CharField(required=False,widget=RichTextWidget(),help_text=mark_safe('You can use following variables to use in title, subtitle and paragraph: <br/>{PROJECT_NAME} - Name of project <br/> {PRODUCT_NAME} - Name of product<br/> {SURVEY_NAME} - Name of survey <br/> {TODAY} - for today date.'))
+
+
+class CreateForm5(forms.Form):
+    CHOICES = [(1,'Yes'),(0,'No')]
+    age = forms.BooleanField(widget=DjangoToggleSwitchWidget(klass="django-toggle-switch-dark-success"),required=False)
+    gender= forms.BooleanField(widget=DjangoToggleSwitchWidget(klass="django-toggle-switch-dark-success"),required=False)
+    nationality = forms.BooleanField(widget=DjangoToggleSwitchWidget(klass="django-toggle-switch-dark-success"),required=False)
+    education = forms.BooleanField(widget=DjangoToggleSwitchWidget(klass="django-toggle-switch-dark-success"),required=False)
+
+class lastForm(forms.Form):
+    CHOICES=[(True,'Activate now'),(False,'Activate later')]
+    project_status = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect(attrs={'class': "custom-radio-list"}),initial=True)
+
+class SurveyQuestion(forms.Form):
+
+    q1  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput())
+    q2  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput())
+    q3  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput())
+    q4  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput())
+    q5  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput())
+    q6  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput())
+    q7  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput())
+    q8  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput())
+    q9  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput())
+    q10  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput())
+    q11  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput())
+    q12  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput())
+    q13  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput())
+    q14  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput())
+
+
+
+age_choices=[(1,_("Below 20")),(2,"20 - 30"),(3,"30 - 40"),(4,"40 - 50"),(5,_("Above 50"))]
+gen_choices=[("M",_("Male")),("F",_("Female"))]
+edu_choices=[(1,_("Primary")),(2,_("Secondary")),(3,_("Bachelor")),(4,_("Master")),(5,_("Doctorate"))]
+
+
+class AnonyForm(forms.ModelForm):
+    class Meta:
+        model = AnonyData
+        fields = ['age','gender','education','nationality']
+        widgets= {
+            'age': forms.Select(attrs={'class':'form-control'}),
+            'gender': forms.Select(attrs={'class':'form-control'}),
+            'education': forms.Select(attrs={'class':'form-control'}),
+            'nationality': forms.Select(attrs={'class':'form-control'})
+        }

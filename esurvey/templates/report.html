@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{%block title%} Reports {%endblock%}
+
+{% block content %}
+
+
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+  <p>Welcome   {{ request.user.username | upper}} <hr/>
+    <br>
+<div>
+<form action="{% url 'Visualize' %}" method="post">
+   {% csrf_token %}
+   <div>
+   <table>
+      {{ form | crispy }}
+    </table>
+    <button type="submit", name='mybtn2' class='main-button'> Visualize Report </button>
+</div>
+</form>
+<br/><br/>
+<form action="{% url 'csv_view' %}" method="post">
+   {% csrf_token %}
+   <div>
+   <table>
+      {{ form | crispy }}
+    </table>
+    <button type="submit"  name='mybtn2' class='main-button'> Download Report
+    </button>
+</div>
+</form>
+</div>
+
+
+
+
+  <div id="container" style="width: 75%;">
+    <canvas id="pie-chart"></canvas>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  <script>
+
+    var config = {
+      type: 'pie',
+      data: {
+        datasets: [{
+          data: {{ data|safe }},
+          backgroundColor: [
+            '#696969', '#808080', '#A9A9A9', '#C0C0C0', '#D3D3D3'
+          ],
+          label: 'Population'
+        }],
+        labels: {{ labels|safe }}
+      },
+      options: {
+        responsive: true
+      }
+    };
+
+    window.onload = function() {
+      var ctx = document.getElementById('pie-chart').getContext('2d');
+      window.myPie = new Chart(ctx, config);
+    };
+
+  </script>
+
+
+
+
+
+{% endblock %}

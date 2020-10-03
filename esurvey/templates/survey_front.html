@@ -1,0 +1,23 @@
+{% extends 'survey-base.html' %}
+
+{% load i18n %}
+
+{% block content%}
+
+<div class="row">
+  <div class="col-lg-12">
+    <h2 class="mt-5">{{project_title}}</h2>
+    <hr/>
+    <p class="lead">{{subtitle}}</p>
+    <br/>
+    <div>
+    <p> {{paragraph | safe}} </p>
+    </div>
+    {% language lang %}
+    <a href="{% url 'survey_form' link %}" class='btn btn-success'> {% trans 'Start Survey' %} </a>
+    {% endlanguage %}
+  </div>
+
+
+</div>
+{% endblock %}

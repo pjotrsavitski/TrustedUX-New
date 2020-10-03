@@ -1,0 +1,298 @@
+{% extends 'base_index.html' %}
+{% load static%}
+{% load i18n %}
+
+{% block content%}
+<div class="container-full-bg">
+<section class='jumbotron min-vh-100 text-center text-white m-0 p-0' style='background:url(/static/img/jumbo.png);margin-bottom:0px;border-radius:0px;height:100%;width:100%;'>
+
+
+
+
+
+
+    <nav class="navbar navbar-expand-xl navbar-dark">
+      <div class='container'>
+
+    		<a class="navbar-brand" href="{% url 'home'%}"><i class="fa fa-cube"></i> Trusted<b>UX</b></a>
+    		<button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggler">
+    			<span class="navbar-toggler-icon"></span>
+
+    		</button>
+
+    	<!-- Collection of nav links, forms, and other content for toggling -->
+    	<div id="navbarCollapse" class="collapse navbar-collapse justify-content-end">
+
+    		<ul class="nav navbar-nav">
+          {% if request.user.is_authenticated  %}
+          <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle mr-auto" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{request.user.email}}
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'project_home'%}"><i class="fa fa-gear"></i> Projects</a>
+
+
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{%url 'logout'%}"><i class="fa fa-sign-out"></i> Logout</a>
+          </div>
+        </li>
+
+
+
+          {% else %}
+          <li class='nav-item'><a class='nav-link'  href="{%url 'register'%}"><i class="fa fa-user"></i> <span>Sign-up</span></a></li>
+          <li class='nav-item'><a class='nav-link'  href="{%url 'login'%}"><i class="fa fa-sign-in"></i> <span>Login</span></a></li>
+          {% endif %}
+
+
+    		</ul>
+    	</div>
+    </div>
+    </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class='container' style='padding-top:5em;padding-bottom:5em;'>
+    <h1 class='display-3'>Understand how people perceive and trust technology. </h1>
+    <p class= lead text-muted> TrustedUX is a research-based tool that can help you  to measure the trust and design more positive interactive experiences with technology. </p>
+    <p>
+      <a class='btn btn-warning' href='{% url 'login'%}'>Try it now </a>
+      <a class='btn btn-success' href='#page2'>Learn more</a>
+    </p>
+  </div>
+
+
+ </section>
+</div>
+
+
+
+<div id='page2' class='album py-5 bg-light '>
+  <div class='container '>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card mb-4 box-shadow">
+          <img class="card-img-top"  src="{% static 'img/sc.jpg'%}" alt="Card image cap">
+          <div class="card-body">
+            <h3> Science </h3>
+            <p class="card-text">Learn more about the science behind the TrustedUX tool. Check our research publications.</p>
+            <a href='#science' class='btn btn-danger'> Read more </a>
+            </div>
+          </div>
+        </div>
+
+
+            <div class="col-md-4">
+              <div class="card mb-4 box-shadow">
+                <img class="card-img-top" src="{% static 'img/features.jpg'%}" alt="Card image cap">
+                <div class="card-body">
+                  <h3> Use-case Scenario </h3>
+                  <p class="card-text">What are the different cases where TrustedUX can be employed to measure trust?</p>
+                  <a href='#use' class='btn btn-danger'> Read more </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card mb-4 box-shadow">
+                <img class="card-img-top" src="{% static 'img/who.jpg'%}" alt="Card image cap">
+                <div class="card-body">
+                  <h3> People </h3>
+                  <p class="card-text">Who are the people behind the development of TrustedUX and what was their role?</p>
+                  <a href='#team' class='btn btn-danger'> Read more </a>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+  </div>
+</div>
+</div>
+
+<!-- How trustedUX works -->
+<div id='science' class='album well'>
+<div class='container min-vh-100'>
+
+
+  <div class="row">
+    <div class="col-md-7">
+      <h2 class="featurette-heading">Trust Model</h2>
+
+      <p class="lead">TrustedUX is based on trust model that measures trust factor on four aspects.  </p>
+
+      <dl class='row'>
+      <dt class='col-sm-3'>Risk perception</dt><dd class='col-sm-9'>defined as the extent to which one party is willing to participate
+in a given action while considering the risk and incentives involved.</dd>
+      <dt class='col-sm-3'>Benevolence</dt><dd class='col-sm-9'>define as user &#39;s perception that a particular system will act in their
+best interest and that most people using the system share similar social behaviors and
+values.</dd>
+      <dt class='col-sm-3'>Competency</dt><dd class='col-sm-9'>The ease of use associated with the use of a system in that it is
+perceived to perform its tasks accurately and correctly.</dd>
+      <dt class='col-sm-3'>Reciprocity</dt><dd class='col-sm-9'>the degree to which an individual sees oneself as a part of a group. It is
+built on the principle of mutual benefit, feeling a sense of belonging and feeling
+connected</dd>
+      </dl>
+    </div>
+    <div class="col-md-5" style='padding-top:20%;'>
+      <img class="featurette-image img-fluid mx-auto" style="scale:110%" src="{% static 'img/model.jpg'%}" alt="Generic placeholder image">
+    </div>
+  </div>
+  <p> <a class='btn btn-success' href="{%url 'publication' %}"> Check our research on TrustedUX </a>
+
+
+
+
+
+</div>
+</div
+
+<!--              end -->
+
+
+<!-- How trustedUX works -->
+<div class='album py-5 well'>
+<div class='container min-vh-100'>
+
+
+  <hr  id='use'  class="featurette-divider">
+
+
+
+
+         <div class="row featurette">
+           <div class="col-md-7 order-md-2">
+             <h2 class="featurette-heading">Use-Case scenario</h2>
+             <p class="lead"> TrustedUX can be used to measure trust in five types of scenarios.</p>
+             <dl class='row'>
+             <dt class='col-sm-3'>Individual</dt><dd class='col-sm-9'>You have a technical product and you want to measure trust for it. In this case, individual case can be used.</dd>
+             <dt class='col-sm-3'>Compare A & B</dt><dd class='col-sm-9'>Either you have two products to compare on trust scale or you want to measure trust for your product in two situation (before/after). This case will suit the need.</dd>
+             <dt class='col-sm-3'>Compare A, B and C</dt><dd class='col-sm-9'>Either you have three products to compare on trust scale or you want to measure trust for your product in three situations. This case will suit the need.</dd>
+             <dt class='col-sm-3'>Compare A, B, C and D</dt><dd class='col-sm-9'>Either you have four products to compare on trust scale or you want to measure trust for your product in four situations. This case will suit the need.</dd>
+               <dt class='col-sm-3'>Compare A, B, C, D and E</dt><dd class='col-sm-9'>Either you have five products to compare on trust scale or you want to measure trust for your product in five situations. This case will suit the need.</dd>
+             </dl>
+
+           </div>
+           <div class="col-md-5 order-md-1" style='padding-top:15%; scale:140%'>
+             <img class="featurette-image img-fluid mx-auto" src="{% static 'img/usage.jpg'%}" alt="Generic placeholder image">
+           </div>
+         </div>
+
+        <!-- Block can be used later
+
+         <hr class="featurette-divider">
+
+         <div class="row featurette">
+           <div class="col-md-7">
+             <h2 class="featurette-heading">And lastly, this one. <span class="text-muted">Checkmate.</span></h2>
+             <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+           </div>
+           <div class="col-md-5">
+             <img class="featurette-image img-fluid mx-auto" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
+           </div>
+         </div>
+
+         <hr class="featurette-divider">
+         -->
+
+         <!-- /END THE FEATURETTES -->
+
+       </div>
+
+
+
+
+</div>
+</div
+
+<!--              end -->
+
+
+
+
+
+<!-- How trustedUX works -->
+<div  class='album well'>
+<div class='container '>
+    <hr  id='team'  class="featurette-divider">
+<h2 class="featurette-heading"> Project Team </h2>
+<br/>
+<br/>
+ <div class='text-center'>
+  <div class="row">
+         <div class="col-lg-4">
+           <img class="rounded-circle" src="{% static 'img/sonia.jpg'%}" alt="Sonia Sousa" width="140" height="140">
+           <h2>Sonia C. Sousa</h2>
+           <p>Associate Professor and Researcher of Interaction Design at Tallinn University’s School of Digital Technology. </p>
+
+           <p><a class="btn btn-secondary" href="https://www.tlu.ee/en/node/106109" role="button">View details &raquo;</a></p>
+         </div><!-- /.col-lg-4 -->
+         <div class="col-lg-4">
+           <img class="rounded-circle"  src="{% static 'img/david.jpeg'%}" alt="David Lamas" width="140" height="140">
+           <h2>David J. R. Lamas</h2>
+           <p>Professor of Human-Computer Interaction at Tallinn University’s School of Digital Technology. </p>
+           <p><a class="btn btn-secondary" href="https://www.tlu.ee/en/node/106045" role="button">View details &raquo;</a></p>
+         </div><!-- /.col-lg-4 -->
+         <div class="col-lg-4">
+           <img class="rounded-circle"src="{% static 'img/vladimir.png'%}" alt="Vladimir Tomberg" width="140" height="140">
+           <h2>Vladimir Tomberg</h2>
+           <p> Associate Professor of Interaction Design at Tallinn University’s School of Digital Technology. </p>
+           <p><a class="btn btn-secondary" href="https://www.tlu.ee/en/node/105982" role="button">View details &raquo;</a></p>
+         </div><!-- /.col-lg-4 -->
+</div><!-- /.row -->
+
+
+<div class="row">
+       <div class="col-lg-4">
+         <img class="rounded-circle" src="{% static 'img/priit.jpeg'%}" alt="Sonia Sousa" width="140" height="140">
+         <h2>Priit Tammets</h2>
+         <p>Analyst  at Tallinn University’s School of Digital Technology. </p>
+
+         <p><a class="btn btn-secondary" href="https://www.tlu.ee/en/node/105929" role="button">View details &raquo;</a></p>
+       </div><!-- /.col-lg-4 -->
+       <div class="col-lg-4">
+         <img class="rounded-circle"  src="{% static 'img/ben.jpeg'%}" alt="David Lamas" width="140" height="140">
+         <h2>I. Ben Ajenaghughrure</h2>
+         <p>Developer at Tallinn University’s School of Digital Technology. </p>
+         <p><a class="btn btn-secondary" href="https://www.tlu.ee/en/node/106045" role="button">View details &raquo;</a></p>
+       </div><!-- /.col-lg-4 -->
+       <div class="col-lg-4">
+         <img class="rounded-circle"src="{% static 'img/anet.jpeg'%}" alt="Vladimir Tomberg" width="140" height="140">
+         <h2>Anet Tammets</h2>
+         <p> Research Assistant at Tallinn University’s School of Digital Technology.  </p>
+         <p><a class="btn btn-secondary" href="https://www.tlu.ee/inimesed/anet-tammets" role="button">View details &raquo;</a></p>
+       </div><!-- /.col-lg-4 -->
+     </div><!-- /.row -->
+</div>
+
+
+
+
+</div>
+</div
+
+<!--              end -->
+
+
+<footer class='text-muted' style="padding-top:1rem;">
+  <div class='container text-center'>
+    <p> TrustedUX © TrustedUX Team </p>
+  </div>
+</footer>
+{% endblock %}

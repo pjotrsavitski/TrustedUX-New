@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{%block title%} Project Report  {%endblock%}
+
+{% block content %}
+Project:{{project}}
+<hr/>
+<a href="{% url 'report_download' project_id=project_id %}" class='btn btn-success'> Download Data </a>
+
+    <div id="container" style="width: 75%;">
+   <canvas id="bar-grouped" width="800" height="450"></canva>
+  </div>
+
+    <div id="container" style="width: 75%;">
+   <canvas id="bar-chart-grouped" width="800" height="450"></canvas>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+  <script>
+new Chart(document.getElementById("bar-chart-grouped"), {
+    type: 'bar',
+    data: {
+      labels: {{ labels|safe }},
+      datasets: [
+        {
+          label: "case study 1",
+          backgroundColor: "#3e95cd",
+          data: {{ data1|safe }}
+        }, {
+          label: "case study 2",
+          backgroundColor: "#8e5ea2",
+          data: {{ data2|safe }}
+        },
+        {
+          label: "case study 3",
+          backgroundColor: "#912D18",
+          data: {{ data3|safe }}
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Summary(Mean)'
+      }
+    }
+});
+  </script>
+
+    <script>
+new Chart(document.getElementById("bar-grouped"), {
+    type: 'horizontalBar',
+    data: {
+      labels: {{ labels11|safe }},
+      datasets: [
+        {
+          label: "case study 1",
+          backgroundColor: "#3e95cd",
+          data: {{ data11|safe }}
+        },
+        {
+          label: "case study 2",
+          backgroundColor: "#8e5ea2",
+          data: {{ data22|safe }}
+        },
+        {
+          label: "case study 3",
+          backgroundColor: "#912D18",
+          data: {{ data33|safe }}
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Word Rating(Mean)'
+      }
+    }
+});
+  </script>
+
+
+
+{% endblock %}

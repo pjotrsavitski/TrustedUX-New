@@ -1,0 +1,1298 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-10-03 07:19+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: TrustedUX/settings-1.py:127 TrustedUX/settings.py:126
+msgid "English"
+msgstr ""
+
+#: TrustedUX/settings-1.py:127 TrustedUX/settings.py:126
+msgid "Estonian"
+msgstr ""
+
+#: TrustedUX/settings-1.py:127 TrustedUX/settings.py:126
+msgid "Portugese"
+msgstr ""
+
+#: esurvey/forms.py:125
+msgid "Below 20"
+msgstr "Abaixo de 20"
+
+#: esurvey/forms.py:125
+msgid "Above 50"
+msgstr "Acima de 50"
+
+#: esurvey/forms.py:126
+msgid "Male"
+msgstr "Masculino"
+
+#: esurvey/forms.py:126
+msgid "Female"
+msgstr "Fêmea"
+
+#: esurvey/forms.py:127
+msgid "Primary"
+msgstr "Primária"
+
+#: esurvey/forms.py:127
+msgid "Secondary"
+msgstr "Secundária"
+
+#: esurvey/forms.py:127
+msgid "Bachelor"
+msgstr "Solteiro"
+
+#: esurvey/forms.py:127
+msgid "Master"
+msgstr "Mestrado"
+
+#: esurvey/forms.py:127
+msgid "Doctorate"
+msgstr "doutorado"
+
+#: esurvey/models.py:10
+msgid "Afghanistan"
+msgstr "Afeganistão"
+
+#: esurvey/models.py:11
+msgid "Åland Islands"
+msgstr "Ilhas Åland"
+
+#: esurvey/models.py:12
+msgid "Albania"
+msgstr "Albânia"
+
+#: esurvey/models.py:13
+msgid "Algeria"
+msgstr "Argélia"
+
+#: esurvey/models.py:14
+msgid "American Samoa"
+msgstr "Samoa Americana"
+
+#: esurvey/models.py:15
+msgid "Andorra"
+msgstr "Andorra"
+
+#: esurvey/models.py:16
+msgid "Angola"
+msgstr "Angola"
+
+#: esurvey/models.py:17
+msgid "Anguilla"
+msgstr "Anguilla"
+
+#: esurvey/models.py:18
+msgid "Antarctica"
+msgstr "Antártida"
+
+#: esurvey/models.py:19
+msgid "Antigua and Barbuda"
+msgstr "Antígua e Barbuda"
+
+#: esurvey/models.py:20
+msgid "Argentina"
+msgstr "Argentina"
+
+#: esurvey/models.py:21
+msgid "Armenia"
+msgstr "Arménia"
+
+#: esurvey/models.py:22
+msgid "Aruba"
+msgstr "Aruba"
+
+#: esurvey/models.py:23
+msgid "Australia"
+msgstr "Austrália"
+
+#: esurvey/models.py:24
+msgid "Austria"
+msgstr "Áustria"
+
+#: esurvey/models.py:25
+msgid "Azerbaijan"
+msgstr "Azerbaijão"
+
+#: esurvey/models.py:26
+msgid "Bahamas"
+msgstr "Bahamas"
+
+#: esurvey/models.py:27
+msgid "Bahrain"
+msgstr "Barein"
+
+#: esurvey/models.py:28
+msgid "Bangladesh"
+msgstr "Bangladesh"
+
+#: esurvey/models.py:29
+msgid "Barbados"
+msgstr "Barbados"
+
+#: esurvey/models.py:30
+msgid "Belarus"
+msgstr "Bielorrússia"
+
+#: esurvey/models.py:31
+msgid "Belgium"
+msgstr "Bélgica"
+
+#: esurvey/models.py:32
+msgid "Belize"
+msgstr "Belize"
+
+#: esurvey/models.py:33
+msgid "Benin"
+msgstr "Benim"
+
+#: esurvey/models.py:34
+msgid "Bermuda"
+msgstr "Bermudas"
+
+#: esurvey/models.py:35
+msgid "Bhutan"
+msgstr "Butão"
+
+#: esurvey/models.py:36
+msgid "Bolivia (Plurinational State of)"
+msgstr "Bolívia (Estado Plurinacional da)"
+
+#: esurvey/models.py:37
+msgid "Bonaire, Sint Eustatius and Saba"
+msgstr "Bonaire, Saba e Santo Eustáquio"
+
+#: esurvey/models.py:38
+msgid "Bosnia and Herzegovina"
+msgstr "Bósnia e Herzegovina"
+
+#: esurvey/models.py:39
+msgid "Botswana"
+msgstr "Botsuana"
+
+#: esurvey/models.py:40
+msgid "Bouvet Island"
+msgstr "Ilha Bouvet"
+
+#: esurvey/models.py:41
+msgid "Brazil"
+msgstr "Brasil"
+
+#: esurvey/models.py:42
+msgid "British Indian Ocean Territory"
+msgstr "Território Britânico do Oceano Índico"
+
+#: esurvey/models.py:43
+msgid "Brunei Darussalam"
+msgstr "Brunei"
+
+#: esurvey/models.py:44
+msgid "Bulgaria"
+msgstr "Bulgária"
+
+#: esurvey/models.py:45
+msgid "Burkina Faso"
+msgstr "Burkina Faso"
+
+#: esurvey/models.py:46
+msgid "Burundi"
+msgstr "Burundi"
+
+#: esurvey/models.py:47
+msgid "Cabo Verde"
+msgstr "Cabo Verde"
+
+#: esurvey/models.py:48
+msgid "Cambodia"
+msgstr "Cambodja"
+
+#: esurvey/models.py:49
+msgid "Cameroon"
+msgstr "Camarões"
+
+#: esurvey/models.py:50
+msgid "Canada"
+msgstr "Canadá"
+
+#: esurvey/models.py:51
+msgid "Cayman Islands"
+msgstr "Ilhas Caimão"
+
+#: esurvey/models.py:52
+msgid "Central African Republic"
+msgstr "República Centro-Africana"
+
+#: esurvey/models.py:53
+msgid "Chad"
+msgstr "Chade"
+
+#: esurvey/models.py:54
+msgid "Chile"
+msgstr "Chile"
+
+#: esurvey/models.py:55
+msgid "China"
+msgstr "China"
+
+#: esurvey/models.py:56
+msgid "Christmas Island"
+msgstr "Ilha Natal"
+
+#: esurvey/models.py:57
+msgid "Cocos (Keeling) Islands"
+msgstr "Ilhas Cocos"
+
+#: esurvey/models.py:58
+msgid "Colombia"
+msgstr "Colômbia"
+
+#: esurvey/models.py:59
+msgid "Comoros"
+msgstr "Comoros"
+
+#: esurvey/models.py:60
+msgid "Congo"
+msgstr "Congo"
+
+#: esurvey/models.py:61
+msgid "Congo (the Democratic Republic of the)"
+msgstr "Congo (República Democrática do)"
+
+#: esurvey/models.py:62
+msgid "Cook Islands"
+msgstr "Ilhas Cook"
+
+#: esurvey/models.py:63
+msgid "Costa Rica"
+msgstr "Costa Rica"
+
+#: esurvey/models.py:64
+msgid "Côte d'Ivoire"
+msgstr "Costa do Marfim"
+
+#: esurvey/models.py:65
+msgid "Croatia"
+msgstr "Croácia"
+
+#: esurvey/models.py:66
+msgid "Cuba"
+msgstr "Cuba"
+
+#: esurvey/models.py:67
+msgid "Curaçao"
+msgstr "Curação"
+
+#: esurvey/models.py:68
+msgid "Cyprus"
+msgstr "Chipre"
+
+#: esurvey/models.py:69
+msgid "Czechia"
+msgstr "República Tcheca"
+
+#: esurvey/models.py:70
+msgid "Denmark"
+msgstr "Dinamarca"
+
+#: esurvey/models.py:71
+msgid "Djibouti"
+msgstr "Djibouti"
+
+#: esurvey/models.py:72
+msgid "Dominica"
+msgstr "Dominica"
+
+#: esurvey/models.py:73
+msgid "Dominican Republic"
+msgstr "República Dominicana"
+
+#: esurvey/models.py:74
+msgid "Ecuador"
+msgstr "Equador"
+
+#: esurvey/models.py:75
+msgid "Egypt"
+msgstr "Egipto"
+
+#: esurvey/models.py:76
+msgid "El Salvador"
+msgstr "El Salvador"
+
+#: esurvey/models.py:77
+msgid "Equatorial Guinea"
+msgstr "Guiné Equatorial"
+
+#: esurvey/models.py:78
+msgid "Eritrea"
+msgstr "Eritreia"
+
+#: esurvey/models.py:79
+msgid "Estonia"
+msgstr "Estónia"
+
+#: esurvey/models.py:80
+msgid "Eswatini"
+msgstr ""
+
+#: esurvey/models.py:81
+msgid "Ethiopia"
+msgstr "Etiópia"
+
+#: esurvey/models.py:82
+msgid "Falkland Islands (Malvinas)"
+msgstr "Ilhas Falkland (Malvinas)"
+
+#: esurvey/models.py:83
+msgid "Faroe Islands"
+msgstr "Ilhas Feroé"
+
+#: esurvey/models.py:84
+msgid "Fiji"
+msgstr "Fiji"
+
+#: esurvey/models.py:85
+msgid "Finland"
+msgstr "Finlândia"
+
+#: esurvey/models.py:86
+msgid "France"
+msgstr "França"
+
+#: esurvey/models.py:87
+msgid "French Guiana"
+msgstr "Guiana Francesa"
+
+#: esurvey/models.py:88
+msgid "French Polynesia"
+msgstr "Polinésia Francesa"
+
+#: esurvey/models.py:89
+msgid "French Southern Territories"
+msgstr "Territórios Franceses do Sul"
+
+#: esurvey/models.py:90
+msgid "Gabon"
+msgstr "Gabão"
+
+#: esurvey/models.py:91
+msgid "Gambia"
+msgstr "Gâmbia"
+
+#: esurvey/models.py:92
+msgid "Georgia"
+msgstr "Geórgia"
+
+#: esurvey/models.py:93
+msgid "Germany"
+msgstr "Alemanha"
+
+#: esurvey/models.py:94
+msgid "Ghana"
+msgstr "Gana"
+
+#: esurvey/models.py:95
+msgid "Gibraltar"
+msgstr "Gibraltar"
+
+#: esurvey/models.py:96
+msgid "Greece"
+msgstr "Grécia"
+
+#: esurvey/models.py:97
+msgid "Greenland"
+msgstr "Gronelândia"
+
+#: esurvey/models.py:98
+msgid "Grenada"
+msgstr "Granada"
+
+#: esurvey/models.py:99
+msgid "Guadeloupe"
+msgstr "Guadalupe"
+
+#: esurvey/models.py:100
+msgid "Guam"
+msgstr "Guam"
+
+#: esurvey/models.py:101
+msgid "Guatemala"
+msgstr "Guatemala"
+
+#: esurvey/models.py:102
+msgid "Guernsey"
+msgstr "Guernsey"
+
+#: esurvey/models.py:103
+msgid "Guinea"
+msgstr "Guiné"
+
+#: esurvey/models.py:104
+msgid "Guinea-Bissau"
+msgstr "Guiné-Bissau"
+
+#: esurvey/models.py:105
+msgid "Guyana"
+msgstr "Guiana"
+
+#: esurvey/models.py:106
+msgid "Haiti"
+msgstr "Haiti"
+
+#: esurvey/models.py:107
+msgid "Heard Island and McDonald Islands"
+msgstr "Ilha Heard e Ilhas McDonald"
+
+#: esurvey/models.py:108
+msgid "Holy See"
+msgstr "Vaticano"
+
+#: esurvey/models.py:109
+msgid "Honduras"
+msgstr "Honduras"
+
+#: esurvey/models.py:110
+msgid "Hong Kong"
+msgstr "Hong Kong"
+
+#: esurvey/models.py:111
+msgid "Hungary"
+msgstr "Hungria"
+
+#: esurvey/models.py:112
+msgid "Iceland"
+msgstr "Islândia"
+
+#: esurvey/models.py:113
+msgid "India"
+msgstr "Índia"
+
+#: esurvey/models.py:114
+msgid "Indonesia"
+msgstr "Indonésia"
+
+#: esurvey/models.py:115
+msgid "Iran (Islamic Republic of)"
+msgstr "Irão (República Islâmica do)"
+
+#: esurvey/models.py:116
+msgid "Iraq"
+msgstr "Iraque"
+
+#: esurvey/models.py:117
+msgid "Ireland"
+msgstr "Irlanda"
+
+#: esurvey/models.py:118
+msgid "Isle of Man"
+msgstr "Ilha de Man"
+
+#: esurvey/models.py:119
+msgid "Israel"
+msgstr "Israel"
+
+#: esurvey/models.py:120
+msgid "Italy"
+msgstr "Itália"
+
+#: esurvey/models.py:121
+msgid "Jamaica"
+msgstr "Jamaica"
+
+#: esurvey/models.py:122
+msgid "Japan"
+msgstr "Japão"
+
+#: esurvey/models.py:123
+msgid "Jersey"
+msgstr "Jersey"
+
+#: esurvey/models.py:124
+msgid "Jordan"
+msgstr "Jordânia"
+
+#: esurvey/models.py:125
+msgid "Kazakhstan"
+msgstr "Cazaquistão"
+
+#: esurvey/models.py:126
+msgid "Kenya"
+msgstr "Quénia"
+
+#: esurvey/models.py:127
+msgid "Kiribati"
+msgstr "Kiribati"
+
+#: esurvey/models.py:128
+msgid "Korea (the Democratic People's Republic of)"
+msgstr "Coreia (República Popular Democrática da)"
+
+#: esurvey/models.py:129
+msgid "Korea (the Republic of)"
+msgstr "Coreia (República da)"
+
+#: esurvey/models.py:130
+msgid "Kuwait"
+msgstr "Kuwait"
+
+#: esurvey/models.py:131
+msgid "Kyrgyzstan"
+msgstr "Quirgistão"
+
+#: esurvey/models.py:132
+msgid "Lao People's Democratic Republic"
+msgstr "República Democrática Popular do Laos"
+
+#: esurvey/models.py:133
+msgid "Latvia"
+msgstr "Letónia"
+
+#: esurvey/models.py:134
+msgid "Lebanon"
+msgstr "Líbano"
+
+#: esurvey/models.py:135
+msgid "Lesotho"
+msgstr "Lesoto"
+
+#: esurvey/models.py:136
+msgid "Liberia"
+msgstr "Libéria"
+
+#: esurvey/models.py:137
+msgid "Libya"
+msgstr "Líbia"
+
+#: esurvey/models.py:138
+msgid "Liechtenstein"
+msgstr "Liechtenstein"
+
+#: esurvey/models.py:139
+msgid "Lithuania"
+msgstr "Lituânia"
+
+#: esurvey/models.py:140
+msgid "Luxembourg"
+msgstr "Luxemburgo"
+
+#: esurvey/models.py:141
+msgid "Macao"
+msgstr "Macau"
+
+#: esurvey/models.py:142
+msgid "Madagascar"
+msgstr "Madagáscar"
+
+#: esurvey/models.py:143
+msgid "Malawi"
+msgstr "Malawi"
+
+#: esurvey/models.py:144
+msgid "Malaysia"
+msgstr "Malásia"
+
+#: esurvey/models.py:145
+msgid "Maldives"
+msgstr "Maldivas"
+
+#: esurvey/models.py:146
+msgid "Mali"
+msgstr "Mali"
+
+#: esurvey/models.py:147
+msgid "Malta"
+msgstr "Malta"
+
+#: esurvey/models.py:148
+msgid "Marshall Islands"
+msgstr "Ilhas Marshall"
+
+#: esurvey/models.py:149
+msgid "Martinique"
+msgstr "Martinica"
+
+#: esurvey/models.py:150
+msgid "Mauritania"
+msgstr "Mauritânia"
+
+#: esurvey/models.py:151
+msgid "Mauritius"
+msgstr "Maurícias"
+
+#: esurvey/models.py:152
+msgid "Mayotte"
+msgstr "Mayotte"
+
+#: esurvey/models.py:153
+msgid "Mexico"
+msgstr "México"
+
+#: esurvey/models.py:154
+msgid "Micronesia (Federated States of)"
+msgstr "Micronésia (Estados Federados da)"
+
+#: esurvey/models.py:155
+msgid "Moldova (the Republic of)"
+msgstr "Moldávia (República da)"
+
+#: esurvey/models.py:156
+msgid "Monaco"
+msgstr "Mónaco"
+
+#: esurvey/models.py:157
+msgid "Mongolia"
+msgstr "Mongólia"
+
+#: esurvey/models.py:158
+msgid "Montenegro"
+msgstr "Montenegro"
+
+#: esurvey/models.py:159
+msgid "Montserrat"
+msgstr "Montserrat"
+
+#: esurvey/models.py:160
+msgid "Morocco"
+msgstr "Marrocos"
+
+#: esurvey/models.py:161
+msgid "Mozambique"
+msgstr "Moçambique"
+
+#: esurvey/models.py:162
+msgid "Myanmar"
+msgstr "Myanmar"
+
+#: esurvey/models.py:163
+msgid "Namibia"
+msgstr "Namíbia"
+
+#: esurvey/models.py:164
+msgid "Nauru"
+msgstr "Nauru"
+
+#: esurvey/models.py:165
+msgid "Nepal"
+msgstr "Nepal"
+
+#: esurvey/models.py:166
+msgid "Netherlands"
+msgstr "Países Baixos"
+
+#: esurvey/models.py:167
+msgid "New Caledonia"
+msgstr "Nova Caledónia"
+
+#: esurvey/models.py:168
+msgid "New Zealand"
+msgstr "Nova Zelândia"
+
+#: esurvey/models.py:169
+msgid "Nicaragua"
+msgstr "Nicarágua"
+
+#: esurvey/models.py:170
+msgid "Niger"
+msgstr "Níger"
+
+#: esurvey/models.py:171
+msgid "Nigeria"
+msgstr "Nigéria"
+
+#: esurvey/models.py:172
+msgid "Niue"
+msgstr "Niue"
+
+#: esurvey/models.py:173
+msgid "Norfolk Island"
+msgstr "Ilha Norfolk"
+
+#: esurvey/models.py:174
+msgid "North Macedonia"
+msgstr ""
+
+#: esurvey/models.py:175
+msgid "Northern Mariana Islands"
+msgstr "Ilhas Marianas do Norte"
+
+#: esurvey/models.py:176
+msgid "Norway"
+msgstr "Noruega"
+
+#: esurvey/models.py:177
+msgid "Oman"
+msgstr "Oman"
+
+#: esurvey/models.py:178
+msgid "Pakistan"
+msgstr "Paquistão"
+
+#: esurvey/models.py:179
+msgid "Palau"
+msgstr "Palau"
+
+#: esurvey/models.py:180
+msgid "Palestine, State of"
+msgstr "Palestina, Estado da"
+
+#: esurvey/models.py:181
+msgid "Panama"
+msgstr "Panamá"
+
+#: esurvey/models.py:182
+msgid "Papua New Guinea"
+msgstr "Papua Nova Guiné"
+
+#: esurvey/models.py:183
+msgid "Paraguay"
+msgstr "Paraguai"
+
+#: esurvey/models.py:184
+msgid "Peru"
+msgstr "Peru"
+
+#: esurvey/models.py:185
+msgid "Philippines"
+msgstr "Filipinas"
+
+#: esurvey/models.py:186
+msgid "Pitcairn"
+msgstr "Pitcairn"
+
+#: esurvey/models.py:187
+msgid "Poland"
+msgstr "Polónia"
+
+#: esurvey/models.py:188
+msgid "Portugal"
+msgstr "Portugal"
+
+#: esurvey/models.py:189
+msgid "Puerto Rico"
+msgstr "Porto Rico"
+
+#: esurvey/models.py:190
+msgid "Qatar"
+msgstr "Quatar"
+
+#: esurvey/models.py:191
+msgid "Réunion"
+msgstr "Reunião"
+
+#: esurvey/models.py:192
+msgid "Romania"
+msgstr "Roménia"
+
+#: esurvey/models.py:193
+msgid "Russian Federation"
+msgstr "Federação Russa"
+
+#: esurvey/models.py:194
+msgid "Rwanda"
+msgstr "Ruanda"
+
+#: esurvey/models.py:195
+msgid "Saint Barthélemy"
+msgstr "Saint Barthélemy"
+
+#: esurvey/models.py:196
+msgid "Saint Helena, Ascension and Tristan da Cunha"
+msgstr "Santa Helena, Ascensão e Tristão da Cunha"
+
+#: esurvey/models.py:197
+msgid "Saint Kitts and Nevis"
+msgstr "Saint Kitts e Nevis"
+
+#: esurvey/models.py:198
+msgid "Saint Lucia"
+msgstr "Santa Lúcia"
+
+#: esurvey/models.py:199
+msgid "Saint Martin (French part)"
+msgstr "São Martinho (França)"
+
+#: esurvey/models.py:200
+msgid "Saint Pierre and Miquelon"
+msgstr "Saint Pierre e Miquelon"
+
+#: esurvey/models.py:201
+msgid "Saint Vincent and the Grenadines"
+msgstr "São Vicente e Grenadinas"
+
+#: esurvey/models.py:202
+msgid "Samoa"
+msgstr "Samoa"
+
+#: esurvey/models.py:203
+msgid "San Marino"
+msgstr "San Marino"
+
+#: esurvey/models.py:204
+msgid "Sao Tome and Principe"
+msgstr "São Tomé e Príncipe"
+
+#: esurvey/models.py:205
+msgid "Saudi Arabia"
+msgstr "Arábia Saudita"
+
+#: esurvey/models.py:206
+msgid "Senegal"
+msgstr "Senegal"
+
+#: esurvey/models.py:207
+msgid "Serbia"
+msgstr "Sérvia"
+
+#: esurvey/models.py:208
+msgid "Seychelles"
+msgstr "Seychelles"
+
+#: esurvey/models.py:209
+msgid "Sierra Leone"
+msgstr "Serra Leoa"
+
+#: esurvey/models.py:210
+msgid "Singapore"
+msgstr "Singapura"
+
+#: esurvey/models.py:211
+msgid "Sint Maarten (Dutch part)"
+msgstr "São Martinho (Países Baixos)"
+
+#: esurvey/models.py:212
+msgid "Slovakia"
+msgstr "Eslováquia"
+
+#: esurvey/models.py:213
+msgid "Slovenia"
+msgstr "Eslovénia"
+
+#: esurvey/models.py:214
+msgid "Solomon Islands"
+msgstr "Ilhas Salomão"
+
+#: esurvey/models.py:215
+msgid "Somalia"
+msgstr "Somália"
+
+#: esurvey/models.py:216
+msgid "South Africa"
+msgstr "África do Sul"
+
+#: esurvey/models.py:217
+msgid "South Georgia and the South Sandwich Islands"
+msgstr "Geórgia do Sul e Ilhas Sandwich do Sul"
+
+#: esurvey/models.py:218
+msgid "South Sudan"
+msgstr "Sudão do Sul"
+
+#: esurvey/models.py:219
+msgid "Spain"
+msgstr "Espanha"
+
+#: esurvey/models.py:220
+msgid "Sri Lanka"
+msgstr "Sri Lanka"
+
+#: esurvey/models.py:221
+msgid "Sudan"
+msgstr "Sudão"
+
+#: esurvey/models.py:222
+msgid "Suriname"
+msgstr "Suriname"
+
+#: esurvey/models.py:223
+msgid "Svalbard and Jan Mayen"
+msgstr "Svalbard e Jan Mayen"
+
+#: esurvey/models.py:224
+msgid "Sweden"
+msgstr "Suécia"
+
+#: esurvey/models.py:225
+msgid "Switzerland"
+msgstr "Suíça"
+
+#: esurvey/models.py:226
+msgid "Syrian Arab Republic"
+msgstr "República Árabe Síria"
+
+#: esurvey/models.py:227
+msgid "Taiwan (Province of China)"
+msgstr "Taiwan"
+
+#: esurvey/models.py:228
+msgid "Tajikistan"
+msgstr "Tadjaquistão"
+
+#: esurvey/models.py:229
+msgid "Tanzania, the United Republic of"
+msgstr ""
+
+#: esurvey/models.py:230
+msgid "Thailand"
+msgstr "Tailândia"
+
+#: esurvey/models.py:231
+msgid "Timor-Leste"
+msgstr "Timor-Leste"
+
+#: esurvey/models.py:232
+msgid "Togo"
+msgstr "Togo"
+
+#: esurvey/models.py:233
+msgid "Tokelau"
+msgstr "Tokelau"
+
+#: esurvey/models.py:234
+msgid "Tonga"
+msgstr "Tonga"
+
+#: esurvey/models.py:235
+msgid "Trinidad and Tobago"
+msgstr "Trinidade e Tobago"
+
+#: esurvey/models.py:236
+msgid "Tunisia"
+msgstr "Tunísia"
+
+#: esurvey/models.py:237
+msgid "Turkey"
+msgstr "Turquia"
+
+#: esurvey/models.py:238
+msgid "Turkmenistan"
+msgstr "Turcomenistão"
+
+#: esurvey/models.py:239
+msgid "Turks and Caicos Islands"
+msgstr "Ilhas Turks e Caicos"
+
+#: esurvey/models.py:240
+msgid "Tuvalu"
+msgstr "Tuvalu"
+
+#: esurvey/models.py:241
+msgid "Uganda"
+msgstr "Uganda"
+
+#: esurvey/models.py:242
+msgid "Ukraine"
+msgstr "Ucrânia"
+
+#: esurvey/models.py:243
+msgid "United Arab Emirates"
+msgstr "Emirados Árabes Unidos"
+
+#: esurvey/models.py:244
+msgid "United Kingdom of Great Britain and Northern Ireland"
+msgstr "Reino Unido da Grã-Bretanha e Irlanda do Norte"
+
+#: esurvey/models.py:245
+msgid "United States Minor Outlying Islands"
+msgstr "Ilhas Menores Exteriores dos Estados Unidos"
+
+#: esurvey/models.py:246
+msgid "United States of America"
+msgstr "Estados Unidos da América"
+
+#: esurvey/models.py:247
+msgid "Uruguay"
+msgstr "Uruguai"
+
+#: esurvey/models.py:248
+msgid "Uzbekistan"
+msgstr "Uzbequistão"
+
+#: esurvey/models.py:249
+msgid "Vanuatu"
+msgstr "Vanuatu"
+
+#: esurvey/models.py:250
+msgid "Venezuela (Bolivarian Republic of)"
+msgstr "Venezuela (República Bolivariana da)"
+
+#: esurvey/models.py:251
+msgid "Viet Nam"
+msgstr "Vietname"
+
+#: esurvey/models.py:252
+msgid "Virgin Islands (British)"
+msgstr "Ilhas Virgens (Britânicas)"
+
+#: esurvey/models.py:253
+msgid "Virgin Islands (U.S.)"
+msgstr "Ilhas Virgens (Americanas)"
+
+#: esurvey/models.py:254
+msgid "Wallis and Futuna"
+msgstr "Wallis e Futuna"
+
+#: esurvey/models.py:255
+msgid "Western Sahara"
+msgstr "Sahara Ocidental"
+
+#: esurvey/models.py:256
+msgid "Yemen"
+msgstr "Iémen"
+
+#: esurvey/models.py:257
+msgid "Zambia"
+msgstr "Zâmbia"
+
+#: esurvey/models.py:258
+msgid "Zimbabwe"
+msgstr "Zimbabwe"
+
+#: esurvey/templates/anony_settings.html:97 esurvey/templates/create.html:148
+#: esurvey/templates/overview.html:119
+msgid "Back"
+msgstr ""
+
+#: esurvey/templates/anony_settings.html:99 esurvey/templates/create.html:150
+#: esurvey/templates/survey_form.html:178
+msgid "Continue"
+msgstr "Continuar"
+
+#: esurvey/templates/anony_settings.html:100 esurvey/templates/create.html:151
+#: esurvey/templates/overview.html:127
+msgid "Cancel"
+msgstr ""
+
+#: esurvey/templates/survey_anony.html:6
+msgid "Your details"
+msgstr "Seus detalhes"
+
+#: esurvey/templates/survey_anony.html:24
+#: esurvey/templates/survey_anony.html:39
+msgid "Age"
+msgstr "Era"
+
+#: esurvey/templates/survey_anony.html:27
+#: esurvey/templates/survey_anony.html:42
+msgid "Gender"
+msgstr "gênero"
+
+#: esurvey/templates/survey_anony.html:30
+#: esurvey/templates/survey_anony.html:45
+msgid "Education"
+msgstr "Educação"
+
+#: esurvey/templates/survey_anony.html:33
+#: esurvey/templates/survey_anony.html:48
+msgid "Nationality"
+msgstr "Nacionalidade"
+
+#: esurvey/templates/survey_anony.html:58
+msgid "Submit"
+msgstr "Enviar"
+
+#: esurvey/templates/survey_form.html:25
+msgid "Strogly disagree"
+msgstr "Strogly discorda"
+
+#: esurvey/templates/survey_form.html:26
+msgid "Disagree"
+msgstr "Discordo"
+
+#: esurvey/templates/survey_form.html:27
+msgid "Neutral"
+msgstr "Neutro"
+
+#: esurvey/templates/survey_form.html:28
+msgid "Agree"
+msgstr "Aceita"
+
+#: esurvey/templates/survey_form.html:29
+msgid "Strogly agree"
+msgstr "Concordo plenamente"
+
+#: esurvey/templates/survey_form.html:35
+#, python-format
+msgid ""
+" I believe that there could be negative consequences from using %(product)s"
+msgstr "Eu acredito que pode haver consequências negativas ao usar %(product)s"
+
+#: esurvey/templates/survey_form.html:45
+#, python-format
+msgid "I feel I must be cautious when using  %(product)s"
+msgstr "Sinto que devo ser cauteloso ao usar %(product)s"
+
+#: esurvey/templates/survey_form.html:55
+#, python-format
+msgid " It is risky to use  %(product)s"
+msgstr "É arriscado usar %(product)s"
+
+#: esurvey/templates/survey_form.html:65
+#, python-format
+msgid " I believe %(product)s will act in my best interest"
+msgstr "Acredito que %(product)s atuará no meu melhor interesse"
+
+#: esurvey/templates/survey_form.html:75
+#, python-format
+msgid "I believe that %(product)s will do its best to help me if I need help "
+msgstr ""
+"Acredito que %(product)s fará o seu melhor para me ajudar se eu precisar de "
+"ajuda"
+
+#: esurvey/templates/survey_form.html:84
+#, python-format
+msgid ""
+"I believe that %(product)s is interested in understanding my needs and "
+"preferences "
+msgstr ""
+"Eu acredito que %(product)s está interessado em entender minhas necessidades "
+"e preferências"
+
+#: esurvey/templates/survey_form.html:93
+#, python-format
+msgid ""
+"%(product)s is competent and effective in providing personal care and  "
+"assistance "
+msgstr ""
+"%(product)s é competente e eficaz na prestação de assistência e cuidados "
+"pessoais"
+
+#: esurvey/templates/survey_form.html:102
+#, python-format
+msgid ""
+"I believe %(product)s has all the functionalities I would expect from an "
+"intelligent personal assistant"
+msgstr ""
+"Acredito que %(product)s tem todas as funcionalidades que eu esperaria de um "
+"assistente pessoal inteligente"
+
+#: esurvey/templates/survey_form.html:111
+#, python-format
+msgid ""
+" %(product)s performs its role as an intelligent personal assistant very "
+"well "
+msgstr ""
+"%(product)s desempenha muito bem a sua função de assistente pessoal "
+"inteligente"
+
+#: esurvey/templates/survey_form.html:120
+#, fuzzy, python-format
+#| msgid ""
+#| "When sharing something with %(product)s I expect to get back a meaningful "
+#| "and knowledgeable response "
+msgid ""
+"When sharing something with %(product)s I expect to get back a meaningful  "
+"and knowledgeable response "
+msgstr ""
+"Ao compartilhar algo com %(product)s, espero receber uma resposta "
+"significativa e informada"
+
+#: esurvey/templates/survey_form.html:129
+#, python-format
+msgid ""
+"When sharing something with %(product)s I believe that I will get an answer"
+msgstr ""
+"Ao compartilhar algo com %(product)s, acredito que irei obter uma resposta"
+
+#: esurvey/templates/survey_form.html:138
+#, python-format
+msgid ""
+"If I use %(product)s I think i would be able to depend on it completely "
+msgstr "Se eu usar %(product)s, acho que posso depender completamente dele"
+
+#: esurvey/templates/survey_form.html:147
+#, python-format
+msgid "I can always rely on %(product)s for personal care and assistance "
+msgstr ""
+"Sempre posso contar com %(product)s para cuidados pessoais e assistência"
+
+#: esurvey/templates/survey_form.html:156
+#, python-format
+msgid "I can trust the information presented to me by %(product)s"
+msgstr "Posso confiar nas informações apresentadas a mim por %(product)s"
+
+#: esurvey/templates/survey_front.html:17
+msgid "Start Survey"
+msgstr "Iniciar pesquisa"
+
+#: esurvey/views.py:2598
+msgid "Successful Submission"
+msgstr "Envio bem-sucedido"
+
+#: esurvey/views.py:2598
+msgid "Your submissions are successfully saved. Thank you for your time."
+msgstr "Seus envios foram salvos com sucesso. Obrigado pelo seu tempo."
+
+#~ msgid "Brunei"
+#~ msgstr "Brunei"
+
+#~ msgid "Bolivia"
+#~ msgstr "Bolívia"
+
+#~ msgid "United Kingdom"
+#~ msgstr "Reino Unido"
+
+#~ msgid "Iran"
+#~ msgstr "Irão"
+
+#~ msgid "North Korea"
+#~ msgstr "Coréia do Norte"
+
+#~ msgid "South Korea"
+#~ msgstr "Coréia do Sul"
+
+#~ msgid "Laos"
+#~ msgstr "Laos"
+
+#~ msgid "Moldova"
+#~ msgstr "Moldávia"
+
+#~ msgid "Russia"
+#~ msgstr "Rússia"
+
+#~ msgid "Syria"
+#~ msgstr "Sí­ria"
+
+#~ msgid "Taiwan"
+#~ msgstr "Taiwan"
+
+#~ msgid "Tanzania"
+#~ msgstr "Tanzânia"
+
+#~ msgid "Venezuela"
+#~ msgstr "Venezuela"
+
+#~ msgid "Vietnam"
+#~ msgstr "Vietnã"
+
+#~ msgid "Czech Republic"
+#~ msgstr "República Checa"
+
+#~ msgid "Macedonia"
+#~ msgstr "Macedónia"
+
+#~ msgid "Macedonia (the former Yugoslav Republic of)"
+#~ msgstr "Macedónia (Antiga República Iugoslava da)"
+
+#~ msgid "Swaziland"
+#~ msgstr "Suazilândia"
+
+#~ msgid "Falkland Islands  [Malvinas]"
+#~ msgstr "Ilhas Malvinas"
+
+#~ msgid "Measure the trust factor for your product."
+#~ msgstr "Meça o fator de confiança para seu produto."

@@ -1,0 +1,177 @@
+{% load static%}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title> TrustedUX</title>
+  {% if form.media %}
+  {{ form.media }}
+  {% endif %}
+  <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+  <!-- Bootstrap core CSS -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Raleway:100,300,400,500,700,900" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/css/bootstrap.min.css' %}">
+
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/css/font-awesome.css' %}">
+
+  <link rel="stylesheet" href="{% static 'assets/css/templatemo-softy-pinko.css' %}">
+
+
+  <script src="{% static 'popper.min.js' %}"></script>
+  <script src="{% static 'my.js' %}"></script>
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.1.0/css/flag-icon.min.css" rel="stylesheet">
+  <link href="{% static 'bs-step.css' %}" rel="stylesheet">
+
+  <style>
+  .custom-radio-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+  }
+    .form-inline {
+        display: inline-block;
+    }
+    .navbar {
+    		color: #fff;
+    		background: #926dde;
+    		padding: 5px 16px;
+    		border-radius: 0;
+    		border: none;
+    		box-shadow: 0 0 4px rgba(0,0,0,.1);
+    	}
+
+    	.navbar .divider {
+    		background-color: #e9ecef !important;
+    	}
+</style>
+
+</head>
+
+<body>
+  <header class="header-area header-sticky">
+      <div class="container">
+          <div class="row">
+              <div class="col-12">
+                  <nav class="main-nav">
+                      <!-- ***** Logo Start ***** -->
+                      <a href="{% url 'home'%}" class="logo">
+                          <i class="fa fa-cube"></i> Trusted<b>UX</b></a>
+                      </a>
+                      <!-- ***** Logo End ***** -->
+                      <!-- ***** Menu Start ***** -->
+                      <ul class="nav">
+                        {% if request.user.is_authenticated  %}
+
+                      <li><a href="{% url 'home'%}">Home</a></li>
+                      <li><a href="{% url 'project_home'%}">My Projects</a></li>
+                      <li><a href="{% url 'logout' %}">Logout</a></li>
+
+
+
+                        {% else %}
+                          <li><a href="#welcome">Home</a></li>
+                          <li><a href="{% url 'login' %}">Sign-in</a></li>
+                          <li><a href="{% url 'register' %}">Register</a></li>
+                        {% endif %}
+                      </ul>
+                      <a class='menu-trigger'>
+                          <span>Menu</span>
+                      </a>
+                      <!-- ***** Menu End ***** -->
+                  </nav>
+              </div>
+          </div>
+      </div>
+  </header>
+
+
+
+  <section class="section colored" id="contact-us">
+    <div class="container">
+
+      {% if messages %}
+      {% for message in messages %}
+      {% if message.tags == 'error'%}
+      <div class="alert alert-danger alert-dismissible fade show rounded-25" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% else %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {%endif%}
+  {% endfor %}
+  {% endif %}
+
+
+
+
+
+      <div class="left-heading">
+        <h2 class="section-title">{% block title%} {%endblock%}</h2>
+      </div>
+      <div class="row">
+
+       <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="contact-form">
+
+
+  <!-- Code to change survey title, subtitle, and paragraph on basis of language selection -->
+    {% block content%}
+
+    {% endblock %}
+       </div>
+      </div>
+     </div>
+   </div>
+  </section>
+
+  <footer>
+      <div class="container">
+
+          <div class="row">
+              <div class="col-lg-12">
+                  <p class="copyright">Copyright &copy; 2020 TrustedUX</p>
+              </div>
+          </div>
+      </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="{% static 'assets/js/jquery-2.1.0.min.js'%}"></script>
+
+  <!-- Bootstrap -->
+
+  <script src="{% static 'assets/js/bootstrap.min.js'%}"></script>
+
+  <!-- Plugins -->
+  <script src="{% static 'assets/js/scrollreveal.min.js'%}"></script>
+  <script src="{% static 'assets/js/waypoints.min.js'%}"></script>
+  <script src="{% static 'assets/js/jquery.counterup.min.js'%}"></script>
+  <script src="{% static 'assets/js/imgfix.min.js'%}"></script>
+
+  <!-- Global Init -->
+  <script src="{% static 'assets/js/custom.js'%}"></script>
+
+  	<!-- ./Footer -->
+</body>
+
+</html>

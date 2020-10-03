@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{%block title%} Projects {%endblock%}
+{%block content%}
+
+
+  <div class="btn-group">
+   <button type="button" class="btn btn-danger dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+     <i class="fa fa-search"> </i> Projects
+   </button>
+   <div class="dropdown-menu">
+     <a class="dropdown-item" href="{% url 'project_filter' filter='all'%}">All</a>
+     <a class="dropdown-item" href="{% url 'project_filter' filter='running'%}">Running</a>
+     <a class="dropdown-item" href="{% url 'project_filter' filter='archived'%}">Archived</a>
+     <a class="dropdown-item" href="{% url 'project_filter' filter='closed'%}">Closed</a>
+   </div>
+   </div>
+
+ <a href="{% url 'create'%}" class="btn btn-success ml-auto"  > New Project </a>
+
+<br/><br/>
+<p>
+
+
+{% for project in projects%}
+
+  <div class="card" class="m-0 p-0">
+   <div class="card-header">
+    <span class='text-uppercase' style="font-size:22px"> {{project.project_name}} </span>
+    <div class="btn-group float-right">
+     <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+       <i class="fa fa-gears"> </i>
+     </button>
+     <div class="dropdown-menu">
+       {% if project.project_status %}
+       <a class="dropdown-item" href="{% url 'project_action' project_id=project.id type='deactivate' %}"><i class="fa fa-check"></i> Deactivate</a>
+       {% else %}
+       <a class="dropdown-item" href="{% url 'project_action' project_id=project.id type='activate' %}"><i class="fa fa-check"></i> Activate</a>
+       {% endif %}
+
+       {% if project.archived  %}
+       <a class="dropdown-item" href="{% url 'project_action' project_id=project.id type='unarchive' %}"><i class="fa fa-check"></i> Reopen</a>
+       {% else %}
+       <a class="dropdown-item" href="{% url 'project_action' project_id=project.id type='archive' %}"><i class="fa fa-archive"></i> Archive</a>
+       {% endif %}
+       <a class="dropdown-item" href="{% url 'edit' project_id=project.id %}"><i class="fa fa-edit"></i> Edit</a>
+       <div class="dropdown-divider"></div>
+       <a class="dropdown-item" href="{% url 'report_view' project_id=project.id %}"><i class="fa fa-bar-chart"></i> Report</a>
+
+     </div>
+  </div>
+   </div>
+   <div class="card-body">
+
+
+     {% for survey in project.survey_set.all %}
+     <b>Start date:</b> {{survey.start_date}} <br/>
+     <b>End date:</b> {{survey.end_date}} <br/>
+
+     <b>Survey links</b> <hr/>
+
+
+       {% for survey_url in survey.link_set.all%}
+       <p>
+        Survey-{{forloop.counter}}: <a target='_blank' href="http://{{domain}}/esurvey/{{survey_url.url}}">http://{{domain}}/esurvey/{{survey_url.url}}</a> <br/>
+         Submission: {{survey_url.submission_set.all.count}} <br/>
+      </p>
+       {% endfor %}
+
+
+
+     {% endfor %}
+
+
+
+   </div>
+  </div>
+  <br/>
+{% endfor %}
+
+
+
+
+
+
+{%endblock %}

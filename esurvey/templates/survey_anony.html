@@ -1,0 +1,63 @@
+{% extends 'survey-base.html' %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% block content%}
+{%language lang %}
+<h2 class="section-title">{% trans "Your details" %}</h2>
+<hr/>
+
+<div class='row'>
+<div class='col col-lg-6'>
+<form method='post'>
+
+
+
+
+
+{% csrf_token %}
+{{ wizard.management_form }}
+{% if wizard.form.forms %}
+    {{ wizard.form.management_form }}
+    {% for form in wizard.form.forms %}
+
+      {% if anony_setting.age %}
+      <p>  {% trans "Age" %}  {{form.age}} </p>
+      {% endif %}
+      {% if anony_setting.gender %}
+      <p>  {% trans "Gender" %} {{form.gender}}</p>
+      {% endif %}
+      {% if anony_setting.education %}
+        <p>{% trans "Education" %}  {{form.education}}</p>
+      {% endif %}
+      {% if anony_setting.nationality %}
+        <p>{% trans "Nationality" %}  {{form.nationality}}</p>
+      {% endif %}
+
+    {% endfor %}
+{% else %}
+   {% if anony_setting.age %}
+    <p>  {% trans "Age" %}  {{form.age}} </p>
+    {% endif %}
+    {% if anony_setting.gender %}
+    <p>  {% trans "Gender" %} {{form.gender}}</p>
+    {% endif %}
+    {% if anony_setting.education %}
+      <p>{% trans "Education" %}  {{form.education}}</p>
+    {% endif %}
+    {% if anony_setting.nationality %}
+      <p>{% trans "Nationality" %}  {{form.nationality}}</p>
+    {% endif %}
+
+
+
+{% endif %}
+
+
+<br/>
+
+<input type="submit" class='btn btn-success'  value="{% trans 'Submit' %}" />
+{%endlanguage%}
+</form>
+</div>
+</div>
+{% endblock %}
