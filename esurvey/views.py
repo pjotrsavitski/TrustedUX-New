@@ -2600,12 +2600,16 @@ class CompleteSubmissionForm(SessionWizardView):
         print(all_data)
 
 
-        age = all_data['age']
+        age = all_data['age'] if all_data['age'] != '' else -1
+        education = all_data['education'] if all_data['education'] != '' else -1
+
         gender = all_data['gender']
         nationality = all_data['nationality']
-        education = all_data['education']
 
         lang = link_obj.survey.language
+
+
+
 
         anony_data = AnonyData.objects.create(submission=submission,age=age,gender=gender,education=education,nationality=nationality)
 
