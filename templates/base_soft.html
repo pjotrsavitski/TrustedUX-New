@@ -41,8 +41,8 @@
         display: inline-block;
     }
     .navbar {
-    		color: #fff;
-    		background: #926dde;
+
+
     		padding: 5px 16px;
     		border-radius: 0;
     		border: none;
@@ -52,47 +52,155 @@
     	.navbar .divider {
     		background-color: #e9ecef !important;
     	}
+
+#exTab1 .tab-content {
+  color : white;
+  background-color: #428bca;
+  padding : 5px 15px;
+}
+
+#exTab2 h3 {
+  color : white;
+  background-color: #428bca;
+  padding : 5px 15px;
+}
+
+/* remove border radius for the tab */
+
+#exTab1 .nav-pills > li > a {
+  border-radius: 0;
+}
+
+/* change border radius for the tab , apply corners on top*/
+
+#exTab3 .nav-pills > li > a {
+  border-radius: 4px 4px 0 0 ;
+}
+
+#exTab3 .tab-content {
+  color : white;
+  background-color: #428bca;
+  padding : 5px 15px;
+}
+
+expand_caret {
+    transform: scale(1.6);
+    margin-left: 8px;
+    margin-top: -4px;
+}
+a[aria-expanded='false'] > .expand_caret {
+    transform: scale(1.6) rotate(-90deg);
+}
+#tabs{
+	background: #007b5e;
+    color: #eee;
+}
+#tabs h6.section-title{
+    color: #eee;
+}
+
+#tabs .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    color: #0280ff;
+    background-color: transparent;
+    border-color: transparent transparent #f3f3f3;
+    border-bottom: 4px solid !important;
+    font-size: 20px;
+    font-weight: bold;
+}
+#tabs .nav-tabs .nav-link {
+    border: 1px solid transparent;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+    color: #eee;
+    font-size: 20px;
+}
+
 </style>
 
 </head>
 
 <body>
-  <header class="header-area header-sticky">
-      <div class="container">
-          <div class="row">
-              <div class="col-12">
-                  <nav class="main-nav">
-                      <!-- ***** Logo Start ***** -->
-                      <a href="{% url 'home'%}" class="logo">
-                          <i class="fa fa-cube"></i> Trusted<b>UX</b></a>
-                      </a>
-                      <!-- ***** Logo End ***** -->
-                      <!-- ***** Menu Start ***** -->
-                      <ul class="nav">
-                        {% if request.user.is_authenticated  %}
+  <nav class="navbar navbar-expand-xl navbar-inverse">
+     <div class='container'>
 
-                      <li><a href="{% url 'home'%}">Home</a></li>
-                      <li><a href="{% url 'project_home'%}">My Projects</a></li>
-                      <li><a href="{% url 'logout' %}">Logout</a></li>
+   		<a class="navbar-brand" href="{% url 'home'%}"> Trusted<b>UX</b></a>
+   		<button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggler">
+   			<span class="navbar-toggler-icon"></span>
 
+   		</button>
+   <div class="navbar-nav-scroll">
+      <ul class="navbar-nav bd-navbar-nav flex-row">
+        <li class='nav-item'><a class='nav-link'  href="#"> <span>Benefits</span></a></li>
+        <li class='nav-item'><a class='nav-link'  href="#how"> <span>How it works</span></a></li>
+        <li class='nav-item'><a class='nav-link'  href="{%url 'login'%}"> <span>Scientific background</span></a></li>
+        <li class='nav-item'><a class='nav-link'  href="#faq"> <span>FAQ</span></a></li>
+      </ul>
+    </div>
 
 
-                        {% else %}
-                          <li><a href="#welcome">Home</a></li>
-                          <li><a href="{% url 'login' %}">Sign-in</a></li>
-                          <li><a href="{% url 'register' %}">Register</a></li>
-                        {% endif %}
-                      </ul>
-                      <a class='menu-trigger'>
-                          <span>Menu</span>
-                      </a>
-                      <!-- ***** Menu End ***** -->
-                  </nav>
-              </div>
-          </div>
-      </div>
-  </header>
+   	<!-- Collection of nav links, forms, and other content for toggling -->
+   	<div id="navbarCollapse" class="collapse navbar-collapse justify-content-end ">
 
+   		<ul class="nav navbar-nav">
+
+       {% if request.user.is_authenticated  %}
+         <li class="nav-item dropdown">
+         <a class="nav-link dropdown-toggle mr-auto" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+           {{request.user.email}}
+         </a>
+         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+           <a class="dropdown-item" href="{% url 'project_home'%}"><i class="fa fa-gear"></i> Projects</a>
+
+
+           <div class="dropdown-divider"></div>
+           <a class="dropdown-item" href="{%url 'logout'%}"><i class="fa fa-sign-out"></i> Logout</a>
+         </div>
+       </li>
+
+
+
+         {% else %}
+         <li class='nav-item'><a class=' pr-4 '  href="#">EN</a></li>
+         <li class='nav-item'><a class=' pr-4 '  href="#">Login</a></li>
+         <li class='nav-item'><a class=' btn btn-success btn-sm '  href="{%url 'login'%}"> Try now</a></li>
+         {% endif %}
+         <!-- Language code
+         {% get_current_language as LANGUAGE_CODE %}
+         {% get_language_info for LANGUAGE_CODE as cur_lang %}
+         {% get_available_languages as LANGUAGES %}
+         {% get_language_info_list for LANGUAGES as languages %}
+
+
+         <li class="nav-item dropdown">
+             {% if LANGUAGE_CODE == 'en' %}
+             <a class="nav-link dropdown-toggle" href="{% url 'change_language' 'en'%}" id="dropdown09" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="flag-icon flag-icon-us"> </span> {{ cur_lang.name}}</a>
+             {% else %}
+             <a class="nav-link dropdown-toggle" href="{% url 'change_language' LANGUAGE_CODE%}" id="dropdown09" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="flag-icon flag-icon-{{LANGUAGE_CODE}}"> </span> {{ cur_lang.name}}</a>
+             {% endif %}
+
+
+
+             <div class="dropdown-menu" aria-labelledby="dropdown09">
+                 {% for language in languages %}
+                 {% if language.code != LANGUAGE_CODE %}
+
+                  {% if language.code == 'en' %}
+                     <a class="dropdown-item" href="{% url 'change_language' 'en'%}"><span class="flag-icon flag-icon-us"> </span> English</a>
+                  {% else %}
+                     <a class="dropdown-item" href="{% url 'change_language' language.code%}"><span class="flag-icon flag-icon-{{language.code}}"> </span> {{language.name}}</a>
+                  {% endif %}
+                 {% endif %}
+
+
+             {% endfor %}
+             </div>
+         </li>
+       -->
+
+   		</ul>
+   	</div>
+   </div>
+   </nav>
 
   {% block title%} {% endblock%}
   <!-- Code to change survey title, subtitle, and paragraph on basis of language selection -->

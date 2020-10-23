@@ -8,7 +8,7 @@ from django.utils import translation
 from django.shortcuts import redirect
 
 def index(request):
-    return render(request,'index.html',{})
+    return render(request,'index_soft.html',{})
 
 def changLang(request,lang_code):
     translation.activate(lang_code)
