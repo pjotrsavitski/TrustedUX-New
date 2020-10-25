@@ -136,9 +136,87 @@ body {
 
 .section {
   position: relative;
-  padding-top: 100px;
-  padding-bottom: 80px;
+
+  padding-bottom: 50px;
 }
+
+.nav-item a span {
+  font-style: normal;
+font-weight: normal;
+font-size: 14px;
+line-height: 28px;
+/* identical to box height, or 571% */
+
+color: #007EFF;
+}
+
+.tr_card{
+  position: relative;
+display: -ms-flexbox;
+display: flex;
+-ms-flex-direction: column;
+flex-direction: column;
+min-width: 0;
+word-wrap: break-word;
+background-color: #fff;
+background-clip: border-box;
+border: 1px solid rgba(0,0,0,.125);
+    border-bottom-color: rgba(0, 0, 0, 0.125);
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+border-radius: 25px;
+    border-bottom-right-radius: 25px;
+    border-bottom-left-radius: 25px;
+}
+
+
+.accordion .btn-link[aria-expanded="true"]{
+  font-weight: bold;
+font-size: 38px;
+line-height: 24px;
+
+/* identical to box height, or 133% */
+letter-spacing: 0.2px;
+
+color: #0280FF;
+text-decoration: none;
+
+}
+
+.accordion .btn-link[aria-expanded="false"]{
+  font-weight: bold;
+font-size: 38px;
+line-height: 24px;
+
+/* identical to box height, or 133% */
+letter-spacing: 0.2px;
+
+color: black;
+text-decoration: none;
+
+}
+
+
+
+.try_now_button{
+
+  font-weight: 600;
+font-size: 18px;
+line-height: 18px;
+
+/* identical to box height, or 100% */
+display: flex;
+align-items: center;
+text-align: center;
+letter-spacing: 0.2px;
+
+/* White */
+color: #FFFFFF;
+background: #007EFF;
+box-shadow: 0px 8px 16px rgba(59, 124, 185, 0.34);
+border-radius: 8px;
+}
+
 
 .section.colored {
   background: #f2f2fe;
@@ -157,11 +235,15 @@ body {
 }
 
 .left-heading .section-title {
-  font-weight: 500;
-  font-size: 24px;
-  line-height: 42px;
-  color: #1e1e1e;
-  letter-spacing: 0.25px;
+  font-weight: 600;
+font-size: 36px;
+line-height: 45px;
+
+/* or 125% */
+text-align: center;
+letter-spacing: 0.2px;
+
+color: #373F41;
   margin-bottom: 30px;
   position: relative;
 }
@@ -182,6 +264,31 @@ body {
 .center-heading.colored .section-title {
   color: #ffffff;
 }
+
+.easy_use_section{
+  font-style: normal;
+font-weight: 500;
+font-size: 24px;
+line-height: 24px;
+
+/* identical to box height, or 100% */
+letter-spacing: 0.2px;
+
+color: #0280FF;
+}
+
+.easy_use_section_text{
+  font-weight: 500;
+font-size: 18px;
+line-height: 27px;
+
+/* or 150% */
+letter-spacing: 0.2px;
+
+color: #737B7D;
+}
+
+
 
 .center-text {
   text-align: center;
@@ -233,7 +340,7 @@ body {
 }
 
 .padding-bottom-100 {
-  padding-bottom: 100px !important;
+  padding-bottom: 80px !important;
 }
 
 .border-bottom {
@@ -656,11 +763,11 @@ welcome
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url(../images/banner-bg.png);
-  background-repeat: no-repeat;
+  background-image: url(../images/bg.jpg);
   background-position: center center;
   background-size: cover;
-  height: 100vh;
+  height:80vh;
+  padding-top:79px;
 }
 
 .welcome-area .header-text {
@@ -677,16 +784,18 @@ welcome
   letter-spacing: 1.4px;
   margin-bottom: 30px;
   color: #fff;
+  text-align: center;
 }
 
 .welcome-area .header-text p {
-  font-weight: 400;
-  font-size: 19px;
+  font-weight: 500;
+  font-size: 20px;
   color: #fff;
-  line-height: 28px;
-  letter-spacing: 0.25px;
+  line-height: 30px;
+  letter-spacing: 0.3px;
   margin-bottom: 10px;
   position: relative;
+  text-align: center;
 }
 
 @media (max-width: 991px) {
@@ -816,11 +925,11 @@ features
 }
 
 .features-small-item p {
-  font-weight: 400;
-  font-size: 13px;
+  font-weight: 500;
+  font-size: 14px;
   color: #777;
-  letter-spacing: 0.5px;
-  line-height: 25px;
+  letter-spacing: 0.2px;
+  line-height: 21px;
   position: relative;
   z-index: 2;
 }
@@ -833,14 +942,27 @@ features
 }
 
 dt {
-  font-weight: bold;
-  font-size: 20px;
-  color: #8261ee;
-  text-decoration: underline;
+  font-weight: 800;
+font-size: 26px;
+line-height: 24px;
+
+/* identical to box height, or 92% */
+letter-spacing: 0.2px;
+color: #0280FF;
 
 }
 dd {
   margin-bottom:20px;
+
+font-style: normal;
+font-weight: 500;
+font-size: 18px;
+line-height: 27px;
+
+/* or 150% */
+letter-spacing: 0.2px;
+
+color: #737B7D;
 }
 
 .home-feature {
@@ -1461,7 +1583,7 @@ footer
 ---------------------------------------------
 */
 footer {
-  background-image: linear-gradient(127deg, #a759d1 0%, #8261ee 91%);
+  background: #0280FF;
   padding-top: 30px;
 }
 

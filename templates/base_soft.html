@@ -130,10 +130,10 @@ a[aria-expanded='false'] > .expand_caret {
    		</button>
    <div class="navbar-nav-scroll">
       <ul class="navbar-nav bd-navbar-nav flex-row">
-        <li class='nav-item'><a class='nav-link'  href="#"> <span>Benefits</span></a></li>
-        <li class='nav-item'><a class='nav-link'  href="#how"> <span>How it works</span></a></li>
+        <li class='nav-item'><a class='nav-link'  href="{%url 'login'%}"> <span>Benefits</span></a></li>
+        <li class='nav-item'><a class='nav-link'  href="{%url 'login'%}"> <span>How it works</span></a></li>
         <li class='nav-item'><a class='nav-link'  href="{%url 'login'%}"> <span>Scientific background</span></a></li>
-        <li class='nav-item'><a class='nav-link'  href="#faq"> <span>FAQ</span></a></li>
+        <li class='nav-item'><a class='nav-link'  href="{%url 'login'%}"> <span>FAQ</span></a></li>
       </ul>
     </div>
 
@@ -160,9 +160,9 @@ a[aria-expanded='false'] > .expand_caret {
 
 
          {% else %}
-         <li class='nav-item'><a class=' pr-4 '  href="#">EN</a></li>
-         <li class='nav-item'><a class=' pr-4 '  href="#">Login</a></li>
-         <li class='nav-item'><a class=' btn btn-success btn-sm '  href="{%url 'login'%}"> Try now</a></li>
+         <li class='nav-item'><a class=' pr-4 '  href="#"><span>EN</span></a></li>
+         <li class='nav-item'><a class=' pr-4 '  href="#"><span>Login<span></a></li>
+         <li class='nav-item'><a class=' btn try_now_button'  href="{%url 'login'%}"> Try now</a></li>
          {% endif %}
          <!-- Language code
          {% get_current_language as LANGUAGE_CODE %}
