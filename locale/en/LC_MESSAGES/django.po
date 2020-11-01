@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-03 05:26+0000\n"
+"POT-Creation-Date: 2020-11-01 16:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,16 +18,52 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: TrustedUX/settings-1.py:127 TrustedUX/settings.py:126
+#: TrustedUX/settings-1.py:127 TrustedUX/settings.py:185
 msgid "English"
 msgstr ""
 
-#: TrustedUX/settings-1.py:127 TrustedUX/settings.py:126
+#: TrustedUX/settings-1.py:127 TrustedUX/settings.py:185
 msgid "Estonian"
 msgstr ""
 
-#: TrustedUX/settings-1.py:127 TrustedUX/settings.py:126
+#: TrustedUX/settings-1.py:127 TrustedUX/settings.py:185
 msgid "Portugese"
+msgstr ""
+
+#: esurvey/forms.py:208 esurvey/models.py:317
+msgid "Below 20"
+msgstr ""
+
+#: esurvey/forms.py:208 esurvey/models.py:317
+msgid "Above 50"
+msgstr ""
+
+#: esurvey/forms.py:209 esurvey/models.py:318
+msgid "Male"
+msgstr ""
+
+#: esurvey/forms.py:209 esurvey/models.py:318
+msgid "Female"
+msgstr ""
+
+#: esurvey/forms.py:210 esurvey/models.py:319
+msgid "Primary"
+msgstr ""
+
+#: esurvey/forms.py:210 esurvey/models.py:319
+msgid "Secondary"
+msgstr ""
+
+#: esurvey/forms.py:210 esurvey/models.py:319
+msgid "Bachelor"
+msgstr ""
+
+#: esurvey/forms.py:210 esurvey/models.py:319
+msgid "Master"
+msgstr ""
+
+#: esurvey/forms.py:210 esurvey/models.py:319
+msgid "Doctorate"
 msgstr ""
 
 #: esurvey/models.py:10
@@ -1027,119 +1063,179 @@ msgid "Zimbabwe"
 msgstr ""
 
 #: esurvey/templates/anony_settings.html:97 esurvey/templates/create.html:148
-#: esurvey/templates/overview.html:119
+#: esurvey/templates/create_participation.html:91
+#: esurvey/templates/create_project.html:100
+#: esurvey/templates/create_survey.html:402 esurvey/templates/overview.html:155
 msgid "Back"
 msgstr ""
 
 #: esurvey/templates/anony_settings.html:99 esurvey/templates/create.html:150
-#: esurvey/templates/survey_form.html:178
+#: esurvey/templates/create_participation.html:93
+#: esurvey/templates/create_project.html:102
+#: esurvey/templates/create_survey.html:404
+#: esurvey/templates/survey_form.html:184
 msgid "Continue"
 msgstr ""
 
 #: esurvey/templates/anony_settings.html:100 esurvey/templates/create.html:151
-#: esurvey/templates/overview.html:127
+#: esurvey/templates/create_participation.html:94
+#: esurvey/templates/create_project.html:103
+#: esurvey/templates/create_survey.html:405 esurvey/templates/overview.html:163
 msgid "Cancel"
 msgstr ""
 
-#: esurvey/templates/survey_anony.html:5
+#: esurvey/templates/survey_anony.html:6
 msgid "Your details"
 msgstr ""
 
-#: esurvey/templates/survey_anony.html:56
+#: esurvey/templates/survey_anony.html:24
+#: esurvey/templates/survey_anony.html:39
+msgid "Age"
+msgstr ""
+
+#: esurvey/templates/survey_anony.html:27
+#: esurvey/templates/survey_anony.html:42
+msgid "Gender"
+msgstr ""
+
+#: esurvey/templates/survey_anony.html:30
+#: esurvey/templates/survey_anony.html:45
+msgid "Education"
+msgstr ""
+
+#: esurvey/templates/survey_anony.html:33
+#: esurvey/templates/survey_anony.html:48
+msgid "Nationality"
+msgstr ""
+
+#: esurvey/templates/survey_anony.html:58
 msgid "Submit"
 msgstr ""
 
-#: esurvey/templates/survey_form.html:25
+#: esurvey/templates/survey_form.html:31
 msgid "Strogly disagree"
 msgstr ""
 
+#: esurvey/templates/survey_form.html:32
+msgid "Disagree"
+msgstr ""
+
+#: esurvey/templates/survey_form.html:33
+msgid "Neutral"
+msgstr ""
+
+#: esurvey/templates/survey_form.html:34
+msgid "Agree"
+msgstr ""
+
 #: esurvey/templates/survey_form.html:35
+msgid "Strogly agree"
+msgstr ""
+
+#: esurvey/templates/survey_form.html:41
 #, python-format
 msgid ""
 " I believe that there could be negative consequences from using %(product)s"
 msgstr ""
 
-#: esurvey/templates/survey_form.html:45
+#: esurvey/templates/survey_form.html:51
 #, python-format
 msgid "I feel I must be cautious when using  %(product)s"
 msgstr ""
 
-#: esurvey/templates/survey_form.html:55
+#: esurvey/templates/survey_form.html:61
 #, python-format
 msgid " It is risky to use  %(product)s"
 msgstr ""
 
-#: esurvey/templates/survey_form.html:65
+#: esurvey/templates/survey_form.html:71
 #, python-format
 msgid " I believe %(product)s will act in my best interest"
 msgstr ""
 
-#: esurvey/templates/survey_form.html:75
+#: esurvey/templates/survey_form.html:81
 #, python-format
 msgid "I believe that %(product)s will do its best to help me if I need help "
 msgstr ""
 
-#: esurvey/templates/survey_form.html:84
+#: esurvey/templates/survey_form.html:90
 #, python-format
 msgid ""
 "I believe that %(product)s is interested in understanding my needs and "
 "preferences "
 msgstr ""
 
-#: esurvey/templates/survey_form.html:93
+#: esurvey/templates/survey_form.html:99
 #, python-format
 msgid ""
 "%(product)s is competent and effective in providing personal care and  "
 "assistance "
 msgstr ""
 
-#: esurvey/templates/survey_form.html:102
+#: esurvey/templates/survey_form.html:108
 #, python-format
 msgid ""
 "I believe %(product)s has all the functionalities I would expect from an "
 "intelligent personal assistant"
 msgstr ""
 
-#: esurvey/templates/survey_form.html:111
+#: esurvey/templates/survey_form.html:117
 #, python-format
 msgid ""
 " %(product)s performs its role as an intelligent personal assistant very "
 "well "
 msgstr ""
 
-#: esurvey/templates/survey_form.html:120
+#: esurvey/templates/survey_form.html:126
 #, python-format
 msgid ""
 "When sharing something with %(product)s I expect to get back a meaningful  "
 "and knowledgeable response "
 msgstr ""
 
-#: esurvey/templates/survey_form.html:129
+#: esurvey/templates/survey_form.html:135
 #, python-format
 msgid ""
 "When sharing something with %(product)s I believe that I will get an answer"
 msgstr ""
 
-#: esurvey/templates/survey_form.html:138
+#: esurvey/templates/survey_form.html:144
 #, python-format
 msgid ""
 "If I use %(product)s I think i would be able to depend on it completely "
 msgstr ""
 
-#: esurvey/templates/survey_form.html:147
+#: esurvey/templates/survey_form.html:153
 #, python-format
 msgid "I can always rely on %(product)s for personal care and assistance "
 msgstr ""
 
-#: esurvey/templates/survey_form.html:156
+#: esurvey/templates/survey_form.html:162
 #, python-format
 msgid "I can trust the information presented to me by %(product)s"
 msgstr ""
 
-#: esurvey/views.py:2593
+#: esurvey/templates/survey_front.html:18
+msgid ""
+"If you have any questions regarding this survey, contact the survey owner"
+msgstr ""
+
+#: esurvey/templates/survey_front.html:19
+msgid "Name"
+msgstr ""
+
+#: esurvey/templates/survey_front.html:20
+msgid "Email"
+msgstr ""
+
+#: esurvey/templates/survey_front.html:22
+msgid "Start Survey"
+msgstr ""
+
+#: esurvey/views.py:2754
 msgid "Successful Submission"
 msgstr ""
 
-#: esurvey/views.py:2593
+#: esurvey/views.py:2754
 msgid "Your submissions are successfully saved. Thank you for your time."
 msgstr ""

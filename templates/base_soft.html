@@ -160,7 +160,28 @@ a[aria-expanded='false'] > .expand_caret {
 
 
          {% else %}
-         <li class='nav-item'><a class=' pr-4 '  href="#"><span>EN</span></a></li>
+
+         {% get_current_language as LANGUAGE_CODE %}
+         {% get_available_languages as LANGUAGES %}
+         {% get_language_info_list for LANGUAGES as languages %}
+<!--
+         <li class="dropdown mr-1">
+           <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span>LN</span></a>
+           <ul class="dropdown-menu" role="menu" id="language-list">
+             {% for language in languages %}
+             <li>
+               <a href="{% url 'set_language' %}" data-language-code="{{ language.code }}">
+                 {% if language.code == LANGUAGE_CODE %}&#10003;{% else %}&nbsp;&nbsp;{% endif %}
+
+                 {{ language.name_local | title  }} ({{language.code}})
+               </a>
+             </li>
+             {% endfor %}
+          </ul>
+        </li>
+      -->
+
+
          <li class='nav-item'><a class=' pr-4 '  href="{%url 'login'%}"><span>Login<span></a></li>
          <li class='nav-item'><a class=' btn try_now_button'  href="{%url 'login'%}"> Try now</a></li>
          {% endif %}

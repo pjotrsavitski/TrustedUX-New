@@ -11,6 +11,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import redirect
 from django.db.models import Count
 from datetime import date
+from datetime import timedelta
 
 from .forms import contactforms
 from djqscsv import render_to_csv_response
@@ -35,19 +36,15 @@ SUBMISSION_TEMPLATE = {'survey':"survey_form.html","anony":"survey_anony.html"}
 
 
 CREATE_FORMS = (
-    ("questionnaire", CreateForm1),
-    ("product", CreateForm2),
+    ("project", CreateForm1),
+    ("survey", CreateForm2),
     ("participants", CreateForm3),
-    ("editq", CreateForm4),
-    ("anony", CreateForm5),
-    ("overview",lastForm))
+    ("summary",lastForm))
 
-TEMPLATES = {"questionnaire": "create.html",
-             "product": "create.html",
-             "participants": "create.html",
-             "editq": "create.html",
-             "anony":"anony_settings.html",
-             "overview": "overview.html"}
+TEMPLATES = {"project": "create_project.html",
+             "survey": "create_survey.html",
+             "participants": "create_participation.html",
+             "summary": "overview.html"}
 
 # Code by been #################
 def csvview(request):
@@ -2385,25 +2382,23 @@ def generateSurvey(request,link):
         if survey_url.survey.project.project_status and not survey_url.survey.project.archived:
             variables = {
                 "PROJECT_NAME":survey_url.survey.project.project_name,
-                "PRODUCT_NAME":survey_url.survey.product_name,
-                "PRODUCT_INDUSTRY":survey_url.survey.product_industry,
+                "PRODUCT_NAME":survey_url.survey.project.product_name,
+                "PRODUCT_INDUSTRY":survey_url.survey.project.product_industry,
                 "TODAY":date.today(),
-                "SURVEY_NAME":survey_url.survey.survey_name,
-                "PRODUCT":survey_url.survey.product_name,
             }
             print(variables)
             title = survey_url.survey.title
-            subtitle = survey_url.survey.subtitle
+            name = survey_url.survey.survey_name
             paragraph = survey_url.survey.paragraph
 
             lang = survey_url.survey.language
 
             title = title.format(**variables)
-            subtitle = subtitle.format(**variables)
+
             paragraph = paragraph.format(**variables)
 
             #return surveyForm(request,link)
-            return render(request,"survey_front.html",{'project_title':title,'subtitle':subtitle,'paragraph':paragraph,'link':survey_url.url,'lang':lang})
+            return render(request,"survey_front.html",{'project_title':title,'paragraph':paragraph,'link':survey_url.url,'lang':lang,'name':name,'survey':survey_url.survey})
         else:
             return render(request, "survey_msg.html",{'msg_title':'Not active','msg_body':'The survey is not active.'})
 
@@ -2439,72 +2434,203 @@ def edit(request,project_id):
     # form1 data
     form1['project_name'] = project.project_name
     form1['project_type'] = project.project_type
-    form1['type_questionnaire'] = project.questionnaire_type
+    form1['product_name'] = project.product_name
+    form1['product_type'] = project.product_type
+    form1['product_industry'] = project.product_industry
     form1['new'] = False
-    form1['project_id'] = str(project_id)
+    form1['project_id'] = int(project_id)
 
+    print('setting:',form1['project_id'],type(form1['project_id']))
 
     # form2 data
-    survey = Survey.objects.all().filter(project=project)[0]
+    survey = Survey.objects.all().filter(project=project)
+
+
+    form2['name_of_survey1'] = survey[0].survey_name
+    form2['questionnaire_language1'] = survey[0].language
+    form2['start_date1'] = survey[0].start_date
+    form2['end_date1'] = survey[0].end_date
+    form2['survey_owner1'] = survey[0].owner
+    form2['survey_owner_email1'] = survey[0].owner_email
+    form2['title1'] = survey[0].title
+    form2['paragraph1'] = survey[0].paragraph
+
+    if survey.count() > 1:
+        form2['name_of_survey2'] = survey[1].survey_name
+        form2['questionnaire_language2'] = survey[1].language
+        form2['start_date2'] = survey[1].start_date
+        form2['end_date2'] = survey[1].end_date
+        form2['survey_owner2'] = survey[1].owner
+        form2['survey_owner_email2'] = survey[1].owner_email
+        form2['title2'] = survey[1].title
+        form2['paragraph2'] = survey[1].paragraph
+    if survey.count() > 2:
+        form2['name_of_survey3'] = survey[2].survey_name
+        form2['questionnaire_language3'] = survey[2].language
+        form2['start_date3'] = survey[2].start_date
+        form2['end_date3'] = survey[2].end_date
+        form2['survey_owner3'] = survey[2].owner
+        form2['survey_owner_email3'] = survey[2].owner_email
+        form2['title3'] = survey[2].title
+        form2['paragraph3'] = survey[2].paragraph
+    if survey.count() > 3:
+        form2['name_of_survey4'] = survey[3].survey_name
+        form2['questionnaire_language4'] = survey[3].language
+        form2['start_date4'] = survey[3].start_date
+        form2['end_date4'] = survey[3].end_date
+        form2['survey_owner4'] = survey[3].owner
+        form2['survey_owner_email4'] = survey[3].owner_email
+        form2['title4'] = survey[3].title
+        form2['paragraph4'] = survey[3].paragraph
+    if survey.count() > 4:
+        form2['name_of_survey5'] = survey[4].survey_name
+        form2['questionnaire_language5'] = survey[4].language
+        form2['start_date5'] = survey[4].start_date
+        form2['end_date5'] = survey[4].end_date
+        form2['survey_owner5'] = survey[4].owner
+        form2['survey_owner_email5'] = survey[4].owner_email
+        form2['title5'] = survey[4].title
+        form2['paragraph5'] = survey[4].paragraph
+
+
 
     anony_setting = AnonyDataSetting.objects.get(project=project)
 
-    form2['start_date'] = survey.start_date
-    form2['end_date'] = survey.end_date
-    form2['name_of_survey'] = survey.survey_name
-    form2['product_name'] = survey.product_name
-    form2['product_type'] = survey.product_type
-    form2['product_industry'] = survey.product_industry
 
-    #form3
 
-    #form4
-    form4['questionnaire_language'] = survey.language
-    form4['title'] = survey.title
-    form4['subtitle'] = survey.subtitle
-    form4['paragraph'] = survey.paragraph
 
     #form5
-    form5['age'] = anony_setting.age
-    form5['gender'] = anony_setting.gender
-    form5['nationality'] =anony_setting.nationality
-    form5['education'] =anony_setting.education
+    form3['age'] = anony_setting.age
+    form3['gender'] = anony_setting.gender
+    form3['nationality'] =anony_setting.nationality
+    form3['education'] =anony_setting.education
 
     #last form
     lastform['project_status'] = project.project_status
 
 
 
-    initial = {'questionnaire':form1,'product':form2,'participants':form3,'editq':form4,'anony':form5}
+    initial = {'project':form1,'survey':form2,'participants':form3,'summary':lastform}
+
 
 
     return CompleteForm.as_view(CREATE_FORMS,initial_dict=initial)(request)
 
 
 class CompleteForm(SessionWizardView):
+    type_of_study = -1
+
+
     def get_template_names(self):
         return [TEMPLATES[self.steps.current]]
 
+
+
+    def get_form(self, step=None, data=None, files=None):
+
+        form = super().get_form(step, data, files)
+
+        # determine the step if not given
+        if step is None:
+            step = self.steps.current
+
+
+
+
+        if step == 'survey':
+            #filled_data = self.fill_dummy('survey',data)
+            print('Get form:',self.type_of_study)
+            #form = super().get_form(step, filled_data, files)
+        #print(form.data)
+        return form
+
+
     def get_context_data(self, form, **kwargs):
         context = super(CompleteForm, self).get_context_data(form=form, **kwargs)
-        print('Step->',self.steps.current,':',self.get_all_cleaned_data())
+        #print('Step->',self.steps.current,':',self.get_all_cleaned_data())
 
-        if self.steps.current == 'overview':
-            print('calling overview step')
-            print(self.get_all_cleaned_data())
+        if self.steps.current =='summary':
+            data = self.get_all_cleaned_data()
+            print('------------------->')
+            print(data['project_id'])
+
             context.update({'all_data': self.get_all_cleaned_data()})
+            context.update({'type':self.type_of_study})
+
+
+
+        if self.steps.current == "survey":
+
+            data = self.get_all_cleaned_data()
+            self.type_of_study = int(data['project_type'])
+
+            #survey_dict = self.fill_dummy()
+            ##self.initial_dict['survey'] = survey_dict
+
+
+            context.update({'type':self.type_of_study})
+            #form = self.fill_dummy(form)
+            #initial = self.fill_dummy(form)
+
+            #print('-----------------------------')
+            #print(initial)
+            #self.initial_dict['survey'] = initial
+            #context = super(CompleteForm, self).get_context_data(form=form, **kwargs)
+
+            #print('Type:',data['project_type'])
         return context
+
+
+    def fill_dummy(self,step,initial):
+        study = self.type_of_study
+
+        k =  study + 1
+        while k <= 5:
+
+            initial['%s-name_of_survey%s' % (step,str(k))] = ['demo']
+            initial['%s-questionnaire_language%s' % (step,str(k))] = ['En']
+            initial['%s-start_date%s'%(step,str(k))] =  [datetime.now().today()]
+            initial['%s-end_date%s'%(step,str(k))] = [datetime.now().today() + timedelta(days=1)]
+
+
+            initial['%s-survey_owner%s'%(step,str(k))] = [self.request.user]
+            initial['%s-survey_owner_email%s'%(step,str(k))] = [self.request.user.email]
+            initial['%s-title%s'%(step,str(k))] =['demo']
+            initial['%s-paragraph%s'%(step,str(k))] = ['para']
+            k += 1
+        print('returing initial')
+        return initial
+
+
 
 
     @transaction.atomic
     def done(self, form_list, **kwargs):
         print('done called')
         all_data = self.get_all_cleaned_data()
-        print(all_data)
+        print(all_data['new'])
+        print(all_data['project_id'])
+        print('--------------->entering condition')
         if all_data['new']:
+            print('New project')
             current_user = self.request.user
-            project = Project.objects.create(user=current_user,questionnaire_type=all_data['type_questionnaire'],project_name=all_data['project_name'],project_type=all_data['project_type'],test_project=False,project_status=all_data['project_status'])
-            survey = Survey.objects.create(project=project,language=all_data['questionnaire_language'],start_date = all_data['start_date'],end_date=all_data['end_date'],survey_name = all_data['name_of_survey'],product_name=all_data['product_name'],product_type=all_data['project_type'],product_industry=all_data['product_industry'], title=all_data['title'],subtitle=all_data['subtitle'],paragraph=all_data['paragraph'])
+            project = Project.objects.create(user=current_user,project_name=all_data['project_name'],project_type=all_data['project_type'],project_status=all_data['project_status'],product_name=all_data['product_name'],product_type=all_data['product_type'],product_industry=all_data['product_industry'])
+            type = int(all_data['project_type'])
+
+            for k in range(type):
+                k += 1
+                s_name_key = 'name_of_survey'+str(k)
+                s_lang_key = 'questionnaire_language'+str(k)
+                s_start_key = 'start_date' + str(k)
+                s_end_key = 'end_date' + str(k)
+                s_title_key = 'title' + str(k)
+                s_paragraph_key = 'paragraph' + str(k)
+                s_owner_key = 'survey_owner' + str(k)
+                s_owner_email_key = 'survey_owner_email' + str(k)
+
+                survey = Survey.objects.create(project=project,survey_name = all_data[s_name_key],start_date=all_data[s_start_key],end_date=all_data[s_end_key],title=all_data[s_title_key],paragraph=all_data[s_paragraph_key],owner=all_data[s_owner_key],owner_email=all_data[s_owner_email_key],language=all_data[s_lang_key])
+
+                survey_url = Link.objects.create(survey=survey,sequence=k)
 
             age = all_data['age']
             gender=all_data['gender']
@@ -2515,39 +2641,48 @@ class CompleteForm(SessionWizardView):
 
             anony_settings = AnonyDataSetting.objects.create(project=project,age=age,gender=gender,education=education,nationality=nationality)
 
-            for i in range(int(all_data['project_type'])):
-                survey_url = Link.objects.create(survey=survey,sequence=(i+1))
 
 
             messages.success(self.request, 'Project created successfully !')
         else:
+            print('-------------------->',all_data['project_id'])
             project_id = int(all_data['project_id'])
-            print('===============Project ID:',project_id)
+
             project = Project.objects.get(id=project_id)
-            survey = Survey.objects.get(project=project)
+            surveys = Survey.objects.all().filter(project=project).delete()
 
 
-            project.questionnaire_type = all_data['type_questionnaire']
+            surveys_count = int(all_data['project_type'])
+
             project.project_name = all_data['project_name']
-            project.project_type=all_data['project_type']
+            project.project_type = all_data['project_type']
+            project.product_name= all_data['product_name']
+            project.product_type=all_data['project_type']
+            project.product_industry=all_data['product_industry']
             project.project_status=all_data['project_status']
 
-            survey.start_date = all_data['start_date']
-            survey.end_date=all_data['end_date']
-            survey.survey_name = all_data['name_of_survey']
-            survey.product_name=all_data['product_name']
-            survey.product_type=all_data['project_type']
-            survey.product_industry=all_data['product_industry']
-            survey.title=all_data['title']
-            survey.subtitle=all_data['subtitle']
-            survey.paragraph=all_data['paragraph']
+            for k in range(surveys_count):
+                k += 1
+                s_name_key = 'name_of_survey'+str(k)
+                s_lang_key = 'questionnaire_language'+str(k)
+                s_start_key = 'start_date' + str(k)
+                s_end_key = 'end_date' + str(k)
+                s_title_key = 'title' + str(k)
+                s_paragraph_key = 'paragraph' + str(k)
+                s_owner_key = 'survey_owner' + str(k)
+                s_owner_email_key = 'survey_owner_email' + str(k)
+
+                survey = Survey.objects.create(project=project,survey_name = all_data[s_name_key],start_date=all_data[s_start_key],end_date=all_data[s_end_key],title=all_data[s_title_key],paragraph=all_data[s_paragraph_key],owner=all_data[s_owner_key],owner_email=all_data[s_owner_email_key],language=all_data[s_lang_key])
+
+                survey_url = Link.objects.create(survey=survey,sequence=k)
+
 
 
 
 
 
             project.save()
-            survey.save()
+
             messages.success(self.request,'Project is successfully updated')
 
         return redirect('project_home')
@@ -2560,7 +2695,7 @@ class CompleteSubmissionForm(SessionWizardView):
         context = super().get_context_data(form=form, **kwargs)
         link_obj = Link.objects.get(url=self.kwargs['link'])
         survey_name = link_obj.survey.survey_name
-        product = link_obj.survey.product_name
+        product = link_obj.survey.project.product_name
         project = link_obj.survey.project
 
         language = link_obj.survey.language

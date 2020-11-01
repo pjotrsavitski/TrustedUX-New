@@ -21,7 +21,7 @@
 <br/><br/>
 <p>
 
-{{domain}}
+
 {% for project in projects%}
 
   <div class="card" class="m-0 p-0">
@@ -54,17 +54,19 @@
 
 
      {% for survey in project.survey_set.all %}
-     <b>Start date:</b> {{survey.start_date}} <br/>
-     <b>End date:</b> {{survey.end_date}} <br/>
+     <h3 class='mt-4'>Survey-{{forloop.counter}}</h3>
+     <b class='mt-2'>Start date:</b> {{survey.start_date}} <br/>
+     <b class='mt-2'>End date:</b> {{survey.end_date}} <br/>
 
-     <b>Survey links</b> <hr/>
+
 
 
        {% for survey_url in survey.link_set.all%}
        <p>
-        Survey-{{forloop.counter}}: <a target='_blank' href="http://{{domain}}/esurvey/{{survey_url.url}}">http://{{domain}}/esurvey/{{survey_url.url}}</a> <br/>
-         Submission: {{survey_url.submission_set.all.count}} <br/>
+        <b class='mt-2'>Survey-link:</b> <a target='_blank' href="http://{{domain}}/esurvey/{{survey_url.url}}">http://{{domain}}/esurvey/{{survey_url.url}}</a> <br/>
+         <b class='mt-2'>Submission:</b> {{survey_url.submission_set.all.count}} <br/>
       </p>
+      <hr/>
        {% endfor %}
 
 

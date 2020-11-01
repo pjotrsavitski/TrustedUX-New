@@ -41,23 +41,101 @@ type_choices = [('Accounting sysetm','Accounting system'),('Consumer Electronics
 
 class CreateForm1(forms.Form):
 
-    type_questionnaire = forms.CharField(label="Type of Questionnaire",widget=forms.Select(choices=[('TrUX','TrustedUX')],attrs={'class':'form-control'}))
-    project_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}),max_length=100)
-    project_type = forms.CharField(widget=forms.Select(choices=project_choices,attrs={'class':'form-control'}))
-    #test_project = forms.BooleanField(required=False,widget=forms.CheckboxInput(attrs={'class':'form-check-input'}))
-    new = forms.BooleanField(widget=forms.HiddenInput(),required=False)
+    project_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
+    project_type = forms.CharField(label='Study type',widget=forms.Select(choices=project_choices,attrs={'class':'form-control mb-4'}))
+    new = forms.BooleanField(widget=forms.HiddenInput(),required=False,initial=True)
     project_id = forms.IntegerField(widget=forms.HiddenInput(),required=False)
+    product_name = forms.CharField(label='Product name',widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
+    product_type = forms.CharField(label='Product type',widget=forms.Select(choices=type_choices,attrs={'class':'form-control mb-4'}),max_length=100)
+    product_industry = forms.CharField(widget=forms.Select(choices=industry_choices,attrs={'class':'form-control mb-4'}))
 
 
 
 class CreateForm2(forms.Form):
+    lang_choices = [('En','English'),('Pt','Portugese'),('Et','Estonian')]
+    CHOICES = [(1,'Yes'),(0,'No')]
 
-    start_date = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control','type':'date'}))
-    end_date = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control','type':'date'}))
-    name_of_survey = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}),max_length=100)
-    product_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}),max_length=100)
-    product_type = forms.CharField(widget=forms.Select(choices=type_choices,attrs={'class':'form-control'}),max_length=100)
-    product_industry = forms.CharField(widget=forms.Select(choices=industry_choices,attrs={'class':'form-control'}))
+    ## survey-1 Project is successfully updated 
+    name_of_survey1 = forms.CharField(label="Survey name",widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
+    questionnaire_language1=forms.CharField(label="Survey language", widget=forms.Select(choices=lang_choices,attrs={'class':'form-control  mb-4'}))
+    start_date1 = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control  mb-4','type':'date'}))
+    end_date1 = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control  mb-4','type':'date'}))
+    survey_owner1=forms.CharField(label="Survey owner full name", widget=forms.TextInput(attrs={'class':'form-control  mb-4'}))
+    survey_owner_email1=forms.CharField(label="Survey owner email", widget=forms.EmailInput(attrs={'class':'form-control  mb-4'}))
+
+    # Survey group front page
+    title1 = forms.CharField(initial="Assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
+    #subtitle1 = forms.CharField(initial="Welcome to the assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
+    paragraph1 = forms.CharField(required=False,widget=RichTextWidget(),help_text=mark_safe('You can use following variables to use in title, subtitle and paragraph: <br/>{PROJECT_NAME} - Name of project <br/> {PRODUCT_NAME} - Name of product<br/> {SURVEY_NAME} - Name of survey <br/> {TODAY} - for today date.'))
+
+
+    # survey-2
+    name_of_survey2 = forms.CharField(label="Survey name",widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
+    questionnaire_language2=forms.CharField(label="Survey language", widget=forms.Select(choices=lang_choices,attrs={'class':'form-control  mb-4'}))
+    start_date2 = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control  mb-4','type':'date'}))
+    end_date2 = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control  mb-4','type':'date'}))
+    survey_owner2=forms.CharField(label="Survey owner full name", widget=forms.TextInput(attrs={'class':'form-control  mb-4'}))
+    survey_owner_email2=forms.CharField(label="Survey owner email", widget=forms.EmailInput(attrs={'class':'form-control  mb-4'}))
+
+    # Survey group front page
+    title2 = forms.CharField(initial="Assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
+    #subtitle2 = forms.CharField(initial="Welcome to the assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
+    paragraph2 = forms.CharField(required=False,widget=RichTextWidget(),help_text=mark_safe('You can use following variables to use in title, subtitle and paragraph: <br/>{PROJECT_NAME} - Name of project <br/> {PRODUCT_NAME} - Name of product<br/> {SURVEY_NAME} - Name of survey <br/> {TODAY} - for today date.'))
+
+
+    ## survey-3
+    name_of_survey3 = forms.CharField(label="Survey name",widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
+    questionnaire_language3=forms.CharField(label="Survey language", widget=forms.Select(choices=lang_choices,attrs={'class':'form-control  mb-4'}))
+    start_date3 = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control  mb-4','type':'date'}))
+    end_date3 = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control  mb-4','type':'date'}))
+    survey_owner3=forms.CharField(label="Survey owner full name", widget=forms.TextInput(attrs={'class':'form-control  mb-4'}))
+    survey_owner_email3=forms.CharField(label="Survey owner email", widget=forms.EmailInput(attrs={'class':'form-control  mb-4'}))
+
+    # Survey group front page
+    title3 = forms.CharField(initial="Assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
+    #subtitle3 = forms.CharField(initial="Welcome to the assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
+    paragraph3 = forms.CharField(required=False,widget=RichTextWidget(),help_text=mark_safe('You can use following variables to use in title, subtitle and paragraph: <br/>{PROJECT_NAME} - Name of project <br/> {PRODUCT_NAME} - Name of product<br/> {SURVEY_NAME} - Name of survey <br/> {TODAY} - for today date.'))
+
+
+    ## survey-4
+    name_of_survey4 = forms.CharField(label="Survey name",widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
+    questionnaire_language4=forms.CharField(label="Survey language", widget=forms.Select(choices=lang_choices,attrs={'class':'form-control  mb-4'}))
+    start_date4 = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control  mb-4','type':'date'}))
+    end_date4 = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control  mb-4','type':'date'}))
+    survey_owner4=forms.CharField(label="Survey owner full name", widget=forms.TextInput(attrs={'class':'form-control  mb-4'}))
+    survey_owner_email4=forms.CharField(label="Survey owner email", widget=forms.EmailInput(attrs={'class':'form-control  mb-4'}))
+
+    # Survey group front page
+    title4 = forms.CharField(initial="Assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
+    #subtitle4 = forms.CharField(initial="Welcome to the assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
+    paragraph4 = forms.CharField(required=False,widget=RichTextWidget(),help_text=mark_safe('You can use following variables to use in title, subtitle and paragraph: <br/>{PROJECT_NAME} - Name of project <br/> {PRODUCT_NAME} - Name of product<br/> {SURVEY_NAME} - Name of survey <br/> {TODAY} - for today date.'))
+
+
+    ## survey-5
+    name_of_survey5 = forms.CharField(label="Survey name",widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
+    questionnaire_language5=forms.CharField(label="Survey language", widget=forms.Select(choices=lang_choices,attrs={'class':'form-control  mb-4'}))
+    start_date5 = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control  mb-4','type':'date'}))
+    end_date5 = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control  mb-4','type':'date'}))
+    survey_owner5=forms.CharField(label="Survey owner full name", widget=forms.TextInput(attrs={'class':'form-control  mb-4'}))
+    survey_owner_email5=forms.CharField(label="Survey owner email", widget=forms.EmailInput(attrs={'class':'form-control  mb-4'}))
+
+    # Survey group front page
+    title5 = forms.CharField(label="Title",initial="Assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
+    #subtitle5 = forms.CharField(initial="Welcome to the assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
+    paragraph5 = forms.CharField(label="Paragraph",required=False,widget=RichTextWidget(),help_text=mark_safe('You can use following variables to use in title, subtitle and paragraph: <br/>{PROJECT_NAME} - Name of project <br/> {PRODUCT_NAME} - Name of product<br/> {SURVEY_NAME} - Name of survey <br/> {TODAY} - for today date.'))
+
+
+
+    # Additional questions for collecting anonymous data about participants
+    #age = forms.BooleanField(widget=DjangoToggleSwitchWidget(klass="django-toggle-switch-dark-success ml-2  mb-4"),required=False)
+    #gender= forms.BooleanField(widget=DjangoToggleSwitchWidget(klass="django-toggle-switch-dark-success ml-2  mb-4"),required=False)
+    #nationality = forms.BooleanField(widget=DjangoToggleSwitchWidget(klass="django-toggle-switch-dark-success ml-2  mb-4"),required=False)
+    #education = forms.BooleanField(widget=DjangoToggleSwitchWidget(klass="django-toggle-switch-dark-success ml-2  mb-4"),required=False)
+
+
+    #product_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}),max_length=100)
+    #product_type = forms.CharField(widget=forms.Select(choices=type_choices,attrs={'class':'form-control'}),max_length=100)
+    #product_industry = forms.CharField(widget=forms.Select(choices=industry_choices,attrs={'class':'form-control'}))
 
     def clean_start_date(self):
         start_date = self.cleaned_data['start_date']
@@ -82,6 +160,11 @@ class CreateForm2(forms.Form):
 class CreateForm3(forms.Form):
     CHOICES = [('A','anonymous participation')]
     type_of_participation=forms.CharField( widget=forms.Select(choices=CHOICES,attrs={'class':'form-control'}))
+    # Additional questions for collecting anonymous data about participants
+    age = forms.BooleanField(widget=DjangoToggleSwitchWidget(klass="django-toggle-switch-dark-success ml-2  mb-4"),required=False)
+    gender= forms.BooleanField(widget=DjangoToggleSwitchWidget(klass="django-toggle-switch-dark-success ml-2  mb-4"),required=False)
+    nationality = forms.BooleanField(widget=DjangoToggleSwitchWidget(klass="django-toggle-switch-dark-success ml-2  mb-4"),required=False)
+    education = forms.BooleanField(widget=DjangoToggleSwitchWidget(klass="django-toggle-switch-dark-success ml-2  mb-4"),required=False)
 
 
 class CreateForm4(forms.Form):

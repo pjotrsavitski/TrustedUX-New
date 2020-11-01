@@ -264,29 +264,27 @@ lang_choices = [('En','English'),('Pt','Portugese'),('Est','Estonian')]
 # Create your models here.
 class Project(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    questionnaire_type  = models.CharField(default=False,max_length=100)
     project_name = models.CharField(max_length=100)
-    test_project = models.BooleanField(max_length=100,default=False)
     project_type = models.IntegerField()
     project_status = models.BooleanField()
     archived = models.BooleanField(default=False)
     closed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    product_name = models.CharField(max_length=100)
+    product_type = models.CharField(max_length=200)
+    product_industry = models.CharField(max_length=200)
 
 
 class Survey(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     language = models.CharField(choices=lang_choices,max_length=2)
     survey_name = models.CharField(max_length=100)
-    product_name = models.CharField(max_length=200)
-    product_type = models.CharField(max_length=200)
-    product_industry = models.CharField(max_length=200)
     start_date = models.DateField()
     end_date = models.DateField()
     title = models.CharField(max_length=100)
-    subtitle = models.CharField(max_length=200)
     paragraph = models.TextField(max_length=1000)
+    owner = models.CharField(max_length=100)
+    owner_email = models.CharField(max_length=100)
 
 
 

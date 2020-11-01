@@ -21,7 +21,7 @@
   <script src="{% static 'popper.min.js' %}"></script>
   <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
   <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-
+<link rel="stylesheet" href="{% static 'assets/css/templatemo-softy-pinko.css' %}">
   <link href="{% static 'bs-step.css' %}" rel="stylesheet">
 
   <style>
@@ -35,7 +35,7 @@
     }
     .navbar {
     		color: #fff;
-    		background: #926dde;
+    		background: #0280FF;
     		padding: 5px 16px;
     		border-radius: 0;
     		border: none;
@@ -43,7 +43,7 @@
     	}
 
     	.navbar .divider {
-    		background-color: #e9ecef !important;
+    		background-color: #0280FF !important;
     	}
 </style>
 </head>
@@ -53,7 +53,7 @@
   <nav class="navbar navbar-expand-xl navbar-dark">
     <div class='container'>
 
-  		<a class="navbar-brand" href="{% url 'home'%}"><i class="fa fa-cube"></i> Trusted<b>UX</b> - eSurvey Platform</a>
+  		<a class="navbar-brand" href="{% url 'home'%}">Trusted<b>UX</b> - eSurvey Platform</a>
 
 
   	<!-- Collection of nav links, forms, and other content for toggling -->
@@ -100,12 +100,28 @@
 
 
 
-  <footer class='text-muted bg-light' style="margin-top:2rem;padding-top:1rem;padding-bottom:1rem;">
-    <div class='container text-center padding-top:.5rem;'>
-      <p> TrustedUX © TrustedUX Team </p>
-    </div>
+  <footer>
+      <div class="container">
+
+          <div class="row">
+              <div class="col-lg-10 mr-auto">
+                  <p class="copyright">Copyright &copy; 2020 TrustedUX</p>
+              </div>
+              <div class="col-lg-1 mr-auto" style="padding-right:0px;padding-left:0px;">
+                  <p class='funded'>funded <br/>by</p>
+
+
+              </div>
+              <div class="col-lg-1 mr-auto">
+                <svg width="50" height="30">
+                  <rect x="0" y="0"  rx="5" ry="5" width="50" height="30" stroke="white"  fill="white"/>
+                  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" style="font-weight:bold;">NGI</text>
+                </svg>
+              </div>
+          </div>
+
+      </div>
   </footer>
-  <!-- Bootstrap core JavaScript -->
 
 
   	<!-- ./Footer -->
