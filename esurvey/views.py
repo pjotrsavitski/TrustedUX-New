@@ -2246,10 +2246,10 @@ def filterProjects(request,filter):
             for project in projects:
                 print(datetime.now().date())
 
-                survey = Survey.objects.get(project=project)
-                print(survey.end_date)
-                if survey.end_date > datetime.now().date():
-                    project_list.add(project.id)
+                survey_set = Survey.objects.all().filter(project=project)
+                for survey in survey_set:
+                    if survey.end_date > datetime.now().date():
+                        project_list.add(project.id)
 
             projects = Project.objects.filter(pk__in = project_list)
 
