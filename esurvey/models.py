@@ -320,7 +320,7 @@ gen_choices=[("M",_("Male")),("F",_("Female"))]
 edu_choices=[(1,_("Primary")),(2,_("Secondary")),(3,_("Bachelor")),(4,_("Master")),(5,_("Doctorate"))]
 
 class AnonyData(models.Model):
-    submission = models.OneToOneField(Submission,on_delete=models.CASCADE)
+    link = models.ForeignKey(Link,on_delete=models.CASCADE)
     age = models.IntegerField(choices=age_choices,blank=True)
     gender = models.CharField(max_length=10,choices=gen_choices,blank=True)
     education = models.IntegerField(choices=edu_choices,blank=True)

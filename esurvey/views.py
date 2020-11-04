@@ -2379,12 +2379,24 @@ def generateSurvey(request,link):
     else:
         survey_url = Link.objects.get(url=link)
 
+        if (survey_url.survey.start_date > datetime.now().date()):
+            return render(request, "survey_msg.html",{'msg_title':'Not started yet','msg_body':'The survey is not started yet.'})
+
+        if (survey_url.survey.end_date < datetime.now().date()):
+            return render(request, "survey_msg.html",{'msg_title':'Expired survey','msg_body':'The survey is expired.'})
+
+
+
+
+
         if survey_url.survey.project.project_status and not survey_url.survey.project.archived:
             variables = {
                 "PROJECT_NAME":survey_url.survey.project.project_name,
-                "PRODUCT_NAME":survey_url.survey.project.product_name,
+                "PRODUCT_NAME":survey_url.survey.product_name,
                 "PRODUCT_INDUSTRY":survey_url.survey.project.product_industry,
                 "TODAY":date.today(),
+                "OWNER_NAME":survey_url.survey.owner,
+                "OWNER_EMAIL":survey_url.survey.owner_email,
             }
             print(variables)
             title = survey_url.survey.title
@@ -2434,7 +2446,7 @@ def edit(request,project_id):
     # form1 data
     form1['project_name'] = project.project_name
     form1['project_type'] = project.project_type
-    form1['product_name'] = project.product_name
+
     form1['product_type'] = project.product_type
     form1['product_industry'] = project.product_industry
     form1['new'] = False
@@ -2450,6 +2462,7 @@ def edit(request,project_id):
     form2['questionnaire_language1'] = survey[0].language
     form2['start_date1'] = survey[0].start_date
     form2['end_date1'] = survey[0].end_date
+    form2['product_name1'] = survey[0].product_name
     form2['survey_owner1'] = survey[0].owner
     form2['survey_owner_email1'] = survey[0].owner_email
     form2['title1'] = survey[0].title
@@ -2460,6 +2473,7 @@ def edit(request,project_id):
         form2['questionnaire_language2'] = survey[1].language
         form2['start_date2'] = survey[1].start_date
         form2['end_date2'] = survey[1].end_date
+        form2['product_name2'] = survey[1].product_name
         form2['survey_owner2'] = survey[1].owner
         form2['survey_owner_email2'] = survey[1].owner_email
         form2['title2'] = survey[1].title
@@ -2469,6 +2483,7 @@ def edit(request,project_id):
         form2['questionnaire_language3'] = survey[2].language
         form2['start_date3'] = survey[2].start_date
         form2['end_date3'] = survey[2].end_date
+        form2['product_name3'] = survey[2].product_name
         form2['survey_owner3'] = survey[2].owner
         form2['survey_owner_email3'] = survey[2].owner_email
         form2['title3'] = survey[2].title
@@ -2478,6 +2493,7 @@ def edit(request,project_id):
         form2['questionnaire_language4'] = survey[3].language
         form2['start_date4'] = survey[3].start_date
         form2['end_date4'] = survey[3].end_date
+        form2['product_name4'] = survey[3].product_name
         form2['survey_owner4'] = survey[3].owner
         form2['survey_owner_email4'] = survey[3].owner_email
         form2['title4'] = survey[3].title
@@ -2487,6 +2503,7 @@ def edit(request,project_id):
         form2['questionnaire_language5'] = survey[4].language
         form2['start_date5'] = survey[4].start_date
         form2['end_date5'] = survey[4].end_date
+        form2['product_name5'] = survey[4].product_name
         form2['survey_owner5'] = survey[4].owner
         form2['survey_owner_email5'] = survey[4].owner_email
         form2['title5'] = survey[4].title
@@ -2500,10 +2517,10 @@ def edit(request,project_id):
 
 
     #form5
-    form3['age'] = anony_setting.age
-    form3['gender'] = anony_setting.gender
-    form3['nationality'] =anony_setting.nationality
-    form3['education'] =anony_setting.education
+    form2['age'] = anony_setting.age
+    form2['gender'] = anony_setting.gender
+    form2['nationality'] =anony_setting.nationality
+    form2['education'] =anony_setting.education
 
     #last form
     lastform['project_status'] = project.project_status
@@ -2697,7 +2714,7 @@ class CompleteSubmissionForm(SessionWizardView):
         context = super().get_context_data(form=form, **kwargs)
         link_obj = Link.objects.get(url=self.kwargs['link'])
         survey_name = link_obj.survey.survey_name
-        product = link_obj.survey.project.product_name
+        product = link_obj.survey.product_name
         project = link_obj.survey.project
 
         language = link_obj.survey.language
@@ -2751,6 +2768,6 @@ class CompleteSubmissionForm(SessionWizardView):
 
 
 
-        anony_data = AnonyData.objects.create(submission=submission,age=age,gender=gender,education=education,nationality=nationality)
+        anony_data = AnonyData.objects.create(link=link_obj,age=age,gender=gender,education=education,nationality=nationality)
 
         return render(self.request,'survey_msg.html',{'msg_title':_('Successful Submission'),'msg_body':_('Your submissions are successfully saved. Thank you for your time.'),'lang':lang})

@@ -1,4 +1,17 @@
+function copyToClipboard(){
+  console.log('event triggered');
+
+}
+
 $(document).ready(function(){
+
+  var cp = new ClipboardJS('.btn-copy');
+
+  $('.btn-copy').mouseleave(function(){
+    $(this).tooltip('hide');
+  });
+
+
   $("#id_editq-questionnaire_language").on('change', function(){
     var lang = $(this).val()
 
