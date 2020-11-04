@@ -2614,7 +2614,7 @@ class CompleteForm(SessionWizardView):
         if all_data['new']:
             print('New project')
             current_user = self.request.user
-            project = Project.objects.create(user=current_user,project_name=all_data['project_name'],project_type=all_data['project_type'],project_status=all_data['project_status'],product_name=all_data['product_name'],product_type=all_data['product_type'],product_industry=all_data['product_industry'])
+            project = Project.objects.create(user=current_user,project_name=all_data['project_name'],project_type=all_data['project_type'],project_status=all_data['project_status'],product_type=all_data['product_type'],product_industry=all_data['product_industry'])
             type = int(all_data['project_type'])
 
             for k in range(type):
@@ -2627,8 +2627,9 @@ class CompleteForm(SessionWizardView):
                 s_paragraph_key = 'paragraph' + str(k)
                 s_owner_key = 'survey_owner' + str(k)
                 s_owner_email_key = 'survey_owner_email' + str(k)
+                s_product_name_key = 'product_name' + str(k)
 
-                survey = Survey.objects.create(project=project,survey_name = all_data[s_name_key],start_date=all_data[s_start_key],end_date=all_data[s_end_key],title=all_data[s_title_key],paragraph=all_data[s_paragraph_key],owner=all_data[s_owner_key],owner_email=all_data[s_owner_email_key],language=all_data[s_lang_key])
+                survey = Survey.objects.create(project=project,product_name=all_data[s_product_name_key],survey_name = all_data[s_name_key],start_date=all_data[s_start_key],end_date=all_data[s_end_key],title=all_data[s_title_key],paragraph=all_data[s_paragraph_key],owner=all_data[s_owner_key],owner_email=all_data[s_owner_email_key],language=all_data[s_lang_key])
 
                 survey_url = Link.objects.create(survey=survey,sequence=k)
 
@@ -2671,8 +2672,9 @@ class CompleteForm(SessionWizardView):
                 s_paragraph_key = 'paragraph' + str(k)
                 s_owner_key = 'survey_owner' + str(k)
                 s_owner_email_key = 'survey_owner_email' + str(k)
+                s_product_name_key = 'product_name' + str(k)
 
-                survey = Survey.objects.create(project=project,survey_name = all_data[s_name_key],start_date=all_data[s_start_key],end_date=all_data[s_end_key],title=all_data[s_title_key],paragraph=all_data[s_paragraph_key],owner=all_data[s_owner_key],owner_email=all_data[s_owner_email_key],language=all_data[s_lang_key])
+                survey = Survey.objects.create(project=project,product_name=all_data[s_product_name_key],survey_name = all_data[s_name_key],start_date=all_data[s_start_key],end_date=all_data[s_end_key],title=all_data[s_title_key],paragraph=all_data[s_paragraph_key],owner=all_data[s_owner_key],owner_email=all_data[s_owner_email_key],language=all_data[s_lang_key])
 
                 survey_url = Link.objects.create(survey=survey,sequence=k)
 

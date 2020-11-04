@@ -9,6 +9,48 @@
 
 {% block content %}
 <br/>
+<style>
+  .tab-content {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    border-radius: 2px;
+}
+
+.nav-tabs {
+    margin-bottom: 0;
+}
+.django-toggle-switch-success input:checked + .django-toggle-switch-slider, input:checked + .django-toggle-switch-slider {
+    background-color: #06ad3d;
+    boarder-radius: 25px;
+}
+.django-toggle-switch-slider::before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 10px;
+}
+.django-toggle-switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 25px;
+}
+
+</style>
 
 <form action="" method="post">{% csrf_token %}
 
@@ -50,13 +92,36 @@
 <br/>
 
 <div class='row'>
- <div class='col col-lg-6 col-md-6'>
+ <div class='col col-lg-8 col-md-8'>
 {% if wizard.form.forms %}
     {{ wizard.form.management_form }}
     {% for form in wizard.form.forms %}
     {% endfor %}
 
 {% else %}
+<div class='row p-1'>General questions for collecting anonymous data about participants <span><i style='color:#007bff;' class='fa fa-info-circle ml-2'  data-toggle='modal' data-placement='top' data-target="#anony_setting"></i></span></div><br/><br/>
+<div class='row small p-1'><div style="padding-left:10px"  class='col col-lg-2 col-md-2'>{{form.age.label}}{{form.age}}</div><div class='col col-lg-3 col-md-3'>{{form.gender.label}}{{form.gender}}</div><div  class='col col-lg-3 col-md-3'>{{form.education.label}}{{form.education}}</div><div class='col col-lg-3 col-md-3'>{{form.nationality.label}}{{form.nationality}}</div></div>
+
+<div class="modal fade" id="anony_setting" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header border-bottom-0">
+        <h5 class="modal-title" id="exampleModalLabel"><span><i style='color:#007bff;' class='fa fa-info-circle mr-2'></i></span>Additional data</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class='modal-body'>
+        Select additional data you want to collect from survey participants.
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
 
 <nav>
 <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
@@ -79,7 +144,7 @@
 
 </nav>
 <div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
-  <div class="tab-pane fade show active" id="nav-s1" role="tabpanel" aria-labelledby="nav-s1-tab">
+  <div class="tab-pane fade show active p-5" id="nav-s1" role="tabpanel" aria-labelledby="nav-s1-tab">
 
 
       <!-- Form start -->
@@ -87,6 +152,7 @@
       <div class='row'>  {{form.questionnaire_language1.label}}{{form.questionnaire_language1}}</div>
 
       <div class='row'><div style="padding-left:0px" class='col col-lg-6 col-md-6'>{{form.start_date1.label}}{{form.start_date1}}</div><div style="padding-right:0px" class='col col-lg-6 col-md-6'>{{form.end_date1.label}}{{form.end_date1}}</div></div>
+      <div class='row'>{{form.product_name1.label}}{{form.product_name1}}</div>
       <br/>
       <b> Contact information </b><span><i style='color:#007bff;' class='fa fa-info-circle ml-2'  data-toggle='modal' data-placement='top' data-target="#contact_info"></i></span>
       <div class="modal fade" id="contact_info" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -141,60 +207,23 @@
       <!--Form end -->
   </div>
 
-  <div class="tab-pane fade show " id="nav-s2" role="tabpanel" aria-labelledby="nav-s2-tab">
+  <div class="tab-pane fade show p-5 " id="nav-s2" role="tabpanel" aria-labelledby="nav-s2-tab">
 
 
       <!-- Form start -->
       <div class='row'>{{form.name_of_survey2.label}}{{form.name_of_survey2}}</div>
       <div class='row'>  {{form.questionnaire_language2.label}}{{form.questionnaire_language2}}</div>
-
+        <div class='row'>{{form.product_name2.label}}{{form.product_name2}}</div>
       <div class='row'><div style="padding-left:0px" class='col col-lg-6 col-md-6'>{{form.start_date2.label}}{{form.start_date2}}</div><div style="padding-right:0px" class='col col-lg-6 col-md-6'>{{form.end_date2.label}}{{form.end_date2}}</div></div>
       <br/>
-      <b> Contact information </b><span><i style='color:#007bff;' class='fa fa-info-circle ml-2'  data-toggle='modal' data-placement='top' data-target="#contact_info"></i></span>
-      <div class="modal fade" id="contact_info" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header border-bottom-0">
-              <h5 class="modal-title" id="exampleModalLabel"><span><i style='color:#007bff;' class='fa fa-info-circle mr-2'></i></span>Contact info</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class='modal-body'>
-              Tell participants who you are. Provide participants  with the contact information in case if they have additional questions.
-            </div>
+      <b> Contact information </b>
 
-          </div>
-        </div>
-      </div>
       <br/>
         <div class='row'>  {{form.survey_owner2.label}}{{form.survey_owner2}}</div>
       <div class='row'>  {{form.survey_owner_email2.label}}{{form.survey_owner_email2}}</div>
       <b> Survey front page setup</b><br/><br/>
       <div class='row'>{{form.title2.label}}{{form.title2}}</div>
-      <div class='row'>  {{form.paragraph2.label}} (Provide a context for the survey)<span><i style='color:#007bff;' class='fa fa-info-circle ml-2'  data-toggle='modal' data-placement='top' data-target="#para"></i></span>
-        <div class="modal fade" id="para" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="modal-header border-bottom-0">
-                <h5 class="modal-title" id="exampleModalLabel"><span><i style='color:#007bff;' class='fa fa-info-circle mr-2'></i></span>Paragraph</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class='modal-body'>
-                Providing context for your survey. You can add video, picture and write a text to explain how evaluated product works.
-                <br/><br/>
-                You can use following variables in the text <br/><br/>
-                {PROJECT_NAME}: Name of project <br/>
-                {PRODCUT_NAME}: Name of product <br/>
-                {TODAY}: Today's date <br/>
-
-              </div>
-
-            </div>
-          </div>
-        </div>
+      <div class='row'>  {{form.paragraph2.label}} (Provide a context for the survey)
           <br/><br/>
 
          {{form.paragraph2}}</div>
@@ -203,7 +232,7 @@
       <!--Form end -->
   </div>
 
-  <div class="tab-pane fade show" id="nav-s3" role="tabpanel" aria-labelledby="nav-s3-tab">
+  <div class="tab-pane fade show p-5" id="nav-s3" role="tabpanel" aria-labelledby="nav-s3-tab">
 
 
       <!-- Form start -->
@@ -211,52 +240,18 @@
       <div class='row'>  {{form.questionnaire_language3.label}}{{form.questionnaire_language3}}</div>
 
       <div class='row'><div style="padding-left:0px" class='col col-lg-6 col-md-6'>{{form.start_date3.label}}{{form.start_date3}}</div><div style="padding-right:0px" class='col col-lg-6 col-md-6'>{{form.end_date3.label}}{{form.end_date3}}</div></div>
-      <br/>
-      <b> Contact information </b><span><i style='color:#007bff;' class='fa fa-info-circle ml-2'  data-toggle='modal' data-placement='top' data-target="#contact_info"></i></span>
-      <div class="modal fade" id="contact_info" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header border-bottom-0">
-              <h5 class="modal-title" id="exampleModalLabel"><span><i style='color:#007bff;' class='fa fa-info-circle mr-2'></i></span>Contact info</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class='modal-body'>
-              Tell participants who you are. Provide participants  with the contact information in case if they have additional questions.
-            </div>
+        <div class='row'>{{form.product_name3.label}}{{form.product_name3}}</div>
 
-          </div>
-        </div>
-      </div>
+      <br/>
+      <b> Contact information </b>
+
       <br/>
         <div class='row'>  {{form.survey_owner3.label}}{{form.survey_owner3}}</div>
       <div class='row'>  {{form.survey_owner_email3.label}}{{form.survey_owner_email3}}</div>
       <b> Survey front page setup</b><br/><br/>
       <div class='row'>{{form.title3.label}}{{form.title3}}</div>
-      <div class='row'>  {{form.paragraph3.label}} (Provide a context for the survey)<span><i style='color:#007bff;' class='fa fa-info-circle ml-2'  data-toggle='modal' data-placement='top' data-target="#para"></i></span>
-        <div class="modal fade" id="para" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="modal-header border-bottom-0">
-                <h5 class="modal-title" id="exampleModalLabel"><span><i style='color:#007bff;' class='fa fa-info-circle mr-2'></i></span>Paragraph</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class='modal-body'>
-                Providing context for your survey. You can add video, picture and write a text to explain how evaluated product works.
-                <br/><br/>
-                You can use following variables in the text <br/><br/>
-                {PROJECT_NAME}: Name of project <br/>
-                {PRODCUT_NAME}: Name of product <br/>
-                {TODAY}: Today's date <br/>
+      <div class='row'>  {{form.paragraph3.label}} (Provide a context for the survey)
 
-              </div>
-
-            </div>
-          </div>
-        </div>
           <br/><br/>
 
          {{form.paragraph3}}</div>
@@ -265,7 +260,7 @@
       <!--Form end -->
   </div>
 
-  <div class="tab-pane fade show " id="nav-s4" role="tabpanel" aria-labelledby="nav-s4-tab">
+  <div class="tab-pane fade show p-5" id="nav-s4" role="tabpanel" aria-labelledby="nav-s4-tab">
 
 
       <!-- Form start -->
@@ -273,52 +268,17 @@
       <div class='row'>  {{form.questionnaire_language4.label}}{{form.questionnaire_language4}}</div>
 
       <div class='row'><div style="padding-left:0px" class='col col-lg-6 col-md-6'>{{form.start_date4.label}}{{form.start_date4}}</div><div style="padding-right:0px" class='col col-lg-6 col-md-6'>{{form.end_date4.label}}{{form.end_date4}}</div></div>
+        <div class='row'>{{form.product_name4.label}}{{form.product_name4}}</div>
       <br/>
-      <b> Contact information </b><span><i style='color:#007bff;' class='fa fa-info-circle ml-2'  data-toggle='modal' data-placement='top' data-target="#contact_info"></i></span>
-      <div class="modal fade" id="contact_info" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header border-bottom-0">
-              <h5 class="modal-title" id="exampleModalLabel"><span><i style='color:#007bff;' class='fa fa-info-circle mr-2'></i></span>Contact info</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class='modal-body'>
-              Tell participants who you are. Provide participants  with the contact information in case if they have additional questions.
-            </div>
+      <b> Contact information </b>
 
-          </div>
-        </div>
-      </div>
       <br/>
         <div class='row'>  {{form.survey_owner4.label}}{{form.survey_owner4}}</div>
       <div class='row'>  {{form.survey_owner_email4.label}}{{form.survey_owner_email4}}</div>
       <b> Survey front page setup</b><br/><br/>
       <div class='row'>{{form.title4.label}}{{form.title4}}</div>
-      <div class='row'>  {{form.paragraph4.label}} (Provide a context for the survey)<span><i style='color:#007bff;' class='fa fa-info-circle ml-2'  data-toggle='modal' data-placement='top' data-target="#para"></i></span>
-        <div class="modal fade" id="para" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="modal-header border-bottom-0">
-                <h5 class="modal-title" id="exampleModalLabel"><span><i style='color:#007bff;' class='fa fa-info-circle mr-2'></i></span>Paragraph</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class='modal-body'>
-                Providing context for your survey. You can add video, picture and write a text to explain how evaluated product works.
-                <br/><br/>
-                You can use following variables in the text <br/><br/>
-                {PROJECT_NAME}: Name of project <br/>
-                {PRODCUT_NAME}: Name of product <br/>
-                {TODAY}: Today's date <br/>
+      <div class='row'>  {{form.paragraph4.label}} (Provide a context for the survey)
 
-              </div>
-
-            </div>
-          </div>
-        </div>
           <br/><br/>
 
          {{form.paragraph4}}</div>
@@ -335,52 +295,15 @@
       <div class='row'>  {{form.questionnaire_language5.label}}{{form.questionnaire_language5}}</div>
 
       <div class='row'><div style="padding-left:0px" class='col col-lg-6 col-md-6'>{{form.start_date5.label}}{{form.start_date5}}</div><div style="padding-right:0px" class='col col-lg-6 col-md-6'>{{form.end_date5.label}}{{form.end_date5}}</div></div>
+        <div class='row'>{{form.product_name5.label}}{{form.product_name5}}</div>
       <br/>
-      <b> Contact information </b><span><i style='color:#007bff;' class='fa fa-info-circle ml-2'  data-toggle='modal' data-placement='top' data-target="#contact_info"></i></span>
-      <div class="modal fade" id="contact_info" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header border-bottom-0">
-              <h5 class="modal-title" id="exampleModalLabel"><span><i style='color:#007bff;' class='fa fa-info-circle mr-2'></i></span>Contact info</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class='modal-body'>
-              Tell participants who you are. Provide participants  with the contact information in case if they have additional questions.
-            </div>
-
-          </div>
-        </div>
-      </div>
+      <b> Contact information </b>
       <br/>
         <div class='row'>  {{form.survey_owner5.label}}{{form.survey_owner5}}</div>
       <div class='row'>  {{form.survey_owner_email5.label}}{{form.survey_owner_email5}}</div>
       <b> Survey front page setup</b><br/><br/>
       <div class='row'>{{form.title5.label}}{{form.title5}}</div>
-      <div class='row'>  {{form.paragraph5.label}} (Provide a context for the survey)<span><i style='color:#007bff;' class='fa fa-info-circle ml-2'  data-toggle='modal' data-placement='top' data-target="#para"></i></span>
-        <div class="modal fade" id="para" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-              <div class="modal-header border-bottom-0">
-                <h5 class="modal-title" id="exampleModalLabel"><span><i style='color:#007bff;' class='fa fa-info-circle mr-2'></i></span>Paragraph</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class='modal-body'>
-                Providing context for your survey. You can add video, picture and write a text to explain how evaluated product works.
-                <br/><br/>
-                You can use following variables in the text <br/><br/>
-                {PROJECT_NAME}: Name of project <br/>
-                {PRODCUT_NAME}: Name of product <br/>
-                {TODAY}: Today's date <br/>
-
-              </div>
-
-            </div>
-          </div>
-        </div>
+      <div class='row'>  {{form.paragraph5.label}} (Provide a context for the survey)
           <br/><br/>
 
          {{form.paragraph5}}</div>
@@ -397,12 +320,13 @@
 
 </div>
 <br/><br/>
+<a class='mr-2'  href="{% url 'project_home'%}">{% trans "Cancel" %} </a>
 {% if wizard.steps.prev %}
 
-<button class='btn btn-warning' formnovalidate="formnovalidate" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" >{% trans "Back" %}</button>
+<button class="btn btn-outline-primary" formnovalidate="formnovalidate" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" >{% trans "Back" %}</button>
 {% endif %}
-<input type="submit" class='btn btn-success'  value="{% trans "Continue" %}" />
-<a class='btn btn-danger'  href="{% url 'project_home'%}">{% trans "Cancel" %} </a>
+<input type="submit" class='btn btn-primary'  value="{% trans "Continue" %}" />
+
 </form>
 
 </div>
@@ -424,6 +348,7 @@
           $("#id_survey-questionnaire_language"+i).val("En");
           $("#id_survey-start_date"+i).val(today);
           $("#id_survey-end_date"+i).val(tomorrow);
+          $("#id_survey-product_name"+i).val('dd');
           $("#id_survey-survey_owner"+i).val('demo');
           $("#id_survey-survey_owner_email"+i).val('c@gmail.com');
           $("#id_survey-title"+i).val("demo");

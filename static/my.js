@@ -15,7 +15,7 @@ $(document).ready(function(){
    } else {
      $("#id_editq-title").val('Assessment of {PRODUCT_NAME}');
      $("#id_editq-subtitle").val('Welcome to the assessment of {PRODUCT_NAME}');
-     $("#id_editq-paragraph").val('With your help, we would like to examine how users perceive the usability and aesthetics of {PRODUCT_NAME}. We hope to identify areas for optimization. This will enable us to optimize the product in such a way that it is as efficient and comprehensible as possible.');
+     $("#id_editq-paragraph").val('Welcome to the assessment of {PRODUCT_NAME}! \n Thank you for taking time to participate in this stdy. My name is {OWNER_NAME}. Through this survey, I would like to undertsand how likely you are to trust {PRODUCT_NAME}. I would be very grateful if you complete this survey. This survey is anonymous. The record of your survey responses does not contain any identifying information about you. \n It will require approximately 10 minutes of your time. In case you have any questions, you can contact me via email {OWNER_EMAIL}');
 
    }
 

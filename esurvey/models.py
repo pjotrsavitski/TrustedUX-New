@@ -270,7 +270,7 @@ class Project(models.Model):
     archived = models.BooleanField(default=False)
     closed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    product_name = models.CharField(max_length=100)
+
     product_type = models.CharField(max_length=200)
     product_industry = models.CharField(max_length=200)
 
@@ -280,6 +280,7 @@ class Survey(models.Model):
     language = models.CharField(choices=lang_choices,max_length=2)
     survey_name = models.CharField(max_length=100)
     start_date = models.DateField()
+    product_name = models.CharField(max_length=100)
     end_date = models.DateField()
     title = models.CharField(max_length=100)
     paragraph = models.TextField(max_length=1000)

@@ -61,7 +61,7 @@
 
   <div class='row'>{{form.project_name.label}}{{form.project_name}}</div>
   <div class='row'>  {{form.project_type.label}}<span><i style='color:#007bff;' class='fa fa-info-circle ml-2'  data-toggle='modal' data-placement='top' data-target="#study_type"></i></span>{{form.project_type}}</div>
-  <div class='row'>{{form.product_name.label}}{{form.product_name}}</div>
+
   <div class='row'>{{form.product_type.label}}{{form.product_type}}</div>
   <div class='row'>  {{form.product_industry.label}}{{form.product_industry}}</div>
 
@@ -95,12 +95,13 @@
   </div>
 </div>
 <br/><br/>
+<a class='mr-2'  href="{% url 'project_home'%}">{% trans "Cancel" %} </a>
 {% if wizard.steps.prev %}
 
-<button class='btn btn-warning' formnovalidate="formnovalidate" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" >{% trans "Back" %}</button>
+<button class="btn btn-outline-primary" formnovalidate="formnovalidate" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" >{% trans "Back" %}</button>
 {% endif %}
-<input type="submit" class='btn btn-success'  value="{% trans "Continue" %}" />
-<a class='btn btn-danger'  href="{% url 'project_home'%}">{% trans "Cancel" %} </a>
+<input type="submit" class='btn btn-primary'  value="{% trans "Continue" %}" />
+
 </form>
 
 </div>

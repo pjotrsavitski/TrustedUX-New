@@ -59,25 +59,25 @@
 
 {% else %}
 
-  <div class='row'>{{form.type_of_participation.label}}{{form.type_of_participation}}</div> <br/><br/>
-  <b> Additional questions for collecting anonymous data about participants <span><i style='color:#007bff;' class='fa fa-info-circle ml-2'  data-toggle='modal' data-placement='top' data-target="#anony_setting"></i></span></b><br/><br/>
-  <div class='row'><div style="padding-left:0px"  class='col col-lg-2 col-md-2'>{{form.age.label}}{{form.age}}</div><div class='col col-lg-3 col-md-3'>{{form.gender.label}}{{form.gender}}</div><div  class='col col-lg-3 col-md-3'>{{form.education.label}}{{form.education}}</div><div class='col col-lg-3 col-md-3'>{{form.nationality.label}}{{form.nationality}}</div></div>
+  <div class='row'>Invite participants <span><i style='color:#007bff;' class='fa fa-info-circle ml-2'  data-toggle='modal' data-placement='top' data-target="#invite"></i></span>
+{{form.type_of_participation}}</div> <br/><br/>
 
 
 {% endif %}
  </div>
   <div class='col'>
-    <div class="modal fade" id="anony_setting" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="invite" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header border-bottom-0">
-            <h5 class="modal-title" id="exampleModalLabel"><span><i style='color:#007bff;' class='fa fa-info-circle mr-2'></i></span>Additional data</h5>
+            <h5 class="modal-title" id="exampleModalLabel"><span><i style='color:#007bff;' class='fa fa-info-circle mr-2'></i></span>Invite participants</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class='modal-body'>
-            Select additional data you want to collect from survey participants.
+            <b> Share link </b><br/>
+            Invite participants manually using a link. System provides you a link for each survey. So you can share link manually when you want.
           </div>
 
         </div>
@@ -86,12 +86,15 @@
   </div>
 </div>
 <br/><br/>
+
+
+<a class='mr-2'  href="{% url 'project_home'%}">{% trans "Cancel" %} </a>
 {% if wizard.steps.prev %}
 
-<button class='btn btn-warning' formnovalidate="formnovalidate" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" >{% trans "Back" %}</button>
+<button class="btn btn-outline-primary" formnovalidate="formnovalidate" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" >{% trans "Back" %}</button>
 {% endif %}
-<input type="submit" class='btn btn-success'  value="{% trans "Continue" %}" />
-<a class='btn btn-danger'  href="{% url 'project_home'%}">{% trans "Cancel" %} </a>
+<input type="submit" class='btn btn-primary'  value="{% trans "Continue" %}" />
+
 </form>
 
 </div>

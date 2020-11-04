@@ -58,7 +58,8 @@
   <div class="card-body">
     <h4> General Information </h4>
     <p class="card-text pt-2"><b>Project name:</b> {{all_data.project_name}}</p>
-    <p class="card-text pt-2"><b>Study type:</b> {{all_data.project_type}}</p>
+    <p class="card-text pt-2"><b>Prpject type:</b> {% if project.project_type == 1 %} Individual {% endif %}{% if project.project_type == 2 %} Comparision A and B {% endif %}{% if project.project_type == 3 %} Comparision A, B and C {% endif %}{% if project.project_type == 4 %} Comparision A, B, C and D {% endif %}{% if project.project_type == 5 %} Comparision A, B, C, D and E {% endif %}</p>
+
     <p class="card-text pt-2"><b>Product:</b> {{all_data.product_type}}</p>
     <p class="card-text pt-2"><b>Industry:</b> {{all_data.product_industry}}</p>
 
@@ -119,49 +120,42 @@
     <p class="card-text pt-2"><span class='mr-4'><b>Start date:</b> {{all_data.start_date5}}</span><span><b>End date:</b> {{all_data.end_date5}}</span></p>
     <p class="card-text pt-2"><b>Title:</b> {{all_data.title5}}</p>
     {% endif %}
+    <br/>
+      <p class="card-text pt-2">
+        {{ wizard.management_form }}
+        {% if wizard.form.forms %}
+            {{ wizard.form.management_form }}
+            {% for form in wizard.form.forms %}
+                {% for field in form %}
+                  {{field}}
+                {%endfor%}
+            {% endfor %}
+        {% else %}
+          {% for field in form %}
+            {{field}}
+          {%endfor%}
+        {% endif %}
+      </p>
 
 
   </div>
 </div> <br/>
 
-<div class="card">
-  <div class="card-header">
-    Activate Project
-  </div>
-  <div class="card-body">
-    {{ wizard.management_form }}
-    {% if wizard.form.forms %}
-        {{ wizard.form.management_form }}
-        {% for form in wizard.form.forms %}
-            {% for field in form %}
-              {{field}}
-            {%endfor%}
-        {% endfor %}
-    {% else %}
-      {% for field in form %}
-        {{field}}
-      {%endfor%}
-    {% endif %}
-
-  </div>
-</div> <br/>
+ <br/>
 
 
 
 <br/>
 
 
+<br/><br/>
+<a class='mr-2'  href="{% url 'project_home'%}">{% trans "Cancel" %} </a>
 {% if wizard.steps.prev %}
-<button class='btn btn-warning' formnovalidate="formnovalidate" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" >{% trans "Back" %}</button>
 
+<button class="btn btn-outline-primary" formnovalidate="formnovalidate" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" >{% trans "Back" %}</button>
 {% endif %}
-{% if wizard.steps.step1 == 4 %}
-<input class='btn btn-success' type="submit" value="Create"  />
-{% else %}
-<input class='btn btn-success' type="submit" value="Continue"   />
-{%endif%}
-<a class='btn btn-danger' href="{% url 'project_home'%}"   >{% trans "Cancel" %} </a>
-<br/>
+
+<input type="submit" class='btn btn-primary'  value="{% trans "Create" %}" />
 
 </form>
 

@@ -51,23 +51,22 @@
   </div>
    </div>
    <div class="card-body">
-
+     <p class='pb-2'><b>Study type: {% if project.project_type == 1 %} Individual {% endif %}{% if project.project_type == 2 %} Comparision A and B {% endif %}{% if project.project_type == 3 %} Comparision A, B and C {% endif %}{% if project.project_type == 4 %} Comparision A, B, C and D {% endif %}{% if project.project_type == 5 %} Comparision A, B, C, D and E {% endif %}</b></p>
 
      {% for survey in project.survey_set.all %}
-     <h3 class='mt-4'>Survey-{{forloop.counter}}</h3>
-     <b class='mt-2'>Start date:</b> {{survey.start_date}} <br/>
-     <b class='mt-2'>End date:</b> {{survey.end_date}} <br/>
+
+     {% for survey_url in survey.link_set.all%}
 
 
 
+     <p class='mt-2'><b >Survey-{{forloop.counter}}:</b> <a target='_blank' href="http://{{domain}}/esurvey/{{survey_url.url}}">http://{{domain}}/esurvey/{{survey_url.url}}</a><i class='fa fa-copy ml-4 small text-muted'></i> <span class='text-muted'>copy</span> </p>
 
-       {% for survey_url in survey.link_set.all%}
-       <p>
-        <b class='mt-2'>Survey-link:</b> <a target='_blank' href="http://{{domain}}/esurvey/{{survey_url.url}}">http://{{domain}}/esurvey/{{survey_url.url}}</a> <br/>
-         <b class='mt-2'>Submission:</b> {{survey_url.submission_set.all.count}} <br/>
-      </p>
-      <hr/>
-       {% endfor %}
+     <p>Duration: {{survey.start_date}} - {{survey.end_date}}</p>
+     <p>Submission: {{survey_url.submission_set.all.count}}</p> <br/>
+
+
+      {% endfor %}
+
 
 
 
