@@ -94,10 +94,12 @@ def register(request):
             subject = 'Activate Your TrustexUX Account'
             message = render_to_string('account_activation_email.html', {
                 'user': user,
-                'domain': current_site.domain,
+                'domain': 'trustedux.herokuapp.com', #current_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': t.account_activation_token.make_token(user),
                 })
+
+            print('Domain:',current_site.domain)
 
             print('base64 code uid:',urlsafe_base64_encode(force_bytes(user.pk)))
             print(t.account_activation_token.make_token(user))
@@ -134,6 +136,8 @@ def register(request):
             print('Form is not valid')
 
     else:
+        c = get_current_site(request)
+        print(c.domain)
         form = RegisterForm()
 
     return render(request, "register.html", {"form":form})
@@ -184,7 +188,7 @@ def password_reset_request(request):
                     subject = "TrustedUX Password Reset"
                     message = render_to_string('password_reset_email.html', {
                         'user': user,
-                        'domain': current_site.domain,
+                        'domain': 'trustedux.herokuapp.com', #current_site.domain,
                         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                         'token': default_token_generator.make_token(user),
                         'protocol': 'http'

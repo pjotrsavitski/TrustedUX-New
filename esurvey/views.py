@@ -2420,7 +2420,7 @@ def generateSurvey(request,link):
 def overview(request):
     projects = Project.objects.all().filter(user=request.user,archived=False).order_by('-created_at')
     current_site = get_current_site(request)
-    domain = current_site.domain
+    domain = 'trustedux.herokuapp.com' #current_site.domain
     print(current_site)
     print('domain:',domain)
 
