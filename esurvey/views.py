@@ -17,11 +17,12 @@ from .forms import contactforms
 from djqscsv import render_to_csv_response
 import urllib
 from djqscsv import render_to_csv_response
-from django.db.models import Q, Sum, Avg, FloatField, Count
+from django.db.models import Q, F, Sum, Avg, FloatField, IntegerField,  Count
 from datetime import datetime
-
+import numpy as np
+import pandas as df
 from django.utils.translation import ugettext, ugettext_lazy as _
-
+import math
 
 
 
@@ -108,1057 +109,51 @@ def reportDownload(request,project_id):
 
 
     SID = Survey.objects.filter(project_id=project_id).values_list('id', flat=True)
-    SID=SID[0]
-    print(SID)
+    NumberOfSurveys=len(SID)
 
-    LID = Link.objects.filter(survey_id=SID).values_list('id', flat=True)
-    print(LID)
-    if len(LID)==1:
+
+    #print(LID)
+    if NumberOfSurveys==1:
+        LID = Link.objects.filter(survey_id=SID[0]).values_list('id', flat=True)
         allData=Submission.objects.all().filter(link_id=LID[0])
-    elif len(LID)==2:
-        surveyOne=Submission.objects.all().filter(link_id=LID[0])
-        surveyTwo=Submission.objects.all().filter(link_id=LID[1])
+    elif NumberOfSurveys==2:
+        LID1 = Link.objects.filter(survey_id=SID[0]).values_list('id', flat=True)
+        LID2 = Link.objects.filter(survey_id=SID[1]).values_list('id', flat=True)
+        surveyOne=Submission.objects.all().filter(link_id=LID1[0])
+        surveyTwo=Submission.objects.all().filter(link_id=LID2[0])
         allData=  surveyOne|surveyTwo
-    elif  len(LID)==3:
-        surveyOne=Submission.objects.all().filter(link_id=LID[0])
-        surveyTwo=Submission.objects.all().filter(link_id=LID[1])
-        surveyThree=Submission.objects.all().filter(link_id=LID[2])
+    elif NumberOfSurveys==3:
+        LID1 = Link.objects.filter(survey_id=SID[0]).values_list('id', flat=True)
+        LID2 = Link.objects.filter(survey_id=SID[1]).values_list('id', flat=True)
+        LID3 = Link.objects.filter(survey_id=SID[2]).values_list('id', flat=True)
+        surveyOne=Submission.objects.all().filter(link_id=LID1[0])
+        surveyTwo=Submission.objects.all().filter(link_id=LID2[0])
+        surveyThree=Submission.objects.all().filter(link_id=LID3[0])
         allData=  surveyOne|surveyTwo|surveyThree
-    elif  len(LID)==4:
-        surveyOne=Submission.objects.all().filter(link_id=LID[0])
-        surveyTwo=Submission.objects.all().filter(link_id=LID[1])
-        surveyThree=Submission.objects.all().filter(link_id=LID[2])
-        surveyFour=Submission.objects.all().filter(link_id=LID[3])
+    elif NumberOfSurveys==4:
+        LID1 = Link.objects.filter(survey_id=SID[0]).values_list('id', flat=True)
+        LID2 = Link.objects.filter(survey_id=SID[1]).values_list('id', flat=True)
+        LID3 = Link.objects.filter(survey_id=SID[2]).values_list('id', flat=True)
+        LID4 = Link.objects.filter(survey_id=SID[3]).values_list('id', flat=True)
+        surveyOne=Submission.objects.all().filter(link_id=LID1[0])
+        surveyTwo=Submission.objects.all().filter(link_id=LID2[0])
+        surveyThree=Submission.objects.all().filter(link_id=LID3[0])
+        surveyFour=Submission.objects.all().filter(link_id=LID4[0])
         allData=  surveyOne|surveyTwo|surveyThree|surveyFour
-    elif  len(LID)==5:
-        surveyOne=Submission.objects.all().filter(link_id=LID[0])
-        surveyTwo=Submission.objects.all().filter(link_id=LID[1])
-        surveyThree=Submission.objects.all().filter(link_id=LID[2])
-        surveyFour=Submission.objects.all().filter(link_id=LID[3])
-        surveyFive=Submission.objects.all().filter(link_id=LID[4])
+    elif NumberOfSurveys==4:
+        LID1 = Link.objects.filter(survey_id=SID[0]).values_list('id', flat=True)
+        LID2 = Link.objects.filter(survey_id=SID[1]).values_list('id', flat=True)
+        LID3 = Link.objects.filter(survey_id=SID[2]).values_list('id', flat=True)
+        LID4 = Link.objects.filter(survey_id=SID[3]).values_list('id', flat=True)
+        LID5 = Link.objects.filter(survey_id=SID[4]).values_list('id', flat=True)
+        surveyOne=Submission.objects.all().filter(link_id=LID1[0])
+        surveyTwo=Submission.objects.all().filter(link_id=LID2[0])
+        surveyThree=Submission.objects.all().filter(link_id=LID3[0])
+        surveyFour=Submission.objects.all().filter(link_id=LID4[0])
+        surveyFive=Submission.objects.all().filter(link_id=LID5[0])
         allData=  surveyOne|surveyTwo|surveyThree|surveyFour|surveyFive
 
     return render_to_csv_response(allData)
-
-
-
-
-
-
-def Visualize(request):
-    datablock = []
-    response=Submission.objects.none()
-    if request.method == "POST":
-        form = contactforms(request.user, request.POST)
-        if form.is_valid():
-            studyidd = form.cleaned_data.get('Project_Name')
-            print(studyidd)
-
-            PID = Project.objects.filter(project_name=studyidd).values_list('id', flat=True)
-            PID=PID[0]
-
-            project_ids = Project.objects.all().filter(id=PID)
-
-            project_id = project_ids[0]
-            print(PID)
-
-            SID = Survey.objects.filter(project_id=PID).values_list('id', flat=True)
-            SID=SID[0]
-            print(SID)
-
-            LID = Link.objects.filter(survey_id=SID).values_list('id', flat=True)
-            print(LID)
-            y= len(LID)
-    if y==1:
-        labels = []
-        data1 = []
-        labels11 = []
-        data11 = []
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[0]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            labels.append(key)
-            data1.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            labels11.append(key)
-            data11.append(entry)
-        return render(request, 'pie_chart2.html', {
-            'labels': labels,
-            'data1': data1,
-            'labels11': labels11,
-            'data11': data11,
-            'project_id':studyidd,
-            })
-
-    elif y==2:
-        labels = []
-        data1 = []
-        data2=[]
-        labels11 = []
-        data11 = []
-        data22=[]
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[0]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            labels.append(key)
-            data1.append(entry)
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[1]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            data2.append(entry)
-
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            labels11.append(key)
-            data11.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            data22.append(entry)
-        return render(request, 'pie_chart2.html', {
-            'labels': labels,
-            'data1': data1,
-            'data2': data2,
-            'labels11': labels11,
-            'data11': data11,
-            'data22': data22,
-            'project':studyidd,
-            'project_id':project_id
-            })
-    elif y==3:
-        labels = []
-        data1 = []
-        data2=[]
-        data3=[]
-        labels11 = []
-        data11 = []
-        data22=[]
-        data33=[]
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[0]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            labels.append(key)
-            data1.append(entry)
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[1]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            data2.append(entry)
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[2]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[2])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            data3.append(entry)
-
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            labels11.append(key)
-            data11.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            data22.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[2])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            data33.append(entry)
-
-        return render(request, 'pie_chart3.html', {
-            'labels': labels,
-            'data1': data1,
-            'data2': data2,
-            'data3': data3,
-            'labels11': labels11,
-            'data11': data11,
-            'data22': data22,
-            'data33': data33,
-            'project':studyidd,
-            'project_id':project_id
-            })
-    elif y==4:
-        labels = []
-        data1 = []
-        data2=[]
-        data3=[]
-        data4=[]
-        labels11 = []
-        data11 = []
-        data22=[]
-        data33=[]
-        data44=[]
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[0]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            labels.append(key)
-            data1.append(entry)
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[1]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            data2.append(entry)
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[2]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[2])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            data3.append(entry)
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[3]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[3])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            data4.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            labels11.append(key)
-            data11.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            data22.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[2])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            data33.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[3])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            data44.append(entry)
-
-
-        return render(request, 'pie_chart4.html', {
-            'labels': labels,
-            'data1': data1,
-            'data2': data2,
-            'data3': data3,
-            'data4': data4,
-            'labels11': labels11,
-            'data11': data11,
-            'data22': data22,
-            'data33': data33,
-            'data44': data44,
-            'project':studyidd,
-            'project_id':project_id
-            })
-    elif y==5:
-        labels = []
-        data1 = []
-        data2=[]
-        data3=[]
-        data4=[]
-        data5=[]
-        labels11 = []
-        data11 = []
-        data22=[]
-        data33=[]
-        data44=[]
-        data55=[]
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[0]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            labels.append(key)
-            data1.append(entry)
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[1]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            data2.append(entry)
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[2]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[2])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            data3.append(entry)
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[3]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[3])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            data4.append(entry)
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[4]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[4])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            data5.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            labels11.append(key)
-            data11.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            data22.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[2])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            data33.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[3])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            data44.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[4])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            data55.append(entry)
-        return render(request, 'pie_chart5.html', {
-            'labels': labels,
-            'data1': data1,
-            'data2': data2,
-            'data3': data3,
-            'data4': data4,
-            'data5': data5,
-            'labels11': labels11,
-            'data11': data11,
-            'data22': data22,
-            'data33': data33,
-            'data44': data44,
-            'data55': data55,
-            'project':studyidd,
-            'project_id':project_id
-            })
 
 
 def GotoReport(request):
@@ -1185,1002 +180,5788 @@ def reportView(request,project_id):
     studyidd = project[0].project_name
 
     SID = Survey.objects.filter(project_id=project_id).values_list('id', flat=True)
-    SID=SID[0]
-    print(SID)
 
-    LID = Link.objects.filter(survey_id=SID).values_list('id', flat=True)
-    print(LID)
-    y= len(LID)
-    if y==1:
-        labels = []
-        data1 = []
-        labels11 = []
-        data11 = []
-        queryset = Submission.objects.aggregate(
+    NumberOfSurveys=len(SID)
+
+    productname = Survey.objects.filter(id=SID[0]).values_list('product_name', flat=True)
+    productname=productname[0]
+#function calculate crobanch alpha
+    def cronbach_alpha(df):
+    # 1. Transform the df into a correlation matrix
+        df_corr = df.corr()
+
+    # 2.1 Calculate N
+    # The number of variables equals the number of columns in the df
+        N = df.shape[1]
+
+    # 2.2 Calculate R
+    # For this, we'll loop through the columns and append every
+    # relevant correlation to an array calles "r_s". Then, we'll
+    # calculate the mean of "r_s"
+        rs = np.array([])
+        for i, col in enumerate(df_corr.columns):
+            sum_ = df_corr[col][i+1:].values
+            rs = np.append(sum_, rs)
+        mean_r = np.mean(rs)
+
+   # 3. Use the formula to calculate Cronbach's Alpha
+        cronbach_alpha = (N * mean_r) / (1 + (N - 1) * mean_r)
+        return cronbach_alpha
+
+    if NumberOfSurveys==1:
+        #get the link ids for the two surveys
+        LID1 = Link.objects.filter(survey_id=SID[0]).values_list('id', flat=True)
+
+        #get the number of respondents by survey
+        S1Count = Submission.objects.aggregate(
+            responseS1= Count("q1", filter=(Q(link_id=LID1[0])), output_field=IntegerField()))
+
+        S1Counts=[]
+
+        for key, entry in S1Count.items():
+            if entry is None:
+                   S1Counts.append(0)
+            else:
+                S1Counts.append(entry)
+
+        survey1Counts= S1Counts[0]
+
+        #get number gender details for each survey
+        S1CountMale = AnonyData.objects.filter(link_id=LID1[0], gender="M").count()
+        S1CountFeMale = AnonyData.objects.filter(link_id=LID1[0], gender="F").count()
+        S1CountOthers = AnonyData.objects.filter(link_id=LID1[0], gender="O").count()
+
+            #appending the results to an array because the chartjs piechart expects the data in an array format
+        S1CountGender = [S1CountMale, S1CountFeMale, S1CountOthers]
+
+        #getting the age distribution for each survey
+        #survey 1
+        S1Count17Below = AnonyData.objects.filter(link_id=LID1[0], age="1").count()
+        S1Count18To27 = AnonyData.objects.filter(link_id=LID1[0], age="2").count()
+        S1Count28To37 = AnonyData.objects.filter(link_id=LID1[0], age="3").count()
+        S1Count38To47 = AnonyData.objects.filter(link_id=LID1[0], age="4").count()
+        S1Count48To57 = AnonyData.objects.filter(link_id=LID1[0], age="5").count()
+        S1Count58Above = AnonyData.objects.filter(link_id=LID1[0], age="6").count()
+
+            #appending the results to an array because the chartjs piechart expects the data in an array format
+        S1CountAge = [S1Count17Below, S1Count18To27, S1Count28To37, S1Count38To47, S1Count48To57, S1Count58Above ]
+
+        #check for null entries and replace them with 0
+        for i in S1CountAge:
+            if i == '':
+                S1CountAge[i]=0
+            else:
+                S1CountAge[i] = S1CountAge[i]
+
+        #print(S1CountAge)
+        #print(S2CountAge)
+        #get all response for each survey
+        allRespS1= Submission.objects.values('q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14').filter(Q(link_id=LID1[0])).all()
+
+        #convert the querryset into dataframe
+        allRespS1=df.DataFrame.from_records(allRespS1)
+
+        #compute the crobanch alpha for each survey using the aggregated responses in dataframe form above
+        CrobanchAlphaS1=cronbach_alpha(allRespS1)
+
+        #reducing the result to two decimal places
+        CrobanchAlphaS1=float("{0:.4f}".format(CrobanchAlphaS1))
+
+        if math.isnan(CrobanchAlphaS1):
+            CrobanchAlphaS1=0.0
+        else:
+            CrobanchAlphaS1=CrobanchAlphaS1
+
+#compute overall trust score for each survey begins from here
+        OvrallTrustS1= Submission.objects.aggregate(
             overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[0]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField())
+                Sum("q1", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q4", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q7", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q10", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q12", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+
+
+        OvrallTrustS1s=[]
+
+        for key, entry in OvrallTrustS1.items():
+            if entry is None:
+                   OvrallTrustS1s.append(0)
+            else:
+                OvrallTrustS1s.append(entry)
+
+        OvrallTrustS1s= OvrallTrustS1s[0]
+
+        OvrallTrustS1s= (OvrallTrustS1s*100) / (70*survey1Counts)
+
+
+        OvrallTrustS1s=float("{0:.1f}".format(OvrallTrustS1s))
+
+#computing overall risk for each survey
+        OvrallRiskS1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID1[0])), output_field=FloatField())
                 )
-        print(queryset)
-        for key, entry in queryset.items():
-            labels.append(key)
-            data1.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            labels11.append(key)
-            data11.append(entry)
-        return render(request, 'pie_chart2.html', {
-            'labels': labels,
-            'data1': data1,
-            'labels11': labels11,
-            'data11': data11,
-            'project':studyidd,
-            'project_id':project_id
+
+
+        OvrallRiskS1s=[]
+
+        for key, entry in OvrallRiskS1.items():
+            if entry is None:
+                   OvrallRiskS1s.append(0)
+            else:
+                OvrallRiskS1s.append(entry)
+
+
+        OvrallRiskS1s= OvrallRiskS1s[0]
+
+        OvrallRiskS1s= (OvrallRiskS1s*100) / (15*survey1Counts)
+
+
+        OvrallRiskS1s=float("{0:.1f}".format(OvrallRiskS1s))
+
+#computing benevolencerisk for each survey
+        OvrallBenevolenceS1= Submission.objects.aggregate(
+            overalBenevolence=
+                Sum("q4", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID1[0])), output_field=FloatField())
+                )
+
+
+        OvrallBenevolenceS1s=[]
+
+        for key, entry in OvrallBenevolenceS1.items():
+            if entry is None:
+                   OvrallBenevolenceS1s.append(0)
+            else:
+                OvrallBenevolenceS1s.append(entry)
+
+        OvrallBenevolenceS1s= OvrallBenevolenceS1s[0]
+
+        OvrallBenevolenceS1s= (OvrallBenevolenceS1s*100) / (15*survey1Counts)
+
+
+        OvrallBenevolenceS1s=float("{0:.1f}".format(OvrallBenevolenceS1s))
+
+# computing competence for each survey
+        OvrallCompetenceS1= Submission.objects.aggregate(
+            overalCompetence=
+                Sum("q7", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+
+        OvrallCompetenceS1s=[]
+
+        for key, entry in OvrallCompetenceS1.items():
+            if entry is None:
+                   OvrallCompetenceS1s.append(0)
+            else:
+                OvrallCompetenceS1s.append(entry)
+
+        OvrallCompetenceS1s= OvrallCompetenceS1s[0]
+
+        OvrallCompetenceS1s= (OvrallCompetenceS1s*100) / (15*survey1Counts)
+
+
+        OvrallCompetenceS1s=float("{0:.1f}".format(OvrallCompetenceS1s))
+
+# computing reciprocity
+        OvrallReciprocityS1= Submission.objects.aggregate(
+            overalReciprocity=
+                Sum("q10", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+
+
+        OvrallReciprocityS1s=[]
+
+        for key, entry in OvrallReciprocityS1.items():
+            if entry is None:
+                   OvrallReciprocityS1s.append(0)
+            else:
+                OvrallReciprocityS1s.append(entry)
+
+        OvrallReciprocityS1s= OvrallReciprocityS1s[0]
+
+        OvrallReciprocityS1s= (OvrallReciprocityS1s*100) / (10*survey1Counts)
+
+
+        OvrallReciprocityS1s=float("{0:.1f}".format(OvrallReciprocityS1s))
+
+
+#Computing general trust for each survey
+        OvrallGeneralTrustS1= Submission.objects.aggregate(
+            overalGeneralTrust=
+                Sum("q12", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+
+
+        OvrallGeneralTrustS1s=[]
+
+        for key, entry in OvrallGeneralTrustS1.items():
+            if entry is None:
+                   OvrallGeneralTrustS1s.append(0)
+            else:
+                OvrallGeneralTrustS1s.append(entry)
+
+        OvrallGeneralTrustS1s= OvrallGeneralTrustS1s[0]
+
+        OvrallGeneralTrustS1s= (OvrallGeneralTrustS1s*100) / (15*survey1Counts)
+
+
+        OvrallGeneralTrustS1s=float("{0:.1f}".format(OvrallGeneralTrustS1s))
+
+
+#Riesk Q1 for both questioniares
+        RiskQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+
+
+        RiskQ1S1s=[]
+
+        for key, entry in RiskQ1S1.items():
+            if entry is None:
+                   RiskQ1S1s.append(0)
+            else:
+                RiskQ1S1s.append(entry)
+
+
+        RiskQ1S1s= RiskQ1S1s[0]
+
+        RiskQ1S1s= (RiskQ1S1s*100) / (5*survey1Counts)
+
+
+        RiskQ1S1s=float("{0:.1f}".format(RiskQ1S1s))
+
+#Riesk Q2 for both questioniares
+        RiskQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q2", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+
+
+        RiskQ2S1s=[]
+
+        for key, entry in RiskQ2S1.items():
+            if entry is None:
+                   RiskQ2S1s.append(0)
+            else:
+                RiskQ2S1s.append(entry)
+
+
+        RiskQ2S1s= RiskQ2S1s[0]
+
+        RiskQ2S1s= (RiskQ2S1s*100) / (5*survey1Counts)
+
+
+        RiskQ2S1s=float("{0:.1f}".format(RiskQ2S1s))
+
+#Riesk Q3 for both questioniares
+        RiskQ3S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q3", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+
+
+        RiskQ3S1s=[]
+
+        for key, entry in RiskQ3S1.items():
+            if entry is None:
+                   RiskQ3S1s.append(0)
+            else:
+                RiskQ3S1s.append(entry)
+
+
+        RiskQ3S1s= RiskQ3S1s[0]
+
+        RiskQ3S1s= (RiskQ3S1s*100) / (5*survey1Counts)
+
+
+        RiskQ3S1s=float("{0:.1f}".format(RiskQ3S1s))
+
+
+#benevolence Q1 for both questioniares
+        BenevlonceQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q4", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+
+
+        BenevlonceQ1S1s=[]
+
+        for key, entry in BenevlonceQ1S1.items():
+            if entry is None:
+                   BenevlonceQ1S1s.append(0)
+            else:
+                BenevlonceQ1S1s.append(entry)
+
+        BenevlonceQ1S1s= BenevlonceQ1S1s[0]
+
+        BenevlonceQ1S1s= (BenevlonceQ1S1s*100) / (5*survey1Counts)
+
+
+        BenevlonceQ1S1s=float("{0:.1f}".format(BenevlonceQ1S1s))
+
+#benevolence Q2 for both questioniares
+        BenevlonceQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q5", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+
+
+        BenevlonceQ2S1s=[]
+
+        for key, entry in BenevlonceQ2S1.items():
+            if entry is None:
+                   BenevlonceQ2S1s.append(0)
+            else:
+                BenevlonceQ2S1s.append(entry)
+
+
+        BenevlonceQ2S1s= BenevlonceQ2S1s[0]
+
+        BenevlonceQ2S1s= (BenevlonceQ2S1s*100) / (5*survey1Counts)
+
+
+        BenevlonceQ2S1s=float("{0:.1f}".format(BenevlonceQ2S1s))
+
+#benevolence Q3 for both questioniares
+        BenevlonceQ3S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q6", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+
+
+        BenevlonceQ3S1s=[]
+
+        for key, entry in BenevlonceQ3S1.items():
+            if entry is None:
+                   BenevlonceQ3S1s.append(0)
+            else:
+                BenevlonceQ3S1s.append(entry)
+
+        BenevlonceQ3S1s= BenevlonceQ3S1s[0]
+
+        BenevlonceQ3S1s= (BenevlonceQ3S1s*100) / (5*survey1Counts)
+
+
+        BenevlonceQ3S1s=float("{0:.1f}".format(BenevlonceQ3S1s))
+
+#Riesk Q1 for both questioniares
+        CompetenceQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+
+        CompetenceQ1S1s=[]
+
+        for key, entry in CompetenceQ1S1.items():
+            if entry is None:
+                   CompetenceQ1S1s.append(0)
+            else:
+                CompetenceQ1S1s.append(entry)
+
+
+        CompetenceQ1S1s= CompetenceQ1S1s[0]
+
+        CompetenceQ1S1s= (CompetenceQ1S1s*100) / (5*survey1Counts)
+
+
+        CompetenceQ1S1s=float("{0:.1f}".format(CompetenceQ1S1s))
+
+#Riesk Q2 for both questioniares
+        CompetenceQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+
+
+        CompetenceQ2S1s=[]
+
+        for key, entry in CompetenceQ2S1.items():
+            if entry is None:
+                   CompetenceQ2S1s.append(0)
+            else:
+                CompetenceQ2S1s.append(entry)
+
+        CompetenceQ2S1s= CompetenceQ2S1s[0]
+
+        CompetenceQ2S1s= (CompetenceQ2S1s*100) / (5*survey1Counts)
+
+
+        CompetenceQ2S1s=float("{0:.1f}".format(CompetenceQ2S1s))
+
+#Riesk Q3 for both questioniares
+        CompetenceQ3S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q9", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+
+
+        CompetenceQ3S1s=[]
+
+        for key, entry in CompetenceQ3S1.items():
+            if entry is None:
+                   CompetenceQ3S1s.append(0)
+            else:
+                CompetenceQ3S1s.append(entry)
+
+
+        CompetenceQ3S1s= CompetenceQ3S1s[0]
+
+        CompetenceQ3S1s= (CompetenceQ3S1s*100) / (5*survey1Counts)
+
+
+        CompetenceQ3S1s=float("{0:.1f}".format(CompetenceQ3S1s))
+
+#Recirptocity Q1 for both questioniares
+        ReciprocityQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+
+
+        ReciprocityQ1S1s=[]
+
+        for key, entry in ReciprocityQ1S1.items():
+            if entry is None:
+                   ReciprocityQ1S1s.append(0)
+            else:
+                ReciprocityQ1S1s.append(entry)
+
+
+        ReciprocityQ1S1s= ReciprocityQ1S1s[0]
+
+        ReciprocityQ1S1s= (ReciprocityQ1S1s*100) / (5*survey1Counts)
+
+
+        ReciprocityQ1S1s=float("{0:.1f}".format(ReciprocityQ1S1s))
+
+
+
+#Recirprocity Q2 for both questioniares
+        ReciprocityQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+
+        ReciprocityQ2S1s=[]
+
+        for key, entry in ReciprocityQ2S1.items():
+            if entry is None:
+                   ReciprocityQ2S1s.append(0)
+            else:
+                ReciprocityQ2S1s.append(entry)
+
+
+        ReciprocityQ2S1s= ReciprocityQ2S1s[0]
+
+        ReciprocityQ2S1s= (ReciprocityQ2S1s*100) / (5*survey1Counts)
+
+
+        ReciprocityQ2S1s=float("{0:.1f}".format(ReciprocityQ2S1s))
+
+#Riesk Q1 for both questioniares
+        GtrustQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q12", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+
+
+        GtrustQ1S1s=[]
+
+        for key, entry in GtrustQ1S1.items():
+            if entry is None:
+                   GtrustQ1S1s.append(0)
+            else:
+                GtrustQ1S1s.append(entry)
+
+
+        GtrustQ1S1s= GtrustQ1S1s[0]
+
+        GtrustQ1S1s= (GtrustQ1S1s*100) / (5*survey1Counts)
+
+
+        GtrustQ1S1s=float("{0:.1f}".format(GtrustQ1S1s))
+
+#Riesk Q2 for both questioniares
+        GtrustQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q13", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+
+
+        GtrustQ2S1s=[]
+
+        for key, entry in GtrustQ2S1.items():
+            if entry is None:
+                   GtrustQ2S1s.append(0)
+            else:
+                GtrustQ2S1s.append(entry)
+
+
+        GtrustQ2S1s= GtrustQ2S1s[0]
+
+        GtrustQ2S1s= (GtrustQ2S1s*100) / (5*survey1Counts)
+
+
+        GtrustQ2S1s=float("{0:.1f}".format(GtrustQ2S1s))
+
+#Riesk Q3 for both questioniares
+        GtrustQ3S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q14", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+
+
+        GtrustQ3S1s=[]
+
+        for key, entry in GtrustQ3S1.items():
+            if entry is None:
+                   GtrustQ3S1s.append(0)
+            else:
+                GtrustQ3S1s.append(entry)
+
+
+        GtrustQ3S1s= GtrustQ3S1s[0]
+
+        GtrustQ3S1s= (GtrustQ3S1s*100) / (5*survey1Counts)
+
+
+        GtrustQ3S1s=float("{0:.1f}".format(GtrustQ3S1s))
+
+
+        return render(request, 'pie_chart1.html', {
+            'project_id':project_id,
+            'productname':productname,
+            'survey1Counts':survey1Counts,
+
+            'S1CountGender':S1CountGender,
+
+            'S1CountAge':S1CountAge,
+
+            'CrobanchAlphaS1':CrobanchAlphaS1,
+
+            'OvrallTrustS1s':OvrallTrustS1s,
+
+            'OvrallRiskS1s':OvrallRiskS1s,
+
+            'OvrallBenevolenceS1s':OvrallBenevolenceS1s,
+
+            'OvrallCompetenceS1s':OvrallCompetenceS1s,
+
+            'OvrallReciprocityS1s':OvrallReciprocityS1s,
+
+            'OvrallGeneralTrustS1s':OvrallGeneralTrustS1s,
+
+            'RiskQ1S1s':RiskQ1S1s,
+
+            'RiskQ2S1s':RiskQ2S1s,
+
+            'RiskQ3S1s':RiskQ3S1s,
+
+            'BenevlonceQ1S1s':BenevlonceQ1S1s,
+
+            'BenevlonceQ2S1s':BenevlonceQ2S1s,
+
+            'BenevlonceQ3S1s':BenevlonceQ3S1s,
+
+            'CompetenceQ1S1s':CompetenceQ1S1s,
+
+            'CompetenceQ2S1s':CompetenceQ2S1s,
+
+            'CompetenceQ3S1s':CompetenceQ3S1s,
+
+            'ReciprocityQ1S1s':ReciprocityQ1S1s,
+
+            'ReciprocityQ2S1s':ReciprocityQ2S1s,
+
+            'GtrustQ1S1s':GtrustQ1S1s,
+
+            'GtrustQ2S1s':GtrustQ2S1s,
+
+            'GtrustQ3S1s':GtrustQ3S1s
+
+
             })
 
-    elif y==2:
-        labels = []
-        data1 = []
-        data2=[]
-        labels11 = []
-        data11 = []
-        data22=[]
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[0]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            labels.append(key)
-            data1.append(entry)
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[1]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            data2.append(entry)
 
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            labels11.append(key)
-            data11.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            data22.append(entry)
+    elif NumberOfSurveys==2:
+        #get the link ids for the two surveys
+        LID1 = Link.objects.filter(survey_id=SID[0]).values_list('id', flat=True)
+        LID2 = Link.objects.filter(survey_id=SID[1]).values_list('id', flat=True)
+        #get the number of respondents by survey
+        S1Count = Submission.objects.aggregate(
+            responseS1= Count("q1", filter=(Q(link_id=LID1[0])), output_field=IntegerField()))
+        S2Count = Submission.objects.aggregate(
+            responseS1= Count("q1", filter=(Q(link_id=LID2[0])), output_field=IntegerField()))
+        S1Counts=[]
+        S2Counts=[]
+        for key, entry in S1Count.items():
+            if entry is None:
+                   S1Counts.append(0)
+            else:
+                S1Counts.append(entry)
+        for key, entry in S2Count.items():
+            if entry is None:
+                S2Counts.append(0)
+            else:
+                S2Counts.append(entry)
+        survey1Counts= S1Counts[0]
+        survey2Counts= S2Counts[0]
+        #get number gender details for each survey
+        S1CountMale = AnonyData.objects.filter(link_id=LID1[0], gender="M").count()
+        S1CountFeMale = AnonyData.objects.filter(link_id=LID1[0], gender="F").count()
+        S1CountOthers = AnonyData.objects.filter(link_id=LID1[0], gender="O").count()
+
+        S2CountMale = AnonyData.objects.filter(link_id=LID2[0], gender="M").count()
+        S2CountFeMale = AnonyData.objects.filter(link_id=LID2[0], gender="F").count()
+        S2CountOthers = AnonyData.objects.filter(link_id=LID2[0], gender="O").count()
+            #appending the results to an array because the chartjs piechart expects the data in an array format
+        S1CountGender = [S1CountMale, S1CountFeMale, S1CountOthers]
+        S2CountGender = [S2CountMale, S2CountFeMale, S2CountOthers]
+        #getting the age distribution for each survey
+        #survey 1
+        S1Count17Below = AnonyData.objects.filter(link_id=LID1[0], age="1").count()
+        S1Count18To27 = AnonyData.objects.filter(link_id=LID1[0], age="2").count()
+        S1Count28To37 = AnonyData.objects.filter(link_id=LID1[0], age="3").count()
+        S1Count38To47 = AnonyData.objects.filter(link_id=LID1[0], age="4").count()
+        S1Count48To57 = AnonyData.objects.filter(link_id=LID1[0], age="5").count()
+        S1Count58Above = AnonyData.objects.filter(link_id=LID1[0], age="6").count()
+        #survey 2
+        S2Count17Below = AnonyData.objects.filter(link_id=LID2[0], age="1").count()
+        S2Count18To27 = AnonyData.objects.filter(link_id=LID2[0], age="2").count()
+        S2Count28To37 = AnonyData.objects.filter(link_id=LID2[0], age="3").count()
+        S2Count38To47 = AnonyData.objects.filter(link_id=LID2[0], age="4").count()
+        S2Count48To57 = AnonyData.objects.filter(link_id=LID2[0], age="5").count()
+        S2Count58Above = AnonyData.objects.filter(link_id=LID2[0], age="6").count()
+            #appending the results to an array because the chartjs piechart expects the data in an array format
+        S1CountAge = [S1Count17Below, S1Count18To27, S1Count28To37, S1Count38To47, S1Count48To57, S1Count58Above ]
+        S2CountAge = [S2Count17Below, S2Count18To27, S2Count28To37, S2Count38To47, S2Count48To57, S2Count58Above ]
+        #check for null entries and replace them with 0
+        for i in S1CountAge:
+            if i == '':
+                S1CountAge[i]=0
+            else:
+                S1CountAge[i] = S1CountAge[i]
+
+        for i in S2CountAge:
+            if i == '':
+                S2CountAge[i]=0
+            else:
+                S2CountAge[i] = S2CountAge[i]
+        #print(S1CountAge)
+        #print(S2CountAge)
+        #get all response for each survey
+        allRespS1= Submission.objects.values('q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14').filter(Q(link_id=LID1[0])).all()
+        allRespS2= Submission.objects.values('q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14').filter(Q(link_id=LID2[0])).all()
+        #convert the querryset into dataframe
+        allRespS1=df.DataFrame.from_records(allRespS1)
+        allRespS2=df.DataFrame.from_records(allRespS2)
+        #compute the crobanch alpha for each survey using the aggregated responses in dataframe form above
+        CrobanchAlphaS1=cronbach_alpha(allRespS1)
+        CrobanchAlphaS2=cronbach_alpha(allRespS2)
+        #reducing the result to two decimal places
+        CrobanchAlphaS1=float("{0:.4f}".format(CrobanchAlphaS1))
+        CrobanchAlphaS2=float("{0:.4f}".format(CrobanchAlphaS2))
+
+        if math.isnan(CrobanchAlphaS1):
+            CrobanchAlphaS1=0.0
+        else:
+            CrobanchAlphaS1=CrobanchAlphaS1
+
+        if math.isnan(CrobanchAlphaS2):
+            CrobanchAlphaS2=0.0
+        else:
+            CrobanchAlphaS2=CrobanchAlphaS2
+
+#compute overall trust score for each survey begins from here
+        OvrallTrustS1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q4", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q7", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q10", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q12", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        OvrallTrustS2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q4", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q7", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q10", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q12", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+
+        OvrallTrustS1s=[]
+        OvrallTrustS2s=[]
+        for key, entry in OvrallTrustS1.items():
+            if entry is None:
+                   OvrallTrustS1s.append(0)
+            else:
+                OvrallTrustS1s.append(entry)
+
+        for key, entry in OvrallTrustS2.items():
+            if entry is None:
+                OvrallTrustS2s.append(0)
+            else:
+                OvrallTrustS2s.append(entry)
+        OvrallTrustS1s= OvrallTrustS1s[0]
+        OvrallTrustS2s= OvrallTrustS2s[0]
+        OvrallTrustS1s= (OvrallTrustS1s*100) / (70*survey1Counts)
+        OvrallTrustS2s= (OvrallTrustS2s*100) / (70*survey2Counts)
+
+        OvrallTrustS1s=float("{0:.1f}".format(OvrallTrustS1s))
+        OvrallTrustS2s=float("{0:.1f}".format(OvrallTrustS2s))
+#computing overall risk for each survey
+        OvrallRiskS1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID1[0])), output_field=FloatField())
+                )
+        OvrallRiskS2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+
+        OvrallRiskS1s=[]
+        OvrallRiskS2s=[]
+        for key, entry in OvrallRiskS1.items():
+            if entry is None:
+                   OvrallRiskS1s.append(0)
+            else:
+                OvrallRiskS1s.append(entry)
+
+        for key, entry in OvrallRiskS2.items():
+            if entry is None:
+                OvrallRiskS2s.append(0)
+            else:
+                OvrallRiskS2s.append(entry)
+        OvrallRiskS1s= OvrallRiskS1s[0]
+        OvrallRiskS2s= OvrallRiskS2s[0]
+        OvrallRiskS1s= (OvrallRiskS1s*100) / (15*survey1Counts)
+        OvrallRiskS2s= (OvrallRiskS2s*100) / (15*survey2Counts)
+
+        OvrallRiskS1s=float("{0:.1f}".format(OvrallRiskS1s))
+        OvrallRiskS2s=float("{0:.1f}".format(OvrallRiskS2s))
+#computing benevolencerisk for each survey
+        OvrallBenevolenceS1= Submission.objects.aggregate(
+            overalBenevolence=
+                Sum("q4", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID1[0])), output_field=FloatField())
+                )
+        OvrallBenevolenceS2= Submission.objects.aggregate(
+            overalBenevolence=
+                Sum("q4", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+
+        OvrallBenevolenceS1s=[]
+        OvrallBenevolenceS2s=[]
+        for key, entry in OvrallBenevolenceS1.items():
+            if entry is None:
+                   OvrallBenevolenceS1s.append(0)
+            else:
+                OvrallBenevolenceS1s.append(entry)
+
+        for key, entry in OvrallBenevolenceS2.items():
+            if entry is None:
+                OvrallBenevolenceS2s.append(0)
+            else:
+                OvrallBenevolenceS2s.append(entry)
+        OvrallBenevolenceS1s= OvrallBenevolenceS1s[0]
+        OvrallBenevolenceS2s= OvrallBenevolenceS2s[0]
+        OvrallBenevolenceS1s= (OvrallBenevolenceS1s*100) / (15*survey1Counts)
+        OvrallBenevolenceS2s= (OvrallBenevolenceS2s*100) / (15*survey2Counts)
+
+        OvrallBenevolenceS1s=float("{0:.1f}".format(OvrallBenevolenceS1s))
+        OvrallBenevolenceS2s=float("{0:.1f}".format(OvrallBenevolenceS2s))
+# computing competence for each survey
+        OvrallCompetenceS1= Submission.objects.aggregate(
+            overalCompetence=
+                Sum("q7", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        OvrallCompetenceS2= Submission.objects.aggregate(
+            overalCompetence=
+                Sum("q7", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+
+        OvrallCompetenceS1s=[]
+        OvrallCompetenceS2s=[]
+        for key, entry in OvrallCompetenceS1.items():
+            if entry is None:
+                   OvrallCompetenceS1s.append(0)
+            else:
+                OvrallCompetenceS1s.append(entry)
+
+        for key, entry in OvrallCompetenceS2.items():
+            if entry is None:
+                OvrallCompetenceS2s.append(0)
+            else:
+                OvrallCompetenceS2s.append(entry)
+        OvrallCompetenceS1s= OvrallCompetenceS1s[0]
+        OvrallCompetenceS2s= OvrallCompetenceS2s[0]
+        OvrallCompetenceS1s= (OvrallCompetenceS1s*100) / (15*survey1Counts)
+        OvrallCompetenceS2s= (OvrallCompetenceS2s*100) / (15*survey2Counts)
+
+        OvrallCompetenceS1s=float("{0:.1f}".format(OvrallCompetenceS1s))
+        OvrallCompetenceS2s=float("{0:.1f}".format(OvrallCompetenceS2s))
+# computing reciprocity
+        OvrallReciprocityS1= Submission.objects.aggregate(
+            overalReciprocity=
+                Sum("q10", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        OvrallReciprocityS2= Submission.objects.aggregate(
+            overalReciprocity=
+                Sum("q10", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+
+        OvrallReciprocityS1s=[]
+        OvrallReciprocityS2s=[]
+        for key, entry in OvrallReciprocityS1.items():
+            if entry is None:
+                   OvrallReciprocityS1s.append(0)
+            else:
+                OvrallReciprocityS1s.append(entry)
+
+        for key, entry in OvrallReciprocityS2.items():
+            if entry is None:
+                OvrallReciprocityS2s.append(0)
+            else:
+                OvrallReciprocityS2s.append(entry)
+        OvrallReciprocityS1s= OvrallReciprocityS1s[0]
+        OvrallReciprocityS2s= OvrallReciprocityS2s[0]
+        OvrallReciprocityS1s= (OvrallReciprocityS1s*100) / (10*survey1Counts)
+        OvrallReciprocityS2s= (OvrallReciprocityS2s*100) / (10*survey2Counts)
+
+        OvrallReciprocityS1s=float("{0:.1f}".format(OvrallReciprocityS1s))
+        OvrallReciprocityS2s=float("{0:.1f}".format(OvrallReciprocityS2s))
+
+#Computing general trust for each survey
+        OvrallGeneralTrustS1= Submission.objects.aggregate(
+            overalGeneralTrust=
+                Sum("q12", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        OvrallGeneralTrustS2= Submission.objects.aggregate(
+            overalGeneralTrust=
+                Sum("q12", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+
+        OvrallGeneralTrustS1s=[]
+        OvrallGeneralTrustS2s=[]
+        for key, entry in OvrallGeneralTrustS1.items():
+            if entry is None:
+                   OvrallGeneralTrustS1s.append(0)
+            else:
+                OvrallGeneralTrustS1s.append(entry)
+
+        for key, entry in OvrallGeneralTrustS2.items():
+            if entry is None:
+                OvrallGeneralTrustS2s.append(0)
+            else:
+                OvrallGeneralTrustS2s.append(entry)
+        OvrallGeneralTrustS1s= OvrallGeneralTrustS1s[0]
+        OvrallGeneralTrustS2s= OvrallGeneralTrustS2s[0]
+        OvrallGeneralTrustS1s= (OvrallGeneralTrustS1s*100) / (15*survey1Counts)
+        OvrallGeneralTrustS2s= (OvrallGeneralTrustS2s*100) / (15*survey2Counts)
+
+        OvrallGeneralTrustS1s=float("{0:.1f}".format(OvrallGeneralTrustS1s))
+        OvrallGeneralTrustS2s=float("{0:.1f}".format(OvrallGeneralTrustS2s))
+
+#Riesk Q1 for both questioniares
+        RiskQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        RiskQ1S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+
+        RiskQ1S1s=[]
+        RiskQ1S2s=[]
+        for key, entry in RiskQ1S1.items():
+            if entry is None:
+                   RiskQ1S1s.append(0)
+            else:
+                RiskQ1S1s.append(entry)
+
+        for key, entry in RiskQ1S2.items():
+            if entry is None:
+                RiskQ1S2s.append(0)
+            else:
+                RiskQ1S2s.append(entry)
+
+        RiskQ1S1s= RiskQ1S1s[0]
+        RiskQ1S2s= RiskQ1S2s[0]
+        RiskQ1S1s= (RiskQ1S1s*100) / (5*survey1Counts)
+        RiskQ1S2s= (RiskQ1S2s*100) / (5*survey2Counts)
+
+        RiskQ1S1s=float("{0:.1f}".format(RiskQ1S1s))
+        RiskQ1S2s=float("{0:.1f}".format(RiskQ1S2s))
+#Riesk Q2 for both questioniares
+        RiskQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q2", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        RiskQ2S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q2", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+
+        RiskQ2S1s=[]
+        RiskQ2S2s=[]
+        for key, entry in RiskQ2S1.items():
+            if entry is None:
+                   RiskQ2S1s.append(0)
+            else:
+                RiskQ2S1s.append(entry)
+
+        for key, entry in RiskQ2S2.items():
+            if entry is None:
+                RiskQ2S2s.append(0)
+            else:
+                RiskQ2S2s.append(entry)
+
+        RiskQ2S1s= RiskQ2S1s[0]
+        RiskQ2S2s= RiskQ2S2s[0]
+        RiskQ2S1s= (RiskQ2S1s*100) / (5*survey1Counts)
+        RiskQ2S2s= (RiskQ2S2s*100) / (5*survey2Counts)
+
+        RiskQ2S1s=float("{0:.1f}".format(RiskQ2S1s))
+        RiskQ2S2s=float("{0:.1f}".format(RiskQ2S2s))
+#Riesk Q3 for both questioniares
+        RiskQ3S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q3", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        RiskQ3S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q3", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+
+        RiskQ3S1s=[]
+        RiskQ3S2s=[]
+        for key, entry in RiskQ3S1.items():
+            if entry is None:
+                   RiskQ3S1s.append(0)
+            else:
+                RiskQ3S1s.append(entry)
+
+        for key, entry in RiskQ3S2.items():
+            if entry is None:
+                RiskQ3S2s.append(0)
+            else:
+                RiskQ3S2s.append(entry)
+
+        RiskQ3S1s= RiskQ3S1s[0]
+        RiskQ3S2s= RiskQ3S2s[0]
+        RiskQ3S1s= (RiskQ3S1s*100) / (5*survey1Counts)
+        RiskQ3S2s= (RiskQ3S2s*100) / (5*survey2Counts)
+
+        RiskQ3S1s=float("{0:.1f}".format(RiskQ3S1s))
+        RiskQ3S2s=float("{0:.1f}".format(RiskQ3S2s))
+
+#benevolence Q1 for both questioniares
+        BenevlonceQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q4", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        BenevlonceQ1S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q4", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+
+        BenevlonceQ1S1s=[]
+        BenevlonceQ1S2s=[]
+        for key, entry in BenevlonceQ1S1.items():
+            if entry is None:
+                   BenevlonceQ1S1s.append(0)
+            else:
+                BenevlonceQ1S1s.append(entry)
+
+        for key, entry in BenevlonceQ1S2.items():
+            if entry is None:
+                BenevlonceQ1S2s.append(0)
+            else:
+                BenevlonceQ1S2s.append(entry)
+
+        BenevlonceQ1S1s= BenevlonceQ1S1s[0]
+        BenevlonceQ1S2s= BenevlonceQ1S2s[0]
+        BenevlonceQ1S1s= (BenevlonceQ1S1s*100) / (5*survey1Counts)
+        BenevlonceQ1S2s= (BenevlonceQ1S2s*100) / (5*survey2Counts)
+
+        BenevlonceQ1S1s=float("{0:.1f}".format(BenevlonceQ1S1s))
+        BenevlonceQ1S2s=float("{0:.1f}".format(BenevlonceQ1S2s))
+#benevolence Q2 for both questioniares
+        BenevlonceQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q5", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        BenevlonceQ2S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q5", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+
+        BenevlonceQ2S1s=[]
+        BenevlonceQ2S2s=[]
+        for key, entry in BenevlonceQ2S1.items():
+            if entry is None:
+                   BenevlonceQ2S1s.append(0)
+            else:
+                BenevlonceQ2S1s.append(entry)
+
+        for key, entry in BenevlonceQ2S2.items():
+            if entry is None:
+                BenevlonceQ2S2s.append(0)
+            else:
+                BenevlonceQ2S2s.append(entry)
+
+        BenevlonceQ2S1s= BenevlonceQ2S1s[0]
+        BenevlonceQ2S2s= BenevlonceQ2S2s[0]
+        BenevlonceQ2S1s= (BenevlonceQ2S1s*100) / (5*survey1Counts)
+        BenevlonceQ2S2s= (BenevlonceQ2S2s*100) / (5*survey2Counts)
+
+        BenevlonceQ2S1s=float("{0:.1f}".format(BenevlonceQ2S1s))
+        BenevlonceQ2S2s=float("{0:.1f}".format(BenevlonceQ2S2s))
+#benevolence Q3 for both questioniares
+        BenevlonceQ3S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q6", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        BenevlonceQ3S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q6", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+
+        BenevlonceQ3S1s=[]
+        BenevlonceQ3S2s=[]
+        for key, entry in BenevlonceQ3S1.items():
+            if entry is None:
+                   BenevlonceQ3S1s.append(0)
+            else:
+                BenevlonceQ3S1s.append(entry)
+
+        for key, entry in BenevlonceQ3S2.items():
+            if entry is None:
+                BenevlonceQ3S2s.append(0)
+            else:
+                BenevlonceQ3S2s.append(entry)
+
+        BenevlonceQ3S1s= BenevlonceQ3S1s[0]
+        BenevlonceQ3S2s= BenevlonceQ3S2s[0]
+        BenevlonceQ3S1s= (BenevlonceQ3S1s*100) / (5*survey1Counts)
+        BenevlonceQ3S2s= (BenevlonceQ3S2s*100) / (5*survey2Counts)
+
+        BenevlonceQ3S1s=float("{0:.1f}".format(BenevlonceQ3S1s))
+        BenevlonceQ3S2s=float("{0:.1f}".format(BenevlonceQ3S2s))
+#Riesk Q1 for both questioniares
+        CompetenceQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        CompetenceQ1S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+
+        CompetenceQ1S1s=[]
+        CompetenceQ1S2s=[]
+        for key, entry in CompetenceQ1S1.items():
+            if entry is None:
+                   CompetenceQ1S1s.append(0)
+            else:
+                CompetenceQ1S1s.append(entry)
+
+        for key, entry in CompetenceQ1S2.items():
+            if entry is None:
+                CompetenceQ1S2s.append(0)
+            else:
+                CompetenceQ1S2s.append(entry)
+
+        CompetenceQ1S1s= CompetenceQ1S1s[0]
+        CompetenceQ1S2s= CompetenceQ1S2s[0]
+        CompetenceQ1S1s= (CompetenceQ1S1s*100) / (5*survey1Counts)
+        CompetenceQ1S2s= (CompetenceQ1S2s*100) / (5*survey2Counts)
+
+        CompetenceQ1S1s=float("{0:.1f}".format(CompetenceQ1S1s))
+        CompetenceQ1S2s=float("{0:.1f}".format(CompetenceQ1S2s))
+        print(CompetenceQ1S1s)
+#Riesk Q2 for both questioniares
+        CompetenceQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        CompetenceQ2S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+
+        CompetenceQ2S1s=[]
+        CompetenceQ2S2s=[]
+        for key, entry in CompetenceQ2S1.items():
+            if entry is None:
+                   CompetenceQ2S1s.append(0)
+            else:
+                CompetenceQ2S1s.append(entry)
+
+        for key, entry in CompetenceQ2S2.items():
+            if entry is None:
+                CompetenceQ2S2s.append(0)
+            else:
+                CompetenceQ2S2s.append(entry)
+
+        CompetenceQ2S1s= CompetenceQ2S1s[0]
+        CompetenceQ2S2s= CompetenceQ2S2s[0]
+        CompetenceQ2S1s= (CompetenceQ2S1s*100) / (5*survey1Counts)
+        CompetenceQ2S2s= (CompetenceQ2S2s*100) / (5*survey2Counts)
+
+        CompetenceQ2S1s=float("{0:.1f}".format(CompetenceQ2S1s))
+        CompetenceQ2S2s=float("{0:.1f}".format(CompetenceQ2S2s))
+#Riesk Q3 for both questioniares
+        CompetenceQ3S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q9", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        CompetenceQ3S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q9", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+
+        CompetenceQ3S1s=[]
+        CompetenceQ3S2s=[]
+        for key, entry in CompetenceQ3S1.items():
+            if entry is None:
+                   CompetenceQ3S1s.append(0)
+            else:
+                CompetenceQ3S1s.append(entry)
+
+        for key, entry in CompetenceQ3S2.items():
+            if entry is None:
+                CompetenceQ3S2s.append(0)
+            else:
+                CompetenceQ3S2s.append(entry)
+
+        CompetenceQ3S1s= CompetenceQ3S1s[0]
+        CompetenceQ3S2s= CompetenceQ3S2s[0]
+        CompetenceQ3S1s= (CompetenceQ3S1s*100) / (5*survey1Counts)
+        CompetenceQ3S2s= (CompetenceQ3S2s*100) / (5*survey2Counts)
+
+        CompetenceQ3S1s=float("{0:.1f}".format(CompetenceQ3S1s))
+        CompetenceQ3S2s=float("{0:.1f}".format(CompetenceQ3S2s))
+#Recirptocity Q1 for both questioniares
+        ReciprocityQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        ReciprocityQ1S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+
+        ReciprocityQ1S1s=[]
+        ReciprocityQ1S2s=[]
+        for key, entry in ReciprocityQ1S1.items():
+            if entry is None:
+                   ReciprocityQ1S1s.append(0)
+            else:
+                ReciprocityQ1S1s.append(entry)
+
+        for key, entry in ReciprocityQ1S2.items():
+            if entry is None:
+                ReciprocityQ1S2s.append(0)
+            else:
+                ReciprocityQ1S2s.append(entry)
+
+        ReciprocityQ1S1s= ReciprocityQ1S1s[0]
+        ReciprocityQ1S2s= ReciprocityQ1S2s[0]
+        ReciprocityQ1S1s= (ReciprocityQ1S1s*100) / (5*survey1Counts)
+        ReciprocityQ1S2s= (ReciprocityQ1S2s*100) / (5*survey2Counts)
+
+        ReciprocityQ1S1s=float("{0:.1f}".format(ReciprocityQ1S1s))
+        ReciprocityQ1S2s=float("{0:.1f}".format(ReciprocityQ1S2s))
+
+
+#Recirprocity Q2 for both questioniares
+        ReciprocityQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        ReciprocityQ2S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+
+        ReciprocityQ2S1s=[]
+        ReciprocityQ2S2s=[]
+        for key, entry in ReciprocityQ2S1.items():
+            if entry is None:
+                   ReciprocityQ2S1s.append(0)
+            else:
+                ReciprocityQ2S1s.append(entry)
+
+        for key, entry in ReciprocityQ2S2.items():
+            if entry is None:
+                ReciprocityQ2S2s.append(0)
+            else:
+                ReciprocityQ2S2s.append(entry)
+
+        ReciprocityQ2S1s= ReciprocityQ2S1s[0]
+        ReciprocityQ2S2s= ReciprocityQ2S2s[0]
+        ReciprocityQ2S1s= (ReciprocityQ2S1s*100) / (5*survey1Counts)
+        ReciprocityQ2S2s= (ReciprocityQ2S2s*100) / (5*survey2Counts)
+
+        ReciprocityQ2S1s=float("{0:.1f}".format(ReciprocityQ2S1s))
+        ReciprocityQ2S2s=float("{0:.1f}".format(ReciprocityQ2S2s))
+#Riesk Q1 for both questioniares
+        GtrustQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q12", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        GtrustQ1S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q12", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+
+        GtrustQ1S1s=[]
+        GtrustQ1S2s=[]
+        for key, entry in GtrustQ1S1.items():
+            if entry is None:
+                   GtrustQ1S1s.append(0)
+            else:
+                GtrustQ1S1s.append(entry)
+
+        for key, entry in GtrustQ1S2.items():
+            if entry is None:
+                GtrustQ1S2s.append(0)
+            else:
+                GtrustQ1S2s.append(entry)
+
+        GtrustQ1S1s= GtrustQ1S1s[0]
+        GtrustQ1S2s= GtrustQ1S2s[0]
+        GtrustQ1S1s= (GtrustQ1S1s*100) / (5*survey1Counts)
+        GtrustQ1S2s= (GtrustQ1S2s*100) / (5*survey2Counts)
+
+        GtrustQ1S1s=float("{0:.1f}".format(GtrustQ1S1s))
+        GtrustQ1S2s=float("{0:.1f}".format(GtrustQ1S2s))
+#Riesk Q2 for both questioniares
+        GtrustQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q13", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        GtrustQ2S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q13", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+
+        GtrustQ2S1s=[]
+        GtrustQ2S2s=[]
+        for key, entry in GtrustQ2S1.items():
+            if entry is None:
+                   GtrustQ2S1s.append(0)
+            else:
+                GtrustQ2S1s.append(entry)
+
+        for key, entry in GtrustQ2S2.items():
+            if entry is None:
+                GtrustQ2S2s.append(0)
+            else:
+                GtrustQ2S2s.append(entry)
+
+        GtrustQ2S1s= GtrustQ2S1s[0]
+        GtrustQ2S2s= GtrustQ2S2s[0]
+        GtrustQ2S1s= (GtrustQ2S1s*100) / (5*survey1Counts)
+        GtrustQ2S2s= (GtrustQ2S2s*100) / (5*survey2Counts)
+
+        GtrustQ2S1s=float("{0:.1f}".format(GtrustQ2S1s))
+        GtrustQ2S2s=float("{0:.1f}".format(GtrustQ2S2s))
+#Riesk Q3 for both questioniares
+        GtrustQ3S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q14", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        GtrustQ3S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q14", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+
+        GtrustQ3S1s=[]
+        GtrustQ3S2s=[]
+        for key, entry in GtrustQ3S1.items():
+            if entry is None:
+                   GtrustQ3S1s.append(0)
+            else:
+                GtrustQ3S1s.append(entry)
+
+        for key, entry in GtrustQ3S2.items():
+            if entry is None:
+                GtrustQ3S2s.append(0)
+            else:
+                GtrustQ3S2s.append(entry)
+
+        GtrustQ3S1s= GtrustQ3S1s[0]
+        GtrustQ3S2s= GtrustQ3S2s[0]
+        GtrustQ3S1s= (GtrustQ3S1s*100) / (5*survey1Counts)
+        GtrustQ3S2s= (GtrustQ3S2s*100) / (5*survey2Counts)
+
+        GtrustQ3S1s=float("{0:.1f}".format(GtrustQ3S1s))
+        GtrustQ3S2s=float("{0:.1f}".format(GtrustQ3S2s))
+
         return render(request, 'pie_chart2.html', {
-            'labels': labels,
-            'data1': data1,
-            'data2': data2,
-            'labels11': labels11,
-            'data11': data11,
-            'data22': data22,
-            'project':studyidd,
-            'project_id':project_id
-            })
-    elif y==3:
-        labels = []
-        data1 = []
-        data2=[]
-        data3=[]
-        labels11 = []
-        data11 = []
-        data22=[]
-        data33=[]
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[0]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            labels.append(key)
-            data1.append(entry)
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[1]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            data2.append(entry)
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[2]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[2])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            data3.append(entry)
+            'project_id':project_id,
+            'productname':productname,
+            'survey1Counts':survey1Counts,
+            'survey2Counts':survey2Counts,
+            'S1CountGender':S1CountGender,
+            'S2CountGender':S2CountGender,
+            'S1CountAge':S1CountAge,
+            'S2CountAge':S2CountAge,
+            'CrobanchAlphaS1':CrobanchAlphaS1,
+            'CrobanchAlphaS2':CrobanchAlphaS2,
+            'OvrallTrustS1s':OvrallTrustS1s,
+            'OvrallTrustS2s':OvrallTrustS2s,
+            'OvrallRiskS1s':OvrallRiskS1s,
+            'OvrallRiskS2s':OvrallRiskS2s,
+            'OvrallBenevolenceS1s':OvrallBenevolenceS1s,
+            'OvrallBenevolenceS2s':OvrallBenevolenceS2s,
+            'OvrallCompetenceS1s':OvrallCompetenceS1s,
+            'OvrallCompetenceS2s':OvrallCompetenceS2s,
+            'OvrallReciprocityS1s':OvrallReciprocityS1s,
+            'OvrallReciprocityS2s':OvrallReciprocityS2s,
+            'OvrallGeneralTrustS1s':OvrallGeneralTrustS1s,
+            'OvrallGeneralTrustS2s':OvrallGeneralTrustS2s,
+            'RiskQ1S1s':RiskQ1S1s,
+            'RiskQ1S2s':RiskQ1S2s,
+            'RiskQ2S1s':RiskQ2S1s,
+            'RiskQ2S2s':RiskQ2S2s,
+            'RiskQ3S1s':RiskQ3S1s,
+            'RiskQ3S2s':RiskQ3S2s,
+            'BenevlonceQ1S1s':BenevlonceQ1S1s,
+            'BenevlonceQ1S2s':BenevlonceQ1S2s,
+            'BenevlonceQ2S1s':BenevlonceQ2S1s,
+            'BenevlonceQ2S2s':BenevlonceQ2S2s,
+            'BenevlonceQ3S1s':BenevlonceQ3S1s,
+            'BenevlonceQ3S2s':BenevlonceQ3S2s,
+            'CompetenceQ1S1s':CompetenceQ1S1s,
+            'CompetenceQ1S2s':CompetenceQ1S2s,
+            'CompetenceQ2S1s':CompetenceQ2S1s,
+            'CompetenceQ2S2s':CompetenceQ2S2s,
+            'CompetenceQ3S1s':CompetenceQ3S1s,
+            'CompetenceQ3S2s':CompetenceQ3S2s,
+            'ReciprocityQ1S1s':ReciprocityQ1S1s,
+            'ReciprocityQ1S2s':ReciprocityQ1S2s,
+            'ReciprocityQ2S1s':ReciprocityQ2S1s,
+            'ReciprocityQ2S2s':ReciprocityQ2S2s,
+            'GtrustQ1S1s':GtrustQ1S1s,
+            'GtrustQ1S2s':GtrustQ1S2s,
+            'GtrustQ2S1s':GtrustQ2S1s,
+            'GtrustQ2S2s':GtrustQ2S2s,
+            'GtrustQ3S1s':GtrustQ3S1s,
+            'GtrustQ3S2s':GtrustQ3S2s
 
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            labels11.append(key)
-            data11.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            data22.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[2])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            data33.append(entry)
+            })
+
+    elif NumberOfSurveys==3:
+        #get the link ids for the two surveys
+        LID1 = Link.objects.filter(survey_id=SID[0]).values_list('id', flat=True)
+        LID2 = Link.objects.filter(survey_id=SID[1]).values_list('id', flat=True)
+        LID3 = Link.objects.filter(survey_id=SID[2]).values_list('id', flat=True)
+        #get the number of respondents by survey
+        S1Count = Submission.objects.aggregate(
+            responseS1= Count("q1", filter=(Q(link_id=LID1[0])), output_field=IntegerField()))
+        S2Count = Submission.objects.aggregate(
+            responseS1= Count("q1", filter=(Q(link_id=LID2[0])), output_field=IntegerField()))
+        S3Count = Submission.objects.aggregate(
+            responseS1= Count("q1", filter=(Q(link_id=LID3[0])), output_field=IntegerField()))
+        S1Counts=[]
+        S2Counts=[]
+        S3Counts=[]
+        for key, entry in S1Count.items():
+            if entry is None:
+                   S1Counts.append(0)
+            else:
+                S1Counts.append(entry)
+        for key, entry in S2Count.items():
+            if entry is None:
+                S2Counts.append(0)
+            else:
+                S2Counts.append(entry)
+        for key, entry in S3Count.items():
+            if entry is None:
+                S3Counts.append(0)
+            else:
+                S3Counts.append(entry)
+        survey1Counts= S1Counts[0]
+        survey2Counts= S2Counts[0]
+        survey3Counts= S3Counts[0]
+
+        #get number gender details for each survey
+        S1CountMale = AnonyData.objects.filter(link_id=LID1[0], gender="M").count()
+        S1CountFeMale = AnonyData.objects.filter(link_id=LID1[0], gender="F").count()
+        S1CountOthers = AnonyData.objects.filter(link_id=LID1[0], gender="O").count()
+
+        S2CountMale = AnonyData.objects.filter(link_id=LID2[0], gender="M").count()
+        S2CountFeMale = AnonyData.objects.filter(link_id=LID2[0], gender="F").count()
+        S2CountOthers = AnonyData.objects.filter(link_id=LID2[0], gender="O").count()
+
+        S3CountMale = AnonyData.objects.filter(link_id=LID3[0], gender="M").count()
+        S3CountFeMale = AnonyData.objects.filter(link_id=LID3[0], gender="F").count()
+        S3CountOthers = AnonyData.objects.filter(link_id=LID3[0], gender="O").count()
+            #appending the results to an array because the chartjs piechart expects the data in an array format
+        S1CountGender = [S1CountMale, S1CountFeMale, S1CountOthers]
+        S2CountGender = [S2CountMale, S2CountFeMale, S2CountOthers]
+        S3CountGender = [S3CountMale, S3CountFeMale, S3CountOthers]
+        print(S1CountGender)
+        print(S2CountGender)
+        print(S3CountGender)
+        #getting the age distribution for each survey
+        #survey 1
+        S1Count17Below = AnonyData.objects.filter(link_id=LID1[0], age="1").count()
+        S1Count18To27 = AnonyData.objects.filter(link_id=LID1[0], age="2").count()
+        S1Count28To37 = AnonyData.objects.filter(link_id=LID1[0], age="3").count()
+        S1Count38To47 = AnonyData.objects.filter(link_id=LID1[0], age="4").count()
+        S1Count48To57 = AnonyData.objects.filter(link_id=LID1[0], age="5").count()
+        S1Count58Above = AnonyData.objects.filter(link_id=LID1[0], age="6").count()
+        #survey 2
+        S2Count17Below = AnonyData.objects.filter(link_id=LID2[0], age="1").count()
+        S2Count18To27 = AnonyData.objects.filter(link_id=LID2[0], age="2").count()
+        S2Count28To37 = AnonyData.objects.filter(link_id=LID2[0], age="3").count()
+        S2Count38To47 = AnonyData.objects.filter(link_id=LID2[0], age="4").count()
+        S2Count48To57 = AnonyData.objects.filter(link_id=LID2[0], age="5").count()
+        S2Count58Above = AnonyData.objects.filter(link_id=LID2[0], age="6").count()
+        #survey 3
+        S3Count17Below = AnonyData.objects.filter(link_id=LID3[0], age="1").count()
+        S3Count18To27 = AnonyData.objects.filter(link_id=LID3[0], age="2").count()
+        S3Count28To37 = AnonyData.objects.filter(link_id=LID3[0], age="3").count()
+        S3Count38To47 = AnonyData.objects.filter(link_id=LID3[0], age="4").count()
+        S3Count48To57 = AnonyData.objects.filter(link_id=LID3[0], age="5").count()
+        S3Count58Above = AnonyData.objects.filter(link_id=LID3[0], age="6").count()
+            #appending the results to an array because the chartjs piechart expects the data in an array format
+        S1CountAge = [S1Count17Below, S1Count18To27, S1Count28To37, S1Count38To47, S1Count48To57, S1Count58Above ]
+        S2CountAge = [S2Count17Below, S2Count18To27, S2Count28To37, S2Count38To47, S2Count48To57, S2Count58Above ]
+        S3CountAge = [S3Count17Below, S3Count18To27, S3Count28To37, S3Count38To47, S3Count48To57, S3Count58Above ]
+        #check for null entries and replace them with 0
+        for i in S1CountAge:
+            if i == '':
+                S1CountAge[i]=0
+            else:
+                S1CountAge[i] = S1CountAge[i]
+
+        for i in S2CountAge:
+            if i == '':
+                S2CountAge[i]=0
+            else:
+                S2CountAge[i] = S2CountAge[i]
+
+        for i in S3CountAge:
+            if i == '':
+                S3CountAge[i]=0
+            else:
+                S3CountAge[i] = S2CountAge[i]
+        #print(S1CountAge)
+        #print(S2CountAge)
+        #get all response for each survey
+        allRespS1= Submission.objects.values('q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14').filter(Q(link_id=LID1[0])).all()
+        allRespS2= Submission.objects.values('q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14').filter(Q(link_id=LID2[0])).all()
+        allRespS3= Submission.objects.values('q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14').filter(Q(link_id=LID3[0])).all()
+        #convert the querryset into dataframe
+        allRespS1=df.DataFrame.from_records(allRespS1)
+        allRespS2=df.DataFrame.from_records(allRespS2)
+        allRespS3=df.DataFrame.from_records(allRespS3)
+        #compute the crobanch alpha for each survey using the aggregated responses in dataframe form above
+        CrobanchAlphaS1=cronbach_alpha(allRespS1)
+        CrobanchAlphaS2=cronbach_alpha(allRespS2)
+        CrobanchAlphaS3=cronbach_alpha(allRespS3)
+        #reducing the result to two decimal places
+        CrobanchAlphaS1=float("{0:.4f}".format(CrobanchAlphaS1))
+        CrobanchAlphaS2=float("{0:.4f}".format(CrobanchAlphaS2))
+        CrobanchAlphaS3=float("{0:.4f}".format(CrobanchAlphaS3))
+
+        if math.isnan(CrobanchAlphaS1):
+            CrobanchAlphaS1=0.0
+        else:
+            CrobanchAlphaS1=CrobanchAlphaS1
+
+        if math.isnan(CrobanchAlphaS2):
+            CrobanchAlphaS2=0.0
+        else:
+            CrobanchAlphaS2=CrobanchAlphaS2
+
+        if math.isnan(CrobanchAlphaS3):
+            CrobanchAlphaS3=0.0
+        else:
+            CrobanchAlphaS3=CrobanchAlphaS3
+#compute overall trust score for each survey begins from here
+        OvrallTrustS1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q4", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q7", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q10", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q12", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        OvrallTrustS2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q4", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q7", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q10", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q12", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        OvrallTrustS3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q4", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q7", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q10", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q12", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        OvrallTrustS1s=[]
+        OvrallTrustS2s=[]
+        OvrallTrustS3s=[]
+        for key, entry in OvrallTrustS1.items():
+            if entry is None:
+                   OvrallTrustS1s.append(0)
+            else:
+                OvrallTrustS1s.append(entry)
+
+        for key, entry in OvrallTrustS2.items():
+            if entry is None:
+                OvrallTrustS2s.append(0)
+            else:
+                OvrallTrustS2s.append(entry)
+
+        for key, entry in OvrallTrustS3.items():
+            if entry is None:
+                OvrallTrustS3s.append(0)
+            else:
+                OvrallTrustS3s.append(entry)
+
+        OvrallTrustS1s= OvrallTrustS1s[0]
+        OvrallTrustS2s= OvrallTrustS2s[0]
+        OvrallTrustS3s= OvrallTrustS3s[0]
+        OvrallTrustS1s= (OvrallTrustS1s*100) / (70*survey1Counts)
+        OvrallTrustS2s= (OvrallTrustS2s*100) / (70*survey2Counts)
+        OvrallTrustS3s= (OvrallTrustS3s*100) / (70*survey3Counts)
+
+        OvrallTrustS1s=float("{0:.1f}".format(OvrallTrustS1s))
+        OvrallTrustS2s=float("{0:.1f}".format(OvrallTrustS2s))
+        OvrallTrustS3s=float("{0:.1f}".format(OvrallTrustS3s))
+#computing overall risk for each survey
+        OvrallRiskS1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID1[0])), output_field=FloatField())
+                )
+        OvrallRiskS2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        OvrallRiskS3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+
+        OvrallRiskS1s=[]
+        OvrallRiskS2s=[]
+        OvrallRiskS3s=[]
+        for key, entry in OvrallRiskS1.items():
+            if entry is None:
+                   OvrallRiskS1s.append(0)
+            else:
+                OvrallRiskS1s.append(entry)
+
+        for key, entry in OvrallRiskS2.items():
+            if entry is None:
+                OvrallRiskS2s.append(0)
+            else:
+                OvrallRiskS2s.append(entry)
+
+        for key, entry in OvrallRiskS3.items():
+            if entry is None:
+                OvrallRiskS3s.append(0)
+            else:
+                OvrallRiskS3s.append(entry)
+        OvrallRiskS1s= OvrallRiskS1s[0]
+        OvrallRiskS2s= OvrallRiskS2s[0]
+        OvrallRiskS3s= OvrallRiskS3s[0]
+        OvrallRiskS1s= (OvrallRiskS1s*100) / (15*survey1Counts)
+        OvrallRiskS2s= (OvrallRiskS2s*100) / (15*survey2Counts)
+        OvrallRiskS3s= (OvrallRiskS3s*100) / (15*survey3Counts)
+
+        OvrallRiskS1s=float("{0:.1f}".format(OvrallRiskS1s))
+        OvrallRiskS2s=float("{0:.1f}".format(OvrallRiskS2s))
+        OvrallRiskS3s=float("{0:.1f}".format(OvrallRiskS3s))
+#computing benevolencerisk for each survey
+        OvrallBenevolenceS1= Submission.objects.aggregate(
+            overalBenevolence=
+                Sum("q4", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID1[0])), output_field=FloatField())
+                )
+        OvrallBenevolenceS2= Submission.objects.aggregate(
+            overalBenevolence=
+                Sum("q4", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        OvrallBenevolenceS3= Submission.objects.aggregate(
+            overalBenevolence=
+                Sum("q4", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+
+        OvrallBenevolenceS1s=[]
+        OvrallBenevolenceS2s=[]
+        OvrallBenevolenceS3s=[]
+        for key, entry in OvrallBenevolenceS1.items():
+            if entry is None:
+                   OvrallBenevolenceS1s.append(0)
+            else:
+                OvrallBenevolenceS1s.append(entry)
+
+        for key, entry in OvrallBenevolenceS2.items():
+            if entry is None:
+                OvrallBenevolenceS2s.append(0)
+            else:
+                OvrallBenevolenceS2s.append(entry)
+
+        for key, entry in OvrallBenevolenceS3.items():
+            if entry is None:
+                OvrallBenevolenceS3s.append(0)
+            else:
+                OvrallBenevolenceS3s.append(entry)
+        OvrallBenevolenceS1s= OvrallBenevolenceS1s[0]
+        OvrallBenevolenceS2s= OvrallBenevolenceS2s[0]
+        OvrallBenevolenceS3s= OvrallBenevolenceS3s[0]
+        OvrallBenevolenceS1s= (OvrallBenevolenceS1s*100) / (15*survey1Counts)
+        OvrallBenevolenceS2s= (OvrallBenevolenceS2s*100) / (15*survey2Counts)
+        OvrallBenevolenceS3s= (OvrallBenevolenceS3s*100) / (15*survey3Counts)
+
+        OvrallBenevolenceS1s=float("{0:.1f}".format(OvrallBenevolenceS1s))
+        OvrallBenevolenceS2s=float("{0:.1f}".format(OvrallBenevolenceS2s))
+        OvrallBenevolenceS3s=float("{0:.1f}".format(OvrallBenevolenceS3s))
+# computing competence for each survey
+        OvrallCompetenceS1= Submission.objects.aggregate(
+            overalCompetence=
+                Sum("q7", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        OvrallCompetenceS2= Submission.objects.aggregate(
+            overalCompetence=
+                Sum("q7", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        OvrallCompetenceS3= Submission.objects.aggregate(
+            overalCompetence=
+                Sum("q7", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        OvrallCompetenceS1s=[]
+        OvrallCompetenceS2s=[]
+        OvrallCompetenceS3s=[]
+        for key, entry in OvrallCompetenceS1.items():
+            if entry is None:
+                   OvrallCompetenceS1s.append(0)
+            else:
+                OvrallCompetenceS1s.append(entry)
+
+        for key, entry in OvrallCompetenceS2.items():
+            if entry is None:
+                OvrallCompetenceS2s.append(0)
+            else:
+                OvrallCompetenceS2s.append(entry)
+        for key, entry in OvrallCompetenceS3.items():
+            if entry is None:
+                OvrallCompetenceS3s.append(0)
+            else:
+                OvrallCompetenceS3s.append(entry)
+        OvrallCompetenceS1s= OvrallCompetenceS1s[0]
+        OvrallCompetenceS2s= OvrallCompetenceS2s[0]
+        OvrallCompetenceS3s= OvrallCompetenceS3s[0]
+        OvrallCompetenceS1s= (OvrallCompetenceS1s*100) / (15*survey1Counts)
+        OvrallCompetenceS2s= (OvrallCompetenceS2s*100) / (15*survey2Counts)
+        OvrallCompetenceS3s= (OvrallCompetenceS3s*100) / (15*survey3Counts)
+
+        OvrallCompetenceS1s=float("{0:.1f}".format(OvrallCompetenceS1s))
+        OvrallCompetenceS2s=float("{0:.1f}".format(OvrallCompetenceS2s))
+        OvrallCompetenceS3s=float("{0:.1f}".format(OvrallCompetenceS3s))
+# computing reciprocity
+        OvrallReciprocityS1= Submission.objects.aggregate(
+            overalReciprocity=
+                Sum("q10", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        OvrallReciprocityS2= Submission.objects.aggregate(
+            overalReciprocity=
+                Sum("q10", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        OvrallReciprocityS3= Submission.objects.aggregate(
+            overalReciprocity=
+                Sum("q10", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        OvrallReciprocityS1s=[]
+        OvrallReciprocityS2s=[]
+        OvrallReciprocityS3s=[]
+        for key, entry in OvrallReciprocityS1.items():
+            if entry is None:
+                   OvrallReciprocityS1s.append(0)
+            else:
+                OvrallReciprocityS1s.append(entry)
+
+        for key, entry in OvrallReciprocityS2.items():
+            if entry is None:
+                OvrallReciprocityS2s.append(0)
+            else:
+                OvrallReciprocityS2s.append(entry)
+
+        for key, entry in OvrallReciprocityS3.items():
+            if entry is None:
+                OvrallReciprocityS3s.append(0)
+            else:
+                OvrallReciprocityS3s.append(entry)
+
+        OvrallReciprocityS1s= OvrallReciprocityS1s[0]
+        OvrallReciprocityS2s= OvrallReciprocityS2s[0]
+        OvrallReciprocityS3s= OvrallReciprocityS3s[0]
+        OvrallReciprocityS1s= (OvrallReciprocityS1s*100) / (10*survey1Counts)
+        OvrallReciprocityS2s= (OvrallReciprocityS2s*100) / (10*survey2Counts)
+        OvrallReciprocityS3s= (OvrallReciprocityS3s*100) / (10*survey3Counts)
+
+        OvrallReciprocityS1s=float("{0:.1f}".format(OvrallReciprocityS1s))
+        OvrallReciprocityS2s=float("{0:.1f}".format(OvrallReciprocityS2s))
+        OvrallReciprocityS3s=float("{0:.1f}".format(OvrallReciprocityS3s))
+
+#Computing general trust for each survey
+        OvrallGeneralTrustS1= Submission.objects.aggregate(
+            overalGeneralTrust=
+                Sum("q12", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        OvrallGeneralTrustS2= Submission.objects.aggregate(
+            overalGeneralTrust=
+                Sum("q12", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        OvrallGeneralTrustS3= Submission.objects.aggregate(
+            overalGeneralTrust=
+                Sum("q12", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+
+        OvrallGeneralTrustS1s=[]
+        OvrallGeneralTrustS2s=[]
+        OvrallGeneralTrustS3s=[]
+        for key, entry in OvrallGeneralTrustS1.items():
+            if entry is None:
+                   OvrallGeneralTrustS1s.append(0)
+            else:
+                OvrallGeneralTrustS1s.append(entry)
+
+        for key, entry in OvrallGeneralTrustS2.items():
+            if entry is None:
+                OvrallGeneralTrustS2s.append(0)
+            else:
+                OvrallGeneralTrustS2s.append(entry)
+
+        for key, entry in OvrallGeneralTrustS3.items():
+            if entry is None:
+                OvrallGeneralTrustS3s.append(0)
+            else:
+                OvrallGeneralTrustS3s.append(entry)
+        OvrallGeneralTrustS1s= OvrallGeneralTrustS1s[0]
+        OvrallGeneralTrustS2s= OvrallGeneralTrustS2s[0]
+        OvrallGeneralTrustS3s= OvrallGeneralTrustS3s[0]
+        OvrallGeneralTrustS1s= (OvrallGeneralTrustS1s*100) / (15*survey1Counts)
+        OvrallGeneralTrustS2s= (OvrallGeneralTrustS2s*100) / (15*survey2Counts)
+        OvrallGeneralTrustS3s= (OvrallGeneralTrustS3s*100) / (15*survey3Counts)
+
+        OvrallGeneralTrustS1s=float("{0:.1f}".format(OvrallGeneralTrustS1s))
+        OvrallGeneralTrustS2s=float("{0:.1f}".format(OvrallGeneralTrustS2s))
+        OvrallGeneralTrustS3s=float("{0:.1f}".format(OvrallGeneralTrustS3s))
+
+#Riesk Q1 for both questioniares
+        RiskQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        RiskQ1S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        RiskQ1S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+
+        RiskQ1S1s=[]
+        RiskQ1S2s=[]
+        RiskQ1S3s=[]
+        for key, entry in RiskQ1S1.items():
+            if entry is None:
+                   RiskQ1S1s.append(0)
+            else:
+                RiskQ1S1s.append(entry)
+
+        for key, entry in RiskQ1S2.items():
+            if entry is None:
+                RiskQ1S2s.append(0)
+            else:
+                RiskQ1S2s.append(entry)
+
+        for key, entry in RiskQ1S3.items():
+            if entry is None:
+                RiskQ1S3s.append(0)
+            else:
+                RiskQ1S3s.append(entry)
+
+        RiskQ1S1s= RiskQ1S1s[0]
+        RiskQ1S2s= RiskQ1S2s[0]
+        RiskQ1S3s= RiskQ1S3s[0]
+        RiskQ1S1s= (RiskQ1S1s*100) / (5*survey1Counts)
+        RiskQ1S2s= (RiskQ1S2s*100) / (5*survey2Counts)
+        RiskQ1S3s= (RiskQ1S3s*100) / (5*survey3Counts)
+
+        RiskQ1S1s=float("{0:.1f}".format(RiskQ1S1s))
+        RiskQ1S2s=float("{0:.1f}".format(RiskQ1S2s))
+        RiskQ1S3s=float("{0:.1f}".format(RiskQ1S3s))
+#Riesk Q2 for both questioniares
+        RiskQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q2", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        RiskQ2S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q2", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        RiskQ2S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q2", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+
+        RiskQ2S1s=[]
+        RiskQ2S2s=[]
+        RiskQ2S3s=[]
+        for key, entry in RiskQ2S1.items():
+            if entry is None:
+                   RiskQ2S1s.append(0)
+            else:
+                RiskQ2S1s.append(entry)
+
+        for key, entry in RiskQ2S2.items():
+            if entry is None:
+                RiskQ2S2s.append(0)
+            else:
+                RiskQ2S2s.append(entry)
+
+        for key, entry in RiskQ2S3.items():
+            if entry is None:
+                RiskQ2S3s.append(0)
+            else:
+                RiskQ2S3s.append(entry)
+        RiskQ2S1s= RiskQ2S1s[0]
+        RiskQ2S2s= RiskQ2S2s[0]
+        RiskQ2S3s= RiskQ2S3s[0]
+        RiskQ2S1s= (RiskQ2S1s*100) / (5*survey1Counts)
+        RiskQ2S2s= (RiskQ2S2s*100) / (5*survey1Counts)
+        RiskQ2S3s= (RiskQ2S3s*100) / (5*survey3Counts)
+
+        RiskQ2S1s=float("{0:.1f}".format(RiskQ2S1s))
+        RiskQ2S2s=float("{0:.1f}".format(RiskQ2S2s))
+        RiskQ2S3s=float("{0:.1f}".format(RiskQ2S3s))
+#Riesk Q3 for both questioniares
+        RiskQ3S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q3", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        RiskQ3S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q3", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        RiskQ3S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q3", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+
+        RiskQ3S1s=[]
+        RiskQ3S2s=[]
+        RiskQ3S3s=[]
+        for key, entry in RiskQ3S1.items():
+            if entry is None:
+                   RiskQ3S1s.append(0)
+            else:
+                RiskQ3S1s.append(entry)
+
+        for key, entry in RiskQ3S2.items():
+            if entry is None:
+                RiskQ3S2s.append(0)
+            else:
+                RiskQ3S2s.append(entry)
+
+        for key, entry in RiskQ3S3.items():
+            if entry is None:
+                RiskQ3S3s.append(0)
+            else:
+                RiskQ3S3s.append(entry)
+        RiskQ3S1s= RiskQ3S1s[0]
+        RiskQ3S2s= RiskQ3S2s[0]
+        RiskQ3S3s= RiskQ3S3s[0]
+        RiskQ3S1s= (RiskQ3S1s*100) / (5*survey1Counts)
+        RiskQ3S2s= (RiskQ3S2s*100) / (5*survey1Counts)
+        RiskQ3S3s= (RiskQ3S3s*100) / (5*survey3Counts)
+
+        RiskQ3S1s=float("{0:.1f}".format(RiskQ3S1s))
+        RiskQ3S2s=float("{0:.1f}".format(RiskQ3S2s))
+        RiskQ3S3s=float("{0:.1f}".format(RiskQ3S3s))
+
+#benevolence Q1 for both questioniares
+        BenevlonceQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q4", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        BenevlonceQ1S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q4", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        BenevlonceQ1S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q4", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        BenevlonceQ1S1s=[]
+        BenevlonceQ1S2s=[]
+        BenevlonceQ1S3s=[]
+        for key, entry in BenevlonceQ1S1.items():
+            if entry is None:
+                   BenevlonceQ1S1s.append(0)
+            else:
+                BenevlonceQ1S1s.append(entry)
+
+        for key, entry in BenevlonceQ1S2.items():
+            if entry is None:
+                BenevlonceQ1S2s.append(0)
+            else:
+                BenevlonceQ1S2s.append(entry)
+
+        for key, entry in BenevlonceQ1S3.items():
+            if entry is None:
+                BenevlonceQ1S3s.append(0)
+            else:
+                BenevlonceQ1S3s.append(entry)
+
+        BenevlonceQ1S1s= BenevlonceQ1S1s[0]
+        BenevlonceQ1S2s= BenevlonceQ1S2s[0]
+        BenevlonceQ1S3s= BenevlonceQ1S3s[0]
+
+        BenevlonceQ1S1s= (BenevlonceQ1S1s*100) / (5*survey1Counts)
+        BenevlonceQ1S2s= (BenevlonceQ1S2s*100) / (5*survey1Counts)
+        BenevlonceQ1S3s= (BenevlonceQ1S3s*100) / (5*survey3Counts)
+
+        BenevlonceQ1S1s=float("{0:.1f}".format(BenevlonceQ1S1s))
+        BenevlonceQ1S2s=float("{0:.1f}".format(BenevlonceQ1S2s))
+        BenevlonceQ1S3s=float("{0:.1f}".format(BenevlonceQ1S3s))
+#benevolence Q2 for both questioniares
+        BenevlonceQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q5", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        BenevlonceQ2S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q5", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        BenevlonceQ2S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q5", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+
+        BenevlonceQ2S1s=[]
+        BenevlonceQ2S2s=[]
+        BenevlonceQ2S3s=[]
+        for key, entry in BenevlonceQ2S1.items():
+            if entry is None:
+                   BenevlonceQ2S1s.append(0)
+            else:
+                BenevlonceQ2S1s.append(entry)
+
+        for key, entry in BenevlonceQ2S2.items():
+            if entry is None:
+                BenevlonceQ2S2s.append(0)
+            else:
+                BenevlonceQ2S2s.append(entry)
+
+        for key, entry in BenevlonceQ2S3.items():
+            if entry is None:
+                BenevlonceQ2S3s.append(0)
+            else:
+                BenevlonceQ2S3s.append(entry)
+
+        BenevlonceQ2S1s= BenevlonceQ2S1s[0]
+        BenevlonceQ2S2s= BenevlonceQ2S2s[0]
+        BenevlonceQ2S3s= BenevlonceQ2S3s[0]
+        BenevlonceQ2S1s= (BenevlonceQ2S1s*100) / (5*survey1Counts)
+        BenevlonceQ2S2s= (BenevlonceQ2S2s*100) / (5*survey1Counts)
+        BenevlonceQ2S3s= (BenevlonceQ2S3s*100) / (5*survey3Counts)
+
+        BenevlonceQ2S1s=float("{0:.1f}".format(BenevlonceQ2S1s))
+        BenevlonceQ2S2s=float("{0:.1f}".format(BenevlonceQ2S2s))
+        BenevlonceQ2S3s=float("{0:.1f}".format(BenevlonceQ2S3s))
+
+#benevolence Q3 for both questioniares
+        BenevlonceQ3S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q6", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        BenevlonceQ3S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q6", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        BenevlonceQ3S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q6", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+
+        BenevlonceQ3S1s=[]
+        BenevlonceQ3S2s=[]
+        BenevlonceQ3S3s=[]
+        for key, entry in BenevlonceQ3S1.items():
+            if entry is None:
+                   BenevlonceQ3S1s.append(0)
+            else:
+                BenevlonceQ3S1s.append(entry)
+
+        for key, entry in BenevlonceQ3S2.items():
+            if entry is None:
+                BenevlonceQ3S2s.append(0)
+            else:
+                BenevlonceQ3S2s.append(entry)
+
+        for key, entry in BenevlonceQ3S3.items():
+            if entry is None:
+                BenevlonceQ3S3s.append(0)
+            else:
+                BenevlonceQ3S3s.append(entry)
+
+        BenevlonceQ3S1s= BenevlonceQ3S1s[0]
+        BenevlonceQ3S2s= BenevlonceQ3S2s[0]
+        BenevlonceQ3S3s= BenevlonceQ3S3s[0]
+
+        BenevlonceQ3S1s= (BenevlonceQ3S1s*100) / (5*survey1Counts)
+        BenevlonceQ3S2s= (BenevlonceQ3S2s*100) / (5*survey2Counts)
+        BenevlonceQ3S3s= (BenevlonceQ3S3s*100) / (5*survey3Counts)
+
+        BenevlonceQ3S1s=float("{0:.1f}".format(BenevlonceQ3S1s))
+        BenevlonceQ3S2s=float("{0:.1f}".format(BenevlonceQ3S2s))
+        BenevlonceQ3S3s=float("{0:.1f}".format(BenevlonceQ3S3s))
+
+#Riesk Q1 for both questioniares
+        CompetenceQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        CompetenceQ1S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        CompetenceQ1S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+
+        CompetenceQ1S1s=[]
+        CompetenceQ1S2s=[]
+        CompetenceQ1S3s=[]
+        for key, entry in CompetenceQ1S1.items():
+            if entry is None:
+                   CompetenceQ1S1s.append(0)
+            else:
+                CompetenceQ1S1s.append(entry)
+
+        for key, entry in CompetenceQ1S2.items():
+            if entry is None:
+                CompetenceQ1S2s.append(0)
+            else:
+                CompetenceQ1S2s.append(entry)
+
+        for key, entry in CompetenceQ1S3.items():
+            if entry is None:
+                CompetenceQ1S3s.append(0)
+            else:
+                CompetenceQ1S3s.append(entry)
+
+        CompetenceQ1S1s= CompetenceQ1S1s[0]
+        CompetenceQ1S2s= CompetenceQ1S2s[0]
+        CompetenceQ1S3s= CompetenceQ1S3s[0]
+
+        CompetenceQ1S1s= (CompetenceQ1S1s*100) / (5*survey1Counts)
+        CompetenceQ1S2s= (CompetenceQ1S2s*100) / (5*survey2Counts)
+        CompetenceQ1S3s= (CompetenceQ1S3s*100) / (5*survey3Counts)
+
+        CompetenceQ1S1s=float("{0:.1f}".format(CompetenceQ1S1s))
+        CompetenceQ1S2s=float("{0:.1f}".format(CompetenceQ1S2s))
+        CompetenceQ1S3s=float("{0:.1f}".format(CompetenceQ1S3s))
+
+#Riesk Q2 for both questioniares
+        CompetenceQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        CompetenceQ2S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        CompetenceQ2S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+
+        CompetenceQ2S1s=[]
+        CompetenceQ2S2s=[]
+        CompetenceQ2S3s=[]
+        for key, entry in CompetenceQ2S1.items():
+            if entry is None:
+                   CompetenceQ2S1s.append(0)
+            else:
+                CompetenceQ2S1s.append(entry)
+
+        for key, entry in CompetenceQ2S2.items():
+            if entry is None:
+                CompetenceQ2S2s.append(0)
+            else:
+                CompetenceQ2S2s.append(entry)
+
+        for key, entry in CompetenceQ2S3.items():
+            if entry is None:
+                CompetenceQ2S3s.append(0)
+            else:
+                CompetenceQ2S3s.append(entry)
+
+        CompetenceQ2S1s= CompetenceQ2S1s[0]
+        CompetenceQ2S2s= CompetenceQ2S2s[0]
+        CompetenceQ2S3s= CompetenceQ2S3s[0]
+
+        CompetenceQ2S1s= (CompetenceQ2S1s*100) / (5*survey1Counts)
+        CompetenceQ2S2s= (CompetenceQ2S2s*100) / (5*survey2Counts)
+        CompetenceQ2S3s= (CompetenceQ2S3s*100) / (5*survey3Counts)
+
+        CompetenceQ2S1s=float("{0:.1f}".format(CompetenceQ2S1s))
+        CompetenceQ2S2s=float("{0:.1f}".format(CompetenceQ2S2s))
+        CompetenceQ2S3s=float("{0:.1f}".format(CompetenceQ2S3s))
+#Riesk Q3 for both questioniares
+        CompetenceQ3S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q9", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        CompetenceQ3S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q9", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        CompetenceQ3S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q9", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+
+        CompetenceQ3S1s=[]
+        CompetenceQ3S2s=[]
+        CompetenceQ3S3s=[]
+        for key, entry in CompetenceQ3S1.items():
+            if entry is None:
+                   CompetenceQ3S1s.append(0)
+            else:
+                CompetenceQ3S1s.append(entry)
+
+        for key, entry in CompetenceQ3S2.items():
+            if entry is None:
+                CompetenceQ3S2s.append(0)
+            else:
+                CompetenceQ3S2s.append(entry)
+
+        for key, entry in CompetenceQ3S3.items():
+            if entry is None:
+                CompetenceQ3S3s.append(0)
+            else:
+                CompetenceQ3S3s.append(entry)
+
+        CompetenceQ3S1s= CompetenceQ3S1s[0]
+        CompetenceQ3S2s= CompetenceQ3S2s[0]
+        CompetenceQ3S3s= CompetenceQ3S3s[0]
+        CompetenceQ3S1s= (CompetenceQ3S1s*100) / (5*survey1Counts)
+        CompetenceQ3S2s= (CompetenceQ3S2s*100) / (5*survey2Counts)
+        CompetenceQ3S3s= (CompetenceQ3S3s*100) / (5*survey3Counts)
+
+        CompetenceQ3S1s=float("{0:.1f}".format(CompetenceQ3S1s))
+        CompetenceQ3S2s=float("{0:.1f}".format(CompetenceQ3S2s))
+        CompetenceQ3S3s=float("{0:.1f}".format(CompetenceQ3S3s))
+#Recirptocity Q1 for both questioniares
+        ReciprocityQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        ReciprocityQ1S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        ReciprocityQ1S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+
+        ReciprocityQ1S1s=[]
+        ReciprocityQ1S2s=[]
+        ReciprocityQ1S3s=[]
+        for key, entry in ReciprocityQ1S1.items():
+            if entry is None:
+                   ReciprocityQ1S1s.append(0)
+            else:
+                ReciprocityQ1S1s.append(entry)
+
+        for key, entry in ReciprocityQ1S2.items():
+            if entry is None:
+                ReciprocityQ1S2s.append(0)
+            else:
+                ReciprocityQ1S2s.append(entry)
+
+        for key, entry in ReciprocityQ1S3.items():
+            if entry is None:
+                ReciprocityQ1S3s.append(0)
+            else:
+                ReciprocityQ1S3s.append(entry)
+
+        ReciprocityQ1S1s= ReciprocityQ1S1s[0]
+        ReciprocityQ1S2s= ReciprocityQ1S2s[0]
+        ReciprocityQ1S3s= ReciprocityQ1S3s[0]
+        ReciprocityQ1S1s= (ReciprocityQ1S1s*100) / (5*survey1Counts)
+        ReciprocityQ1S2s= (ReciprocityQ1S2s*100) / (5*survey2Counts)
+        ReciprocityQ1S3s= (ReciprocityQ1S3s*100) / (5*survey3Counts)
+
+        ReciprocityQ1S1s=float("{0:.1f}".format(ReciprocityQ1S1s))
+        ReciprocityQ1S2s=float("{0:.1f}".format(ReciprocityQ1S2s))
+        ReciprocityQ1S3s=float("{0:.1f}".format(ReciprocityQ1S3s))
+
+
+#Recirprocity Q2 for both questioniares
+        ReciprocityQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        ReciprocityQ2S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        ReciprocityQ2S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        ReciprocityQ2S1s=[]
+        ReciprocityQ2S2s=[]
+        ReciprocityQ2S3s=[]
+        for key, entry in ReciprocityQ2S1.items():
+            if entry is None:
+                   ReciprocityQ2S1s.append(0)
+            else:
+                ReciprocityQ2S1s.append(entry)
+
+        for key, entry in ReciprocityQ2S2.items():
+            if entry is None:
+                ReciprocityQ2S2s.append(0)
+            else:
+                ReciprocityQ2S2s.append(entry)
+
+        for key, entry in ReciprocityQ2S3.items():
+            if entry is None:
+                ReciprocityQ2S3s.append(0)
+            else:
+                ReciprocityQ2S3s.append(entry)
+
+        ReciprocityQ2S1s= ReciprocityQ2S1s[0]
+        ReciprocityQ2S2s= ReciprocityQ2S2s[0]
+        ReciprocityQ2S3s= ReciprocityQ2S3s[0]
+
+        ReciprocityQ2S1s= (ReciprocityQ2S1s*100) / (5*survey1Counts)
+        ReciprocityQ2S2s= (ReciprocityQ2S2s*100) / (5*survey2Counts)
+        ReciprocityQ2S3s= (ReciprocityQ2S3s*100) / (5*survey3Counts)
+
+        ReciprocityQ2S1s=float("{0:.1f}".format(ReciprocityQ2S1s))
+        ReciprocityQ2S2s=float("{0:.1f}".format(ReciprocityQ2S2s))
+        ReciprocityQ2S3s=float("{0:.1f}".format(ReciprocityQ2S3s))
+#Riesk Q1 for both questioniares
+        GtrustQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q12", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        GtrustQ1S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q12", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        GtrustQ1S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q12", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+
+        GtrustQ1S1s=[]
+        GtrustQ1S2s=[]
+        GtrustQ1S3s=[]
+        for key, entry in GtrustQ1S1.items():
+            if entry is None:
+                   GtrustQ1S1s.append(0)
+            else:
+                GtrustQ1S1s.append(entry)
+
+        for key, entry in GtrustQ1S2.items():
+            if entry is None:
+                GtrustQ1S2s.append(0)
+            else:
+                GtrustQ1S2s.append(entry)
+
+        for key, entry in GtrustQ1S3.items():
+            if entry is None:
+                GtrustQ1S3s.append(0)
+            else:
+                GtrustQ1S3s.append(entry)
+
+        GtrustQ1S1s= GtrustQ1S1s[0]
+        GtrustQ1S2s= GtrustQ1S2s[0]
+        GtrustQ1S3s= GtrustQ1S3s[0]
+        GtrustQ1S1s= (GtrustQ1S1s*100) / (5*survey1Counts)
+        GtrustQ1S2s= (GtrustQ1S2s*100) / (5*survey2Counts)
+        GtrustQ1S3s= (GtrustQ1S3s*100) / (5*survey3Counts)
+
+        GtrustQ1S1s=float("{0:.1f}".format(GtrustQ1S1s))
+        GtrustQ1S2s=float("{0:.1f}".format(GtrustQ1S2s))
+        GtrustQ1S3s=float("{0:.1f}".format(GtrustQ1S3s))
+#Riesk Q2 for both questioniares
+        GtrustQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q13", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        GtrustQ2S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q13", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        GtrustQ2S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q13", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        GtrustQ2S1s=[]
+        GtrustQ2S2s=[]
+        GtrustQ2S3s=[]
+        for key, entry in GtrustQ2S1.items():
+            if entry is None:
+                   GtrustQ2S1s.append(0)
+            else:
+                GtrustQ2S1s.append(entry)
+
+        for key, entry in GtrustQ2S2.items():
+            if entry is None:
+                GtrustQ2S2s.append(0)
+            else:
+                GtrustQ2S2s.append(entry)
+
+        for key, entry in GtrustQ2S3.items():
+            if entry is None:
+                GtrustQ2S3s.append(0)
+            else:
+                GtrustQ2S3s.append(entry)
+
+        GtrustQ2S1s= GtrustQ2S1s[0]
+        GtrustQ2S2s= GtrustQ2S2s[0]
+        GtrustQ2S3s= GtrustQ2S3s[0]
+        GtrustQ2S1s= (GtrustQ2S1s*100) / (5*survey1Counts)
+        GtrustQ2S2s= (GtrustQ2S2s*100) / (5*survey2Counts)
+        GtrustQ2S3s= (GtrustQ2S3s*100) / (5*survey3Counts)
+
+        GtrustQ2S1s=float("{0:.1f}".format(GtrustQ2S1s))
+        GtrustQ2S2s=float("{0:.1f}".format(GtrustQ2S2s))
+        GtrustQ2S3s=float("{0:.1f}".format(GtrustQ2S3s))
+#Riesk Q3 for both questioniares
+        GtrustQ3S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q14", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        GtrustQ3S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q14", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        GtrustQ3S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q14", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+
+        GtrustQ3S1s=[]
+        GtrustQ3S2s=[]
+        GtrustQ3S3s=[]
+        for key, entry in GtrustQ3S1.items():
+            if entry is None:
+                   GtrustQ3S1s.append(0)
+            else:
+                GtrustQ3S1s.append(entry)
+
+        for key, entry in GtrustQ3S2.items():
+            if entry is None:
+                GtrustQ3S2s.append(0)
+            else:
+                GtrustQ3S2s.append(entry)
+
+        for key, entry in GtrustQ3S3.items():
+            if entry is None:
+                GtrustQ3S3s.append(0)
+            else:
+                GtrustQ3S3s.append(entry)
+
+        GtrustQ3S1s= GtrustQ3S1s[0]
+        GtrustQ3S2s= GtrustQ3S2s[0]
+        GtrustQ3S3s= GtrustQ3S3s[0]
+        GtrustQ3S1s= (GtrustQ3S1s*100) / (5*survey1Counts)
+        GtrustQ3S2s= (GtrustQ3S2s*100) / (5*survey2Counts)
+        GtrustQ3S3s= (GtrustQ3S3s*100) / (5*survey3Counts)
+
+        GtrustQ3S1s=float("{0:.1f}".format(GtrustQ3S1s))
+        GtrustQ3S2s=float("{0:.1f}".format(GtrustQ3S2s))
+        GtrustQ3S3s=float("{0:.1f}".format(GtrustQ3S3s))
 
         return render(request, 'pie_chart3.html', {
-            'labels': labels,
-            'data1': data1,
-            'data2': data2,
-            'data3': data3,
-            'labels11': labels11,
-            'data11': data11,
-            'data22': data22,
-            'data33': data33,
-            'project':studyidd,
-            'project_id':project_id
-            })
-    elif y==4:
-        labels = []
-        data1 = []
-        data2=[]
-        data3=[]
-        data4=[]
-        labels11 = []
-        data11 = []
-        data22=[]
-        data33=[]
-        data44=[]
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[0]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            labels.append(key)
-            data1.append(entry)
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[1]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            data2.append(entry)
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[2]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[2])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            data3.append(entry)
-        queryset = Submission.objects.aggregate(
-            overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[3]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[3])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            data4.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            labels11.append(key)
-            data11.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            data22.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[2])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            data33.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[3])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            data44.append(entry)
+            'project_id':project_id,
+            'productname':productname,
+            'survey1Counts':survey1Counts,
+            'survey2Counts':survey2Counts,
+            'survey3Counts':survey3Counts,
+            'S1CountGender':S1CountGender,
+            'S2CountGender':S2CountGender,
+            'S3CountGender':S3CountGender,
+            'S1CountAge':S1CountAge,
+            'S2CountAge':S2CountAge,
+            'S3CountAge':S3CountAge,
+            'CrobanchAlphaS1':CrobanchAlphaS1,
+            'CrobanchAlphaS2':CrobanchAlphaS2,
+            'CrobanchAlphaS3':CrobanchAlphaS3,
+            'OvrallTrustS1s':OvrallTrustS1s,
+            'OvrallTrustS2s':OvrallTrustS2s,
+            'OvrallTrustS3s':OvrallTrustS3s,
+            'OvrallRiskS1s':OvrallRiskS1s,
+            'OvrallRiskS2s':OvrallRiskS2s,
+            'OvrallRiskS3s':OvrallRiskS3s,
+            'OvrallBenevolenceS1s':OvrallBenevolenceS1s,
+            'OvrallBenevolenceS2s':OvrallBenevolenceS2s,
+            'OvrallBenevolenceS3s':OvrallBenevolenceS3s,
+            'OvrallCompetenceS1s':OvrallCompetenceS1s,
+            'OvrallCompetenceS2s':OvrallCompetenceS2s,
+            'OvrallCompetenceS3s':OvrallCompetenceS3s,
+            'OvrallReciprocityS1s':OvrallReciprocityS1s,
+            'OvrallReciprocityS2s':OvrallReciprocityS2s,
+            'OvrallReciprocityS3s':OvrallReciprocityS3s,
+            'OvrallGeneralTrustS1s':OvrallGeneralTrustS1s,
+            'OvrallGeneralTrustS2s':OvrallGeneralTrustS2s,
+            'OvrallGeneralTrustS3s':OvrallGeneralTrustS3s,
+            'RiskQ1S1s':RiskQ1S1s,
+            'RiskQ1S2s':RiskQ1S2s,
+            'RiskQ1S3s':RiskQ1S3s,
+            'RiskQ2S1s':RiskQ2S1s,
+            'RiskQ2S2s':RiskQ2S2s,
+            'RiskQ2S3s':RiskQ2S3s,
+            'RiskQ3S1s':RiskQ3S1s,
+            'RiskQ3S2s':RiskQ3S2s,
+            'RiskQ3S3s':RiskQ3S3s,
+            'BenevlonceQ1S1s':BenevlonceQ1S1s,
+            'BenevlonceQ1S2s':BenevlonceQ1S2s,
+            'BenevlonceQ1S3s':BenevlonceQ1S3s,
+            'BenevlonceQ2S1s':BenevlonceQ2S1s,
+            'BenevlonceQ2S2s':BenevlonceQ2S2s,
+            'BenevlonceQ2S3s':BenevlonceQ2S3s,
+            'BenevlonceQ3S1s':BenevlonceQ3S1s,
+            'BenevlonceQ3S2s':BenevlonceQ3S2s,
+            'BenevlonceQ3S3s':BenevlonceQ3S3s,
+            'CompetenceQ1S1s':CompetenceQ1S1s,
+            'CompetenceQ1S2s':CompetenceQ1S2s,
+            'CompetenceQ1S3s':CompetenceQ1S3s,
+            'CompetenceQ2S1s':CompetenceQ2S1s,
+            'CompetenceQ2S2s':CompetenceQ2S2s,
+            'CompetenceQ2S3s':CompetenceQ2S3s,
+            'CompetenceQ3S1s':CompetenceQ3S1s,
+            'CompetenceQ3S2s':CompetenceQ3S2s,
+            'CompetenceQ3S3s':CompetenceQ3S3s,
+            'ReciprocityQ1S1s':ReciprocityQ1S1s,
+            'ReciprocityQ1S2s':ReciprocityQ1S2s,
+            'ReciprocityQ1S3s':ReciprocityQ1S3s,
+            'ReciprocityQ2S1s':ReciprocityQ2S1s,
+            'ReciprocityQ2S2s':ReciprocityQ2S2s,
+            'ReciprocityQ2S3s':ReciprocityQ2S3s,
+            'GtrustQ1S1s':GtrustQ1S1s,
+            'GtrustQ1S2s':GtrustQ1S2s,
+            'GtrustQ1S3s':GtrustQ1S3s,
+            'GtrustQ2S1s':GtrustQ2S1s,
+            'GtrustQ2S2s':GtrustQ2S2s,
+            'GtrustQ2S3s':GtrustQ2S3s,
+            'GtrustQ3S1s':GtrustQ3S1s,
+            'GtrustQ3S2s':GtrustQ3S2s,
+            'GtrustQ3S3s':GtrustQ3S3s
 
+            })
+    elif NumberOfSurveys==4:
+        #get the link ids for the two surveys
+        LID1 = Link.objects.filter(survey_id=SID[0]).values_list('id', flat=True)
+        LID2 = Link.objects.filter(survey_id=SID[1]).values_list('id', flat=True)
+        LID3 = Link.objects.filter(survey_id=SID[2]).values_list('id', flat=True)
+        LID4 = Link.objects.filter(survey_id=SID[3]).values_list('id', flat=True)
+        #get the number of respondents by survey
+        S1Count = Submission.objects.aggregate(
+            responseS1= Count("q1", filter=(Q(link_id=LID1[0])), output_field=IntegerField()))
+        S2Count = Submission.objects.aggregate(
+            responseS1= Count("q1", filter=(Q(link_id=LID2[0])), output_field=IntegerField()))
+        S3Count = Submission.objects.aggregate(
+            responseS1= Count("q1", filter=(Q(link_id=LID3[0])), output_field=IntegerField()))
+        S4Count = Submission.objects.aggregate(
+            responseS1= Count("q1", filter=(Q(link_id=LID4[0])), output_field=IntegerField()))
+        S1Counts=[]
+        S2Counts=[]
+        S3Counts=[]
+        S4Counts=[]
+        for key, entry in S1Count.items():
+            if entry is None:
+                   S1Counts.append(0)
+            else:
+                S1Counts.append(entry)
+        for key, entry in S2Count.items():
+            if entry is None:
+                S2Counts.append(0)
+            else:
+                S2Counts.append(entry)
+        for key, entry in S3Count.items():
+            if entry is None:
+                S3Counts.append(0)
+            else:
+                S3Counts.append(entry)
+        for key, entry in S4Count.items():
+            if entry is None:
+                S4Counts.append(0)
+            else:
+                S4Counts.append(entry)
+        survey1Counts= S1Counts[0]
+        survey2Counts= S2Counts[0]
+        survey3Counts= S3Counts[0]
+        survey4Counts= S4Counts[0]
+        #get number gender details for each survey
+        S1CountMale = AnonyData.objects.filter(link_id=LID1[0], gender="M").count()
+        S1CountFeMale = AnonyData.objects.filter(link_id=LID1[0], gender="F").count()
+        S1CountOthers = AnonyData.objects.filter(link_id=LID1[0], gender="O").count()
+
+        S2CountMale = AnonyData.objects.filter(link_id=LID2[0], gender="M").count()
+        S2CountFeMale = AnonyData.objects.filter(link_id=LID2[0], gender="F").count()
+        S2CountOthers = AnonyData.objects.filter(link_id=LID2[0], gender="O").count()
+
+        S3CountMale = AnonyData.objects.filter(link_id=LID3[0], gender="M").count()
+        S3CountFeMale = AnonyData.objects.filter(link_id=LID3[0], gender="F").count()
+        S3CountOthers = AnonyData.objects.filter(link_id=LID3[0], gender="O").count()
+
+        S4CountMale = AnonyData.objects.filter(link_id=LID4[0], gender="M").count()
+        S4CountFeMale = AnonyData.objects.filter(link_id=LID4[0], gender="F").count()
+        S4CountOthers = AnonyData.objects.filter(link_id=LID4[0], gender="O").count()
+            #appending the results to an array because the chartjs piechart expects the data in an array format
+        S1CountGender = [S1CountMale, S1CountFeMale, S1CountOthers]
+        S2CountGender = [S2CountMale, S2CountFeMale, S2CountOthers]
+        S3CountGender = [S3CountMale, S3CountFeMale, S3CountOthers]
+        S4CountGender = [S4CountMale, S4CountFeMale, S4CountOthers]
+        #getting the age distribution for each survey
+        #survey 1
+        S1Count17Below = AnonyData.objects.filter(link_id=LID1[0], age="1").count()
+        S1Count18To27 = AnonyData.objects.filter(link_id=LID1[0], age="2").count()
+        S1Count28To37 = AnonyData.objects.filter(link_id=LID1[0], age="3").count()
+        S1Count38To47 = AnonyData.objects.filter(link_id=LID1[0], age="4").count()
+        S1Count48To57 = AnonyData.objects.filter(link_id=LID1[0], age="5").count()
+        S1Count58Above = AnonyData.objects.filter(link_id=LID1[0], age="6").count()
+        #survey 2
+        S2Count17Below = AnonyData.objects.filter(link_id=LID2[0], age="1").count()
+        S2Count18To27 = AnonyData.objects.filter(link_id=LID2[0], age="2").count()
+        S2Count28To37 = AnonyData.objects.filter(link_id=LID2[0], age="3").count()
+        S2Count38To47 = AnonyData.objects.filter(link_id=LID2[0], age="4").count()
+        S2Count48To57 = AnonyData.objects.filter(link_id=LID2[0], age="5").count()
+        S2Count58Above = AnonyData.objects.filter(link_id=LID2[0], age="6").count()
+        #survey 3
+        S3Count17Below = AnonyData.objects.filter(link_id=LID3[0], age="1").count()
+        S3Count18To27 = AnonyData.objects.filter(link_id=LID3[0], age="2").count()
+        S3Count28To37 = AnonyData.objects.filter(link_id=LID3[0], age="3").count()
+        S3Count38To47 = AnonyData.objects.filter(link_id=LID3[0], age="4").count()
+        S3Count48To57 = AnonyData.objects.filter(link_id=LID3[0], age="5").count()
+        S3Count58Above = AnonyData.objects.filter(link_id=LID3[0], age="6").count()
+
+        #survey 4
+        S4Count17Below = AnonyData.objects.filter(link_id=LID4[0], age="1").count()
+        S4Count18To27 = AnonyData.objects.filter(link_id=LID4[0], age="2").count()
+        S4Count28To37 = AnonyData.objects.filter(link_id=LID4[0], age="3").count()
+        S4Count38To47 = AnonyData.objects.filter(link_id=LID4[0], age="4").count()
+        S4Count48To57 = AnonyData.objects.filter(link_id=LID4[0], age="5").count()
+        S4Count58Above = AnonyData.objects.filter(link_id=LID4[0], age="6").count()
+
+            #appending the results to an array because the chartjs piechart expects the data in an array format
+        S1CountAge = [S1Count17Below, S1Count18To27, S1Count28To37, S1Count38To47, S1Count48To57, S1Count58Above ]
+        S2CountAge = [S2Count17Below, S2Count18To27, S2Count28To37, S2Count38To47, S2Count48To57, S2Count58Above ]
+        S3CountAge = [S3Count17Below, S3Count18To27, S3Count28To37, S3Count38To47, S3Count48To57, S3Count58Above ]
+        S4CountAge = [S4Count17Below, S4Count18To27, S4Count28To37, S4Count38To47, S4Count48To57, S4Count58Above ]
+        #check for null entries and replace them with 0
+        for i in S1CountAge:
+            if i == '':
+                S1CountAge[i]=0
+            else:
+                S1CountAge[i] = S1CountAge[i]
+
+        for i in S2CountAge:
+            if i == '':
+                S2CountAge[i]=0
+            else:
+                S2CountAge[i] = S2CountAge[i]
+
+        for i in S3CountAge:
+            if i == '':
+                S3CountAge[i]=0
+            else:
+                S3CountAge[i] = S2CountAge[i]
+
+        for i in S4CountAge:
+            if i == '':
+                S4CountAge[i]=0
+            else:
+                S4CountAge[i] = S4CountAge[i]
+        #print(S1CountAge)
+        #print(S2CountAge)
+        #get all response for each survey
+        allRespS1= Submission.objects.values('q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14').filter(Q(link_id=LID1[0])).all()
+        allRespS2= Submission.objects.values('q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14').filter(Q(link_id=LID2[0])).all()
+        allRespS3= Submission.objects.values('q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14').filter(Q(link_id=LID3[0])).all()
+        allRespS4= Submission.objects.values('q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14').filter(Q(link_id=LID4[0])).all()
+        #convert the querryset into dataframe
+        allRespS1=df.DataFrame.from_records(allRespS1)
+        allRespS2=df.DataFrame.from_records(allRespS2)
+        allRespS3=df.DataFrame.from_records(allRespS3)
+        allRespS4=df.DataFrame.from_records(allRespS4)
+        #compute the crobanch alpha for each survey using the aggregated responses in dataframe form above
+        CrobanchAlphaS1=cronbach_alpha(allRespS1)
+        CrobanchAlphaS2=cronbach_alpha(allRespS2)
+        CrobanchAlphaS3=cronbach_alpha(allRespS3)
+        CrobanchAlphaS4=cronbach_alpha(allRespS4)
+
+
+        #reducing the result to two decimal places
+        CrobanchAlphaS1=float("{0:.4f}".format(CrobanchAlphaS1))
+        CrobanchAlphaS2=float("{0:.4f}".format(CrobanchAlphaS2))
+        CrobanchAlphaS3=float("{0:.4f}".format(CrobanchAlphaS3))
+        CrobanchAlphaS4=float("{0:.4f}".format(CrobanchAlphaS4))
+
+        if math.isnan(CrobanchAlphaS1):
+            CrobanchAlphaS1=0.0
+        else:
+            CrobanchAlphaS1=CrobanchAlphaS1
+
+        if math.isnan(CrobanchAlphaS2):
+            CrobanchAlphaS2=0.0
+        else:
+            CrobanchAlphaS2=CrobanchAlphaS2
+
+        if math.isnan(CrobanchAlphaS3):
+            CrobanchAlphaS3=0.0
+        else:
+            CrobanchAlphaS3=CrobanchAlphaS3
+
+        if math.isnan(CrobanchAlphaS4):
+            CrobanchAlphaS4=0.0
+        else:
+            CrobanchAlphaS4=CrobanchAlphaS4
+#compute overall trust score for each survey begins from here
+        OvrallTrustS1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q4", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q7", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q10", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q12", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        OvrallTrustS2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q4", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q7", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q10", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q12", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        OvrallTrustS3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q4", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q7", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q10", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q12", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        OvrallTrustS4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q4", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q7", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q10", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q12", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        OvrallTrustS1s=[]
+        OvrallTrustS2s=[]
+        OvrallTrustS3s=[]
+        OvrallTrustS4s=[]
+        for key, entry in OvrallTrustS1.items():
+            if entry is None:
+                   OvrallTrustS1s.append(0)
+            else:
+                OvrallTrustS1s.append(entry)
+
+        for key, entry in OvrallTrustS2.items():
+            if entry is None:
+                OvrallTrustS2s.append(0)
+            else:
+                OvrallTrustS2s.append(entry)
+
+        for key, entry in OvrallTrustS3.items():
+            if entry is None:
+                OvrallTrustS3s.append(0)
+            else:
+                OvrallTrustS3s.append(entry)
+
+        for key, entry in OvrallTrustS4.items():
+            if entry is None:
+                OvrallTrustS4s.append(0)
+            else:
+                OvrallTrustS4s.append(entry)
+
+        OvrallTrustS1s= OvrallTrustS1s[0]
+        OvrallTrustS2s= OvrallTrustS2s[0]
+        OvrallTrustS3s= OvrallTrustS3s[0]
+        OvrallTrustS4s= OvrallTrustS4s[0]
+        OvrallTrustS1s= (OvrallTrustS1s*100) / (70*survey1Counts)
+        OvrallTrustS2s= (OvrallTrustS2s*100) / (70*survey2Counts)
+        OvrallTrustS3s= (OvrallTrustS3s*100) / (70*survey3Counts)
+        OvrallTrustS4s= (OvrallTrustS4s*100) / (70*survey4Counts)
+
+        OvrallTrustS1s=float("{0:.1f}".format(OvrallTrustS1s))
+        OvrallTrustS2s=float("{0:.1f}".format(OvrallTrustS2s))
+        OvrallTrustS3s=float("{0:.1f}".format(OvrallTrustS3s))
+        OvrallTrustS4s=float("{0:.1f}".format(OvrallTrustS4s))
+#computing overall risk for each survey
+        OvrallRiskS1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID1[0])), output_field=FloatField())
+                )
+        OvrallRiskS2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        OvrallRiskS3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        OvrallRiskS4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+
+        OvrallRiskS1s=[]
+        OvrallRiskS2s=[]
+        OvrallRiskS3s=[]
+        OvrallRiskS4s=[]
+        for key, entry in OvrallRiskS1.items():
+            if entry is None:
+                   OvrallRiskS1s.append(0)
+            else:
+                OvrallRiskS1s.append(entry)
+
+        for key, entry in OvrallRiskS2.items():
+            if entry is None:
+                OvrallRiskS2s.append(0)
+            else:
+                OvrallRiskS2s.append(entry)
+
+        for key, entry in OvrallRiskS3.items():
+            if entry is None:
+                OvrallRiskS3s.append(0)
+            else:
+                OvrallRiskS3s.append(entry)
+
+        for key, entry in OvrallRiskS4.items():
+            if entry is None:
+                OvrallRiskS4s.append(0)
+            else:
+                OvrallRiskS4s.append(entry)
+
+        OvrallRiskS1s= OvrallRiskS1s[0]
+        OvrallRiskS2s= OvrallRiskS2s[0]
+        OvrallRiskS3s= OvrallRiskS3s[0]
+        OvrallRiskS4s= OvrallRiskS4s[0]
+        OvrallRiskS1s= (OvrallRiskS1s*100) / (15*survey1Counts)
+        OvrallRiskS2s= (OvrallRiskS2s*100) / (15*survey2Counts)
+        OvrallRiskS3s= (OvrallRiskS3s*100) / (15*survey3Counts)
+        OvrallRiskS4s= (OvrallRiskS4s*100) / (15*survey4Counts)
+
+        OvrallRiskS1s=float("{0:.1f}".format(OvrallRiskS1s))
+        OvrallRiskS2s=float("{0:.1f}".format(OvrallRiskS2s))
+        OvrallRiskS3s=float("{0:.1f}".format(OvrallRiskS3s))
+        OvrallRiskS4s=float("{0:.1f}".format(OvrallRiskS4s))
+#computing benevolencerisk for each survey
+        OvrallBenevolenceS1= Submission.objects.aggregate(
+            overalBenevolence=
+                Sum("q4", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID1[0])), output_field=FloatField())
+                )
+        OvrallBenevolenceS2= Submission.objects.aggregate(
+            overalBenevolence=
+                Sum("q4", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        OvrallBenevolenceS3= Submission.objects.aggregate(
+            overalBenevolence=
+                Sum("q4", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        OvrallBenevolenceS4= Submission.objects.aggregate(
+            overalBenevolence=
+                Sum("q4", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+
+        OvrallBenevolenceS1s=[]
+        OvrallBenevolenceS2s=[]
+        OvrallBenevolenceS3s=[]
+        OvrallBenevolenceS4s=[]
+        for key, entry in OvrallBenevolenceS1.items():
+            if entry is None:
+                   OvrallBenevolenceS1s.append(0)
+            else:
+                OvrallBenevolenceS1s.append(entry)
+
+        for key, entry in OvrallBenevolenceS2.items():
+            if entry is None:
+                OvrallBenevolenceS2s.append(0)
+            else:
+                OvrallBenevolenceS2s.append(entry)
+
+        for key, entry in OvrallBenevolenceS3.items():
+            if entry is None:
+                OvrallBenevolenceS3s.append(0)
+            else:
+                OvrallBenevolenceS3s.append(entry)
+
+        for key, entry in OvrallBenevolenceS4.items():
+            if entry is None:
+                OvrallBenevolenceS4s.append(0)
+            else:
+                OvrallBenevolenceS4s.append(entry)
+
+        OvrallBenevolenceS1s= OvrallBenevolenceS1s[0]
+        OvrallBenevolenceS2s= OvrallBenevolenceS2s[0]
+        OvrallBenevolenceS3s= OvrallBenevolenceS3s[0]
+        OvrallBenevolenceS4s= OvrallBenevolenceS4s[0]
+
+        OvrallBenevolenceS1s= (OvrallBenevolenceS1s*100) / (15*survey1Counts)
+        OvrallBenevolenceS2s= (OvrallBenevolenceS2s*100) / (15*survey2Counts)
+        OvrallBenevolenceS3s= (OvrallBenevolenceS3s*100) / (15*survey3Counts)
+        OvrallBenevolenceS4s= (OvrallBenevolenceS4s*100) / (15*survey4Counts)
+
+        OvrallBenevolenceS1s=float("{0:.1f}".format(OvrallBenevolenceS1s))
+        OvrallBenevolenceS2s=float("{0:.1f}".format(OvrallBenevolenceS2s))
+        OvrallBenevolenceS3s=float("{0:.1f}".format(OvrallBenevolenceS3s))
+        OvrallBenevolenceS4s=float("{0:.1f}".format(OvrallBenevolenceS4s))
+
+# computing competence for each survey
+        OvrallCompetenceS1= Submission.objects.aggregate(
+            overalCompetence=
+                Sum("q7", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        OvrallCompetenceS2= Submission.objects.aggregate(
+            overalCompetence=
+                Sum("q7", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        OvrallCompetenceS3= Submission.objects.aggregate(
+            overalCompetence=
+                Sum("q7", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        OvrallCompetenceS4= Submission.objects.aggregate(
+            overalCompetence=
+                Sum("q7", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+
+
+        OvrallCompetenceS1s=[]
+        OvrallCompetenceS2s=[]
+        OvrallCompetenceS3s=[]
+        OvrallCompetenceS4s=[]
+
+        for key, entry in OvrallCompetenceS1.items():
+            if entry is None:
+                   OvrallCompetenceS1s.append(0)
+            else:
+                OvrallCompetenceS1s.append(entry)
+
+        for key, entry in OvrallCompetenceS2.items():
+            if entry is None:
+                OvrallCompetenceS2s.append(0)
+            else:
+                OvrallCompetenceS2s.append(entry)
+
+        for key, entry in OvrallCompetenceS3.items():
+            if entry is None:
+                OvrallCompetenceS3s.append(0)
+            else:
+                OvrallCompetenceS3s.append(entry)
+
+        for key, entry in OvrallCompetenceS4.items():
+            if entry is None:
+                OvrallCompetenceS4s.append(0)
+            else:
+                OvrallCompetenceS4s.append(entry)
+
+        OvrallCompetenceS1s= OvrallCompetenceS1s[0]
+        OvrallCompetenceS2s= OvrallCompetenceS2s[0]
+        OvrallCompetenceS3s= OvrallCompetenceS3s[0]
+        OvrallCompetenceS4s= OvrallCompetenceS4s[0]
+
+        OvrallCompetenceS1s= (OvrallCompetenceS1s*100) / (15*survey1Counts)
+        OvrallCompetenceS2s= (OvrallCompetenceS2s*100) / (15*survey2Counts)
+        OvrallCompetenceS3s= (OvrallCompetenceS3s*100) / (15*survey3Counts)
+        OvrallCompetenceS4s= (OvrallCompetenceS4s*100) / (15*survey4Counts)
+
+        OvrallCompetenceS1s=float("{0:.1f}".format(OvrallCompetenceS1s))
+        OvrallCompetenceS2s=float("{0:.1f}".format(OvrallCompetenceS2s))
+        OvrallCompetenceS3s=float("{0:.1f}".format(OvrallCompetenceS3s))
+        OvrallCompetenceS4s=float("{0:.1f}".format(OvrallCompetenceS4s))
+# computing reciprocity
+        OvrallReciprocityS1= Submission.objects.aggregate(
+            overalReciprocity=
+                Sum("q10", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        OvrallReciprocityS2= Submission.objects.aggregate(
+            overalReciprocity=
+                Sum("q10", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        OvrallReciprocityS3= Submission.objects.aggregate(
+            overalReciprocity=
+                Sum("q10", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        OvrallReciprocityS4= Submission.objects.aggregate(
+            overalReciprocity=
+                Sum("q10", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        OvrallReciprocityS1s=[]
+        OvrallReciprocityS2s=[]
+        OvrallReciprocityS3s=[]
+        OvrallReciprocityS4s=[]
+        for key, entry in OvrallReciprocityS1.items():
+            if entry is None:
+                   OvrallReciprocityS1s.append(0)
+            else:
+                OvrallReciprocityS1s.append(entry)
+
+        for key, entry in OvrallReciprocityS2.items():
+            if entry is None:
+                OvrallReciprocityS2s.append(0)
+            else:
+                OvrallReciprocityS2s.append(entry)
+
+        for key, entry in OvrallReciprocityS3.items():
+            if entry is None:
+                OvrallReciprocityS3s.append(0)
+            else:
+                OvrallReciprocityS3s.append(entry)
+        for key, entry in OvrallReciprocityS4.items():
+            if entry is None:
+                OvrallReciprocityS4s.append(0)
+            else:
+                OvrallReciprocityS4s.append(entry)
+
+        OvrallReciprocityS1s= OvrallReciprocityS1s[0]
+        OvrallReciprocityS2s= OvrallReciprocityS2s[0]
+        OvrallReciprocityS3s= OvrallReciprocityS3s[0]
+        OvrallReciprocityS4s= OvrallReciprocityS4s[0]
+        OvrallReciprocityS1s= (OvrallReciprocityS1s*100) / (10*survey1Counts)
+        OvrallReciprocityS2s= (OvrallReciprocityS2s*100) / (10*survey2Counts)
+        OvrallReciprocityS3s= (OvrallReciprocityS3s*100) / (10*survey3Counts)
+        OvrallReciprocityS4s= (OvrallReciprocityS4s*100) / (10*survey4Counts)
+
+        OvrallReciprocityS1s=float("{0:.1f}".format(OvrallReciprocityS1s))
+        OvrallReciprocityS2s=float("{0:.1f}".format(OvrallReciprocityS2s))
+        OvrallReciprocityS3s=float("{0:.1f}".format(OvrallReciprocityS3s))
+        OvrallReciprocityS4s=float("{0:.1f}".format(OvrallReciprocityS4s))
+
+#Computing general trust for each survey
+        OvrallGeneralTrustS1= Submission.objects.aggregate(
+            overalGeneralTrust=
+                Sum("q12", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        OvrallGeneralTrustS2= Submission.objects.aggregate(
+            overalGeneralTrust=
+                Sum("q12", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        OvrallGeneralTrustS3= Submission.objects.aggregate(
+            overalGeneralTrust=
+                Sum("q12", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        OvrallGeneralTrustS4= Submission.objects.aggregate(
+            overalGeneralTrust=
+                Sum("q12", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+
+        OvrallGeneralTrustS1s=[]
+        OvrallGeneralTrustS2s=[]
+        OvrallGeneralTrustS3s=[]
+        OvrallGeneralTrustS4s=[]
+        for key, entry in OvrallGeneralTrustS1.items():
+            if entry is None:
+                   OvrallGeneralTrustS1s.append(0)
+            else:
+                OvrallGeneralTrustS1s.append(entry)
+
+        for key, entry in OvrallGeneralTrustS2.items():
+            if entry is None:
+                OvrallGeneralTrustS2s.append(0)
+            else:
+                OvrallGeneralTrustS2s.append(entry)
+
+        for key, entry in OvrallGeneralTrustS3.items():
+            if entry is None:
+                OvrallGeneralTrustS3s.append(0)
+            else:
+                OvrallGeneralTrustS3s.append(entry)
+        for key, entry in OvrallGeneralTrustS4.items():
+            if entry is None:
+                OvrallGeneralTrustS4s.append(0)
+            else:
+                OvrallGeneralTrustS4s.append(entry)
+
+        OvrallGeneralTrustS1s= OvrallGeneralTrustS1s[0]
+        OvrallGeneralTrustS2s= OvrallGeneralTrustS2s[0]
+        OvrallGeneralTrustS3s= OvrallGeneralTrustS3s[0]
+        OvrallGeneralTrustS4s= OvrallGeneralTrustS4s[0]
+        OvrallGeneralTrustS1s= (OvrallGeneralTrustS1s*100) / (15*survey1Counts)
+        OvrallGeneralTrustS2s= (OvrallGeneralTrustS2s*100) / (15*survey2Counts)
+        OvrallGeneralTrustS3s= (OvrallGeneralTrustS3s*100) / (15*survey3Counts)
+        OvrallGeneralTrustS4s= (OvrallGeneralTrustS4s*100) / (15*survey4Counts)
+
+        OvrallGeneralTrustS1s=float("{0:.1f}".format(OvrallGeneralTrustS1s))
+        OvrallGeneralTrustS2s=float("{0:.1f}".format(OvrallGeneralTrustS2s))
+        OvrallGeneralTrustS3s=float("{0:.1f}".format(OvrallGeneralTrustS3s))
+        OvrallGeneralTrustS4s=float("{0:.1f}".format(OvrallGeneralTrustS4s))
+
+#Riesk Q1 for both questioniares
+        RiskQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        RiskQ1S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        RiskQ1S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        RiskQ1S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+
+        RiskQ1S1s=[]
+        RiskQ1S2s=[]
+        RiskQ1S3s=[]
+        RiskQ1S4s=[]
+        for key, entry in RiskQ1S1.items():
+            if entry is None:
+                   RiskQ1S1s.append(0)
+            else:
+                RiskQ1S1s.append(entry)
+
+        for key, entry in RiskQ1S2.items():
+            if entry is None:
+                RiskQ1S2s.append(0)
+            else:
+                RiskQ1S2s.append(entry)
+
+        for key, entry in RiskQ1S3.items():
+            if entry is None:
+                RiskQ1S3s.append(0)
+            else:
+                RiskQ1S3s.append(entry)
+        for key, entry in RiskQ1S4.items():
+            if entry is None:
+                RiskQ1S4s.append(0)
+            else:
+                RiskQ1S4s.append(entry)
+
+        RiskQ1S1s= RiskQ1S1s[0]
+        RiskQ1S2s= RiskQ1S2s[0]
+        RiskQ1S3s= RiskQ1S3s[0]
+        RiskQ1S4s= RiskQ1S4s[0]
+        RiskQ1S1s= (RiskQ1S1s*100) / (5*survey1Counts)
+        RiskQ1S2s= (RiskQ1S2s*100) / (5*survey2Counts)
+        RiskQ1S3s= (RiskQ1S3s*100) / (5*survey3Counts)
+        RiskQ1S4s= (RiskQ1S4s*100) / (5*survey4Counts)
+
+        RiskQ1S1s=float("{0:.1f}".format(RiskQ1S1s))
+        RiskQ1S2s=float("{0:.1f}".format(RiskQ1S2s))
+        RiskQ1S3s=float("{0:.1f}".format(RiskQ1S3s))
+        RiskQ1S4s=float("{0:.1f}".format(RiskQ1S4s))
+#Riesk Q2 for both questioniares
+        RiskQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q2", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        RiskQ2S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q2", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        RiskQ2S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q2", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        RiskQ2S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q2", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+
+        RiskQ2S1s=[]
+        RiskQ2S2s=[]
+        RiskQ2S3s=[]
+        RiskQ2S4s=[]
+        for key, entry in RiskQ2S1.items():
+            if entry is None:
+                   RiskQ2S1s.append(0)
+            else:
+                RiskQ2S1s.append(entry)
+
+        for key, entry in RiskQ2S2.items():
+            if entry is None:
+                RiskQ2S2s.append(0)
+            else:
+                RiskQ2S2s.append(entry)
+
+        for key, entry in RiskQ2S3.items():
+            if entry is None:
+                RiskQ2S3s.append(0)
+            else:
+                RiskQ2S3s.append(entry)
+        for key, entry in RiskQ2S4.items():
+            if entry is None:
+                RiskQ2S4s.append(0)
+            else:
+                RiskQ2S4s.append(entry)
+        RiskQ2S1s= RiskQ2S1s[0]
+        RiskQ2S2s= RiskQ2S2s[0]
+        RiskQ2S3s= RiskQ2S3s[0]
+        RiskQ2S4s= RiskQ2S4s[0]
+        RiskQ2S1s= (RiskQ2S1s*100) / (5*survey1Counts)
+        RiskQ2S2s= (RiskQ2S2s*100) / (5*survey1Counts)
+        RiskQ2S3s= (RiskQ2S3s*100) / (5*survey3Counts)
+        RiskQ2S4s= (RiskQ2S4s*100) / (5*survey4Counts)
+
+        RiskQ2S1s=float("{0:.1f}".format(RiskQ2S1s))
+        RiskQ2S2s=float("{0:.1f}".format(RiskQ2S2s))
+        RiskQ2S3s=float("{0:.1f}".format(RiskQ2S3s))
+        RiskQ2S4s=float("{0:.1f}".format(RiskQ2S4s))
+#Riesk Q3 for both questioniares
+        RiskQ3S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q3", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        RiskQ3S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q3", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        RiskQ3S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q3", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        RiskQ3S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q3", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+
+        RiskQ3S1s=[]
+        RiskQ3S2s=[]
+        RiskQ3S3s=[]
+        RiskQ3S4s=[]
+        for key, entry in RiskQ3S1.items():
+            if entry is None:
+                   RiskQ3S1s.append(0)
+            else:
+                RiskQ3S1s.append(entry)
+
+        for key, entry in RiskQ3S2.items():
+            if entry is None:
+                RiskQ3S2s.append(0)
+            else:
+                RiskQ3S2s.append(entry)
+
+        for key, entry in RiskQ3S3.items():
+            if entry is None:
+                RiskQ3S3s.append(0)
+            else:
+                RiskQ3S3s.append(entry)
+
+        for key, entry in RiskQ3S4.items():
+            if entry is None:
+                RiskQ3S4s.append(0)
+            else:
+                RiskQ3S4s.append(entry)
+
+        RiskQ3S1s= RiskQ3S1s[0]
+        RiskQ3S2s= RiskQ3S2s[0]
+        RiskQ3S3s= RiskQ3S3s[0]
+        RiskQ3S4s= RiskQ3S4s[0]
+        RiskQ3S1s= (RiskQ3S1s*100) / (5*survey1Counts)
+        RiskQ3S2s= (RiskQ3S2s*100) / (5*survey1Counts)
+        RiskQ3S3s= (RiskQ3S3s*100) / (5*survey3Counts)
+        RiskQ3S4s= (RiskQ3S4s*100) / (5*survey4Counts)
+
+        RiskQ3S1s=float("{0:.1f}".format(RiskQ3S1s))
+        RiskQ3S2s=float("{0:.1f}".format(RiskQ3S2s))
+        RiskQ3S3s=float("{0:.1f}".format(RiskQ3S3s))
+        RiskQ3S4s=float("{0:.1f}".format(RiskQ3S4s))
+
+#benevolence Q1 for both questioniares
+        BenevlonceQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q4", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        BenevlonceQ1S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q4", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        BenevlonceQ1S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q4", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        BenevlonceQ1S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q4", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        BenevlonceQ1S1s=[]
+        BenevlonceQ1S2s=[]
+        BenevlonceQ1S3s=[]
+        BenevlonceQ1S4s=[]
+        for key, entry in BenevlonceQ1S1.items():
+            if entry is None:
+                   BenevlonceQ1S1s.append(0)
+            else:
+                BenevlonceQ1S1s.append(entry)
+
+        for key, entry in BenevlonceQ1S2.items():
+            if entry is None:
+                BenevlonceQ1S2s.append(0)
+            else:
+                BenevlonceQ1S2s.append(entry)
+
+        for key, entry in BenevlonceQ1S3.items():
+            if entry is None:
+                BenevlonceQ1S3s.append(0)
+            else:
+                BenevlonceQ1S3s.append(entry)
+        for key, entry in BenevlonceQ1S4.items():
+            if entry is None:
+                BenevlonceQ1S4s.append(0)
+            else:
+                BenevlonceQ1S4s.append(entry)
+
+        BenevlonceQ1S1s= BenevlonceQ1S1s[0]
+        BenevlonceQ1S2s= BenevlonceQ1S2s[0]
+        BenevlonceQ1S3s= BenevlonceQ1S3s[0]
+        BenevlonceQ1S4s= BenevlonceQ1S4s[0]
+
+        BenevlonceQ1S1s= (BenevlonceQ1S1s*100) / (5*survey1Counts)
+        BenevlonceQ1S2s= (BenevlonceQ1S2s*100) / (5*survey1Counts)
+        BenevlonceQ1S3s= (BenevlonceQ1S3s*100) / (5*survey3Counts)
+        BenevlonceQ1S4s= (BenevlonceQ1S4s*100) / (5*survey4Counts)
+
+        BenevlonceQ1S1s=float("{0:.1f}".format(BenevlonceQ1S1s))
+        BenevlonceQ1S2s=float("{0:.1f}".format(BenevlonceQ1S2s))
+        BenevlonceQ1S3s=float("{0:.1f}".format(BenevlonceQ1S3s))
+        BenevlonceQ1S4s=float("{0:.1f}".format(BenevlonceQ1S4s))
+#benevolence Q2 for both questioniares
+        BenevlonceQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q5", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        BenevlonceQ2S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q5", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        BenevlonceQ2S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q5", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        BenevlonceQ2S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q5", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+
+
+        BenevlonceQ2S1s=[]
+        BenevlonceQ2S2s=[]
+        BenevlonceQ2S3s=[]
+        BenevlonceQ2S4s=[]
+        for key, entry in BenevlonceQ2S1.items():
+            if entry is None:
+                   BenevlonceQ2S1s.append(0)
+            else:
+                BenevlonceQ2S1s.append(entry)
+
+        for key, entry in BenevlonceQ2S2.items():
+            if entry is None:
+                BenevlonceQ2S2s.append(0)
+            else:
+                BenevlonceQ2S2s.append(entry)
+
+        for key, entry in BenevlonceQ2S3.items():
+            if entry is None:
+                BenevlonceQ2S3s.append(0)
+            else:
+                BenevlonceQ2S3s.append(entry)
+
+        for key, entry in BenevlonceQ2S4.items():
+            if entry is None:
+                BenevlonceQ2S4s.append(0)
+            else:
+                BenevlonceQ2S4s.append(entry)
+
+        BenevlonceQ2S1s= BenevlonceQ2S1s[0]
+        BenevlonceQ2S2s= BenevlonceQ2S2s[0]
+        BenevlonceQ2S3s= BenevlonceQ2S3s[0]
+        BenevlonceQ2S4s= BenevlonceQ2S4s[0]
+        BenevlonceQ2S1s= (BenevlonceQ2S1s*100) / (5*survey1Counts)
+        BenevlonceQ2S2s= (BenevlonceQ2S2s*100) / (5*survey1Counts)
+        BenevlonceQ2S3s= (BenevlonceQ2S3s*100) / (5*survey3Counts)
+        BenevlonceQ2S4s= (BenevlonceQ2S4s*100) / (5*survey4Counts)
+
+        BenevlonceQ2S1s=float("{0:.1f}".format(BenevlonceQ2S1s))
+        BenevlonceQ2S2s=float("{0:.1f}".format(BenevlonceQ2S2s))
+        BenevlonceQ2S3s=float("{0:.1f}".format(BenevlonceQ2S3s))
+        BenevlonceQ2S4s=float("{0:.1f}".format(BenevlonceQ2S4s))
+
+#benevolence Q3 for both questioniares
+        BenevlonceQ3S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q6", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        BenevlonceQ3S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q6", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        BenevlonceQ3S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q6", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        BenevlonceQ3S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q6", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+
+        BenevlonceQ3S1s=[]
+        BenevlonceQ3S2s=[]
+        BenevlonceQ3S3s=[]
+        BenevlonceQ3S4s=[]
+        for key, entry in BenevlonceQ3S1.items():
+            if entry is None:
+                   BenevlonceQ3S1s.append(0)
+            else:
+                BenevlonceQ3S1s.append(entry)
+
+        for key, entry in BenevlonceQ3S2.items():
+            if entry is None:
+                BenevlonceQ3S2s.append(0)
+            else:
+                BenevlonceQ3S2s.append(entry)
+
+        for key, entry in BenevlonceQ3S3.items():
+            if entry is None:
+                BenevlonceQ3S3s.append(0)
+            else:
+                BenevlonceQ3S3s.append(entry)
+
+        for key, entry in BenevlonceQ3S4.items():
+            if entry is None:
+                BenevlonceQ3S4s.append(0)
+            else:
+                BenevlonceQ3S4s.append(entry)
+
+        BenevlonceQ3S1s= BenevlonceQ3S1s[0]
+        BenevlonceQ3S2s= BenevlonceQ3S2s[0]
+        BenevlonceQ3S3s= BenevlonceQ3S3s[0]
+        BenevlonceQ3S4s= BenevlonceQ3S4s[0]
+
+        BenevlonceQ3S1s= (BenevlonceQ3S1s*100) / (5*survey1Counts)
+        BenevlonceQ3S2s= (BenevlonceQ3S2s*100) / (5*survey2Counts)
+        BenevlonceQ3S3s= (BenevlonceQ3S3s*100) / (5*survey3Counts)
+        BenevlonceQ3S4s= (BenevlonceQ3S4s*100) / (5*survey4Counts)
+
+        BenevlonceQ3S1s=float("{0:.1f}".format(BenevlonceQ3S1s))
+        BenevlonceQ3S2s=float("{0:.1f}".format(BenevlonceQ3S2s))
+        BenevlonceQ3S3s=float("{0:.1f}".format(BenevlonceQ3S3s))
+        BenevlonceQ3S4s=float("{0:.1f}".format(BenevlonceQ3S4s))
+
+#Riesk Q1 for both questioniares
+        CompetenceQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        CompetenceQ1S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        CompetenceQ1S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        CompetenceQ1S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+
+        CompetenceQ1S1s=[]
+        CompetenceQ1S2s=[]
+        CompetenceQ1S3s=[]
+        CompetenceQ1S4s=[]
+        for key, entry in CompetenceQ1S1.items():
+            if entry is None:
+                   CompetenceQ1S1s.append(0)
+            else:
+                CompetenceQ1S1s.append(entry)
+
+        for key, entry in CompetenceQ1S2.items():
+            if entry is None:
+                CompetenceQ1S2s.append(0)
+            else:
+                CompetenceQ1S2s.append(entry)
+
+        for key, entry in CompetenceQ1S3.items():
+            if entry is None:
+                CompetenceQ1S3s.append(0)
+            else:
+                CompetenceQ1S3s.append(entry)
+
+        for key, entry in CompetenceQ1S4.items():
+            if entry is None:
+                CompetenceQ1S4s.append(0)
+            else:
+                CompetenceQ1S4s.append(entry)
+
+        CompetenceQ1S1s= CompetenceQ1S1s[0]
+        CompetenceQ1S2s= CompetenceQ1S2s[0]
+        CompetenceQ1S3s= CompetenceQ1S3s[0]
+        CompetenceQ1S4s= CompetenceQ1S4s[0]
+
+        CompetenceQ1S1s= (CompetenceQ1S1s*100) / (5*survey1Counts)
+        CompetenceQ1S2s= (CompetenceQ1S2s*100) / (5*survey2Counts)
+        CompetenceQ1S3s= (CompetenceQ1S3s*100) / (5*survey3Counts)
+        CompetenceQ1S4s= (CompetenceQ1S4s*100) / (5*survey4Counts)
+
+        CompetenceQ1S1s=float("{0:.1f}".format(CompetenceQ1S1s))
+        CompetenceQ1S2s=float("{0:.1f}".format(CompetenceQ1S2s))
+        CompetenceQ1S3s=float("{0:.1f}".format(CompetenceQ1S3s))
+        CompetenceQ1S4s=float("{0:.1f}".format(CompetenceQ1S4s))
+
+#Riesk Q2 for both questioniares
+        CompetenceQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        CompetenceQ2S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        CompetenceQ2S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        CompetenceQ2S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+
+        CompetenceQ2S1s=[]
+        CompetenceQ2S2s=[]
+        CompetenceQ2S3s=[]
+        CompetenceQ2S4s=[]
+        for key, entry in CompetenceQ2S1.items():
+            if entry is None:
+                   CompetenceQ2S1s.append(0)
+            else:
+                CompetenceQ2S1s.append(entry)
+
+        for key, entry in CompetenceQ2S2.items():
+            if entry is None:
+                CompetenceQ2S2s.append(0)
+            else:
+                CompetenceQ2S2s.append(entry)
+
+        for key, entry in CompetenceQ2S3.items():
+            if entry is None:
+                CompetenceQ2S3s.append(0)
+            else:
+                CompetenceQ2S3s.append(entry)
+        for key, entry in CompetenceQ2S4.items():
+            if entry is None:
+                CompetenceQ2S4s.append(0)
+            else:
+                CompetenceQ2S4s.append(entry)
+
+        CompetenceQ2S1s= CompetenceQ2S1s[0]
+        CompetenceQ2S2s= CompetenceQ2S2s[0]
+        CompetenceQ2S3s= CompetenceQ2S3s[0]
+        CompetenceQ2S4s= CompetenceQ2S4s[0]
+
+        CompetenceQ2S1s= (CompetenceQ2S1s*100) / (5*survey1Counts)
+        CompetenceQ2S2s= (CompetenceQ2S2s*100) / (5*survey2Counts)
+        CompetenceQ2S3s= (CompetenceQ2S3s*100) / (5*survey3Counts)
+        CompetenceQ2S4s= (CompetenceQ2S4s*100) / (5*survey4Counts)
+
+        CompetenceQ2S1s=float("{0:.1f}".format(CompetenceQ2S1s))
+        CompetenceQ2S2s=float("{0:.1f}".format(CompetenceQ2S2s))
+        CompetenceQ2S3s=float("{0:.1f}".format(CompetenceQ2S3s))
+        CompetenceQ2S4s=float("{0:.1f}".format(CompetenceQ2S4s))
+#Riesk Q3 for both questioniares
+        CompetenceQ3S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q9", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        CompetenceQ3S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q9", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        CompetenceQ3S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q9", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        CompetenceQ3S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q9", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+
+        CompetenceQ3S1s=[]
+        CompetenceQ3S2s=[]
+        CompetenceQ3S3s=[]
+        CompetenceQ3S4s=[]
+        for key, entry in CompetenceQ3S1.items():
+            if entry is None:
+                   CompetenceQ3S1s.append(0)
+            else:
+                CompetenceQ3S1s.append(entry)
+
+        for key, entry in CompetenceQ3S2.items():
+            if entry is None:
+                CompetenceQ3S2s.append(0)
+            else:
+                CompetenceQ3S2s.append(entry)
+
+        for key, entry in CompetenceQ3S3.items():
+            if entry is None:
+                CompetenceQ3S3s.append(0)
+            else:
+                CompetenceQ3S3s.append(entry)
+
+        for key, entry in CompetenceQ3S4.items():
+            if entry is None:
+                CompetenceQ3S4s.append(0)
+            else:
+                CompetenceQ3S4s.append(entry)
+
+        CompetenceQ3S1s= CompetenceQ3S1s[0]
+        CompetenceQ3S2s= CompetenceQ3S2s[0]
+        CompetenceQ3S3s= CompetenceQ3S3s[0]
+        CompetenceQ3S4s= CompetenceQ3S4s[0]
+
+        CompetenceQ3S1s= (CompetenceQ3S1s*100) / (5*survey1Counts)
+        CompetenceQ3S2s= (CompetenceQ3S2s*100) / (5*survey2Counts)
+        CompetenceQ3S3s= (CompetenceQ3S3s*100) / (5*survey3Counts)
+        CompetenceQ3S4s= (CompetenceQ3S4s*100) / (5*survey4Counts)
+
+        CompetenceQ3S1s=float("{0:.1f}".format(CompetenceQ3S1s))
+        CompetenceQ3S2s=float("{0:.1f}".format(CompetenceQ3S2s))
+        CompetenceQ3S3s=float("{0:.1f}".format(CompetenceQ3S3s))
+        CompetenceQ3S4s=float("{0:.1f}".format(CompetenceQ3S4s))
+#Recirptocity Q1 for both questioniares
+        ReciprocityQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        ReciprocityQ1S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        ReciprocityQ1S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        ReciprocityQ1S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+
+        ReciprocityQ1S1s=[]
+        ReciprocityQ1S2s=[]
+        ReciprocityQ1S3s=[]
+        ReciprocityQ1S4s=[]
+
+        for key, entry in ReciprocityQ1S1.items():
+            if entry is None:
+                   ReciprocityQ1S1s.append(0)
+            else:
+                ReciprocityQ1S1s.append(entry)
+
+        for key, entry in ReciprocityQ1S2.items():
+            if entry is None:
+                ReciprocityQ1S2s.append(0)
+            else:
+                ReciprocityQ1S2s.append(entry)
+
+        for key, entry in ReciprocityQ1S3.items():
+            if entry is None:
+                ReciprocityQ1S3s.append(0)
+            else:
+                ReciprocityQ1S3s.append(entry)
+        for key, entry in ReciprocityQ1S4.items():
+            if entry is None:
+                ReciprocityQ1S4s.append(0)
+            else:
+                ReciprocityQ1S4s.append(entry)
+
+        ReciprocityQ1S1s= ReciprocityQ1S1s[0]
+        ReciprocityQ1S2s= ReciprocityQ1S2s[0]
+        ReciprocityQ1S3s= ReciprocityQ1S3s[0]
+        ReciprocityQ1S4s= ReciprocityQ1S4s[0]
+
+        ReciprocityQ1S1s= (ReciprocityQ1S1s*100) / (5*survey1Counts)
+        ReciprocityQ1S2s= (ReciprocityQ1S2s*100) / (5*survey2Counts)
+        ReciprocityQ1S3s= (ReciprocityQ1S3s*100) / (5*survey3Counts)
+        ReciprocityQ1S4s= (ReciprocityQ1S4s*100) / (5*survey4Counts)
+
+        ReciprocityQ1S1s=float("{0:.1f}".format(ReciprocityQ1S1s))
+        ReciprocityQ1S2s=float("{0:.1f}".format(ReciprocityQ1S2s))
+        ReciprocityQ1S3s=float("{0:.1f}".format(ReciprocityQ1S3s))
+        ReciprocityQ1S4s=float("{0:.1f}".format(ReciprocityQ1S4s))
+
+
+#Recirprocity Q2 for both questioniares
+        ReciprocityQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        ReciprocityQ2S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        ReciprocityQ2S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        ReciprocityQ2S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        ReciprocityQ2S1s=[]
+        ReciprocityQ2S2s=[]
+        ReciprocityQ2S3s=[]
+        ReciprocityQ2S4s=[]
+
+        for key, entry in ReciprocityQ2S1.items():
+            if entry is None:
+                   ReciprocityQ2S1s.append(0)
+            else:
+                ReciprocityQ2S1s.append(entry)
+
+        for key, entry in ReciprocityQ2S2.items():
+            if entry is None:
+                ReciprocityQ2S2s.append(0)
+            else:
+                ReciprocityQ2S2s.append(entry)
+
+        for key, entry in ReciprocityQ2S3.items():
+            if entry is None:
+                ReciprocityQ2S3s.append(0)
+            else:
+                ReciprocityQ2S3s.append(entry)
+
+        for key, entry in ReciprocityQ2S4.items():
+            if entry is None:
+                ReciprocityQ2S4s.append(0)
+            else:
+                ReciprocityQ2S4s.append(entry)
+
+        ReciprocityQ2S1s= ReciprocityQ2S1s[0]
+        ReciprocityQ2S2s= ReciprocityQ2S2s[0]
+        ReciprocityQ2S3s= ReciprocityQ2S3s[0]
+        ReciprocityQ2S4s= ReciprocityQ2S4s[0]
+
+        ReciprocityQ2S1s= (ReciprocityQ2S1s*100) / (5*survey1Counts)
+        ReciprocityQ2S2s= (ReciprocityQ2S2s*100) / (5*survey2Counts)
+        ReciprocityQ2S3s= (ReciprocityQ2S3s*100) / (5*survey3Counts)
+        ReciprocityQ2S4s= (ReciprocityQ2S4s*100) / (5*survey4Counts)
+
+        ReciprocityQ2S1s=float("{0:.1f}".format(ReciprocityQ2S1s))
+        ReciprocityQ2S2s=float("{0:.1f}".format(ReciprocityQ2S2s))
+        ReciprocityQ2S3s=float("{0:.1f}".format(ReciprocityQ2S3s))
+        ReciprocityQ2S4s=float("{0:.1f}".format(ReciprocityQ2S4s))
+#Riesk Q1 for both questioniares
+        GtrustQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q12", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        GtrustQ1S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q12", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        GtrustQ1S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q12", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        GtrustQ1S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q12", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+
+        GtrustQ1S1s=[]
+        GtrustQ1S2s=[]
+        GtrustQ1S3s=[]
+        GtrustQ1S4s=[]
+        for key, entry in GtrustQ1S1.items():
+            if entry is None:
+                   GtrustQ1S1s.append(0)
+            else:
+                GtrustQ1S1s.append(entry)
+
+        for key, entry in GtrustQ1S2.items():
+            if entry is None:
+                GtrustQ1S2s.append(0)
+            else:
+                GtrustQ1S2s.append(entry)
+
+        for key, entry in GtrustQ1S3.items():
+            if entry is None:
+                GtrustQ1S3s.append(0)
+            else:
+                GtrustQ1S3s.append(entry)
+
+        for key, entry in GtrustQ1S4.items():
+            if entry is None:
+                GtrustQ1S4s.append(0)
+            else:
+                GtrustQ1S4s.append(entry)
+
+        GtrustQ1S1s= GtrustQ1S1s[0]
+        GtrustQ1S2s= GtrustQ1S2s[0]
+        GtrustQ1S3s= GtrustQ1S3s[0]
+        GtrustQ1S4s= GtrustQ1S4s[0]
+        GtrustQ1S1s= (GtrustQ1S1s*100) / (5*survey1Counts)
+        GtrustQ1S2s= (GtrustQ1S2s*100) / (5*survey2Counts)
+        GtrustQ1S3s= (GtrustQ1S3s*100) / (5*survey3Counts)
+        GtrustQ1S4s= (GtrustQ1S4s*100) / (5*survey4Counts)
+
+        GtrustQ1S1s=float("{0:.1f}".format(GtrustQ1S1s))
+        GtrustQ1S2s=float("{0:.1f}".format(GtrustQ1S2s))
+        GtrustQ1S3s=float("{0:.1f}".format(GtrustQ1S3s))
+        GtrustQ1S4s=float("{0:.1f}".format(GtrustQ1S4s))
+#Riesk Q2 for both questioniares
+        GtrustQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q13", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        GtrustQ2S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q13", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        GtrustQ2S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q13", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        GtrustQ2S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q13", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        GtrustQ2S1s=[]
+        GtrustQ2S2s=[]
+        GtrustQ2S3s=[]
+        GtrustQ2S4s=[]
+        for key, entry in GtrustQ2S1.items():
+            if entry is None:
+                   GtrustQ2S1s.append(0)
+            else:
+                GtrustQ2S1s.append(entry)
+
+        for key, entry in GtrustQ2S2.items():
+            if entry is None:
+                GtrustQ2S2s.append(0)
+            else:
+                GtrustQ2S2s.append(entry)
+
+        for key, entry in GtrustQ2S3.items():
+            if entry is None:
+                GtrustQ2S3s.append(0)
+            else:
+                GtrustQ2S3s.append(entry)
+
+        for key, entry in GtrustQ2S4.items():
+            if entry is None:
+                GtrustQ2S4s.append(0)
+            else:
+                GtrustQ2S4s.append(entry)
+
+        GtrustQ2S1s= GtrustQ2S1s[0]
+        GtrustQ2S2s= GtrustQ2S2s[0]
+        GtrustQ2S3s= GtrustQ2S3s[0]
+        GtrustQ2S4s= GtrustQ2S4s[0]
+        GtrustQ2S1s= (GtrustQ2S1s*100) / (5*survey1Counts)
+        GtrustQ2S2s= (GtrustQ2S2s*100) / (5*survey2Counts)
+        GtrustQ2S3s= (GtrustQ2S3s*100) / (5*survey3Counts)
+        GtrustQ2S4s= (GtrustQ2S4s*100) / (5*survey4Counts)
+
+        GtrustQ2S1s=float("{0:.1f}".format(GtrustQ2S1s))
+        GtrustQ2S2s=float("{0:.1f}".format(GtrustQ2S2s))
+        GtrustQ2S3s=float("{0:.1f}".format(GtrustQ2S3s))
+        GtrustQ2S4s=float("{0:.1f}".format(GtrustQ2S4s))
+#Riesk Q3 for both questioniares
+        GtrustQ3S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q14", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        GtrustQ3S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q14", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        GtrustQ3S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q14", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        GtrustQ3S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q14", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+
+        GtrustQ3S1s=[]
+        GtrustQ3S2s=[]
+        GtrustQ3S3s=[]
+        GtrustQ3S4s=[]
+
+        for key, entry in GtrustQ3S1.items():
+            if entry is None:
+                   GtrustQ3S1s.append(0)
+            else:
+                GtrustQ3S1s.append(entry)
+
+        for key, entry in GtrustQ3S2.items():
+            if entry is None:
+                GtrustQ3S2s.append(0)
+            else:
+                GtrustQ3S2s.append(entry)
+
+        for key, entry in GtrustQ3S3.items():
+            if entry is None:
+                GtrustQ3S3s.append(0)
+            else:
+                GtrustQ3S3s.append(entry)
+        for key, entry in GtrustQ3S4.items():
+            if entry is None:
+                GtrustQ3S4s.append(0)
+            else:
+                GtrustQ3S4s.append(entry)
+
+        GtrustQ3S1s= GtrustQ3S1s[0]
+        GtrustQ3S2s= GtrustQ3S2s[0]
+        GtrustQ3S3s= GtrustQ3S3s[0]
+        GtrustQ3S4s= GtrustQ3S4s[0]
+        GtrustQ3S1s= (GtrustQ3S1s*100) / (5*survey1Counts)
+        GtrustQ3S2s= (GtrustQ3S2s*100) / (5*survey2Counts)
+        GtrustQ3S3s= (GtrustQ3S3s*100) / (5*survey3Counts)
+        GtrustQ3S4s= (GtrustQ3S4s*100) / (5*survey4Counts)
+
+        GtrustQ3S1s=float("{0:.1f}".format(GtrustQ3S1s))
+        GtrustQ3S2s=float("{0:.1f}".format(GtrustQ3S2s))
+        GtrustQ3S3s=float("{0:.1f}".format(GtrustQ3S3s))
+        GtrustQ3S4s=float("{0:.1f}".format(GtrustQ3S4s))
 
         return render(request, 'pie_chart4.html', {
-            'labels': labels,
-            'data1': data1,
-            'data2': data2,
-            'data3': data3,
-            'data4': data4,
-            'labels11': labels11,
-            'data11': data11,
-            'data22': data22,
-            'data33': data33,
-            'data44': data44,
-            'project':studyidd,
-            'project_id':project_id
+            'project_id':project_id,
+            'productname':productname,
+            'survey1Counts':survey1Counts,
+            'survey2Counts':survey2Counts,
+            'survey3Counts':survey3Counts,
+            'survey4Counts':survey4Counts,
+            'S1CountGender':S1CountGender,
+            'S2CountGender':S2CountGender,
+            'S3CountGender':S3CountGender,
+            'S4CountGender':S4CountGender,
+            'S1CountAge':S1CountAge,
+            'S2CountAge':S2CountAge,
+            'S3CountAge':S3CountAge,
+            'S4CountAge':S4CountAge,
+            'CrobanchAlphaS1':CrobanchAlphaS1,
+            'CrobanchAlphaS2':CrobanchAlphaS2,
+            'CrobanchAlphaS3':CrobanchAlphaS3,
+            'CrobanchAlphaS4':CrobanchAlphaS4,
+            'OvrallTrustS1s':OvrallTrustS1s,
+            'OvrallTrustS2s':OvrallTrustS2s,
+            'OvrallTrustS3s':OvrallTrustS3s,
+            'OvrallTrustS4s':OvrallTrustS4s,
+            'OvrallRiskS1s':OvrallRiskS1s,
+            'OvrallRiskS2s':OvrallRiskS2s,
+            'OvrallRiskS3s':OvrallRiskS3s,
+            'OvrallRiskS4s':OvrallRiskS4s,
+            'OvrallBenevolenceS1s':OvrallBenevolenceS1s,
+            'OvrallBenevolenceS2s':OvrallBenevolenceS2s,
+            'OvrallBenevolenceS3s':OvrallBenevolenceS3s,
+            'OvrallBenevolenceS4s':OvrallBenevolenceS4s,
+            'OvrallCompetenceS1s':OvrallCompetenceS1s,
+            'OvrallCompetenceS2s':OvrallCompetenceS2s,
+            'OvrallCompetenceS3s':OvrallCompetenceS3s,
+            'OvrallCompetenceS4s':OvrallCompetenceS4s,
+            'OvrallReciprocityS1s':OvrallReciprocityS1s,
+            'OvrallReciprocityS2s':OvrallReciprocityS2s,
+            'OvrallReciprocityS3s':OvrallReciprocityS3s,
+            'OvrallReciprocityS4s':OvrallReciprocityS4s,
+            'OvrallGeneralTrustS1s':OvrallGeneralTrustS1s,
+            'OvrallGeneralTrustS2s':OvrallGeneralTrustS2s,
+            'OvrallGeneralTrustS3s':OvrallGeneralTrustS3s,
+            'OvrallGeneralTrustS4s':OvrallGeneralTrustS4s,
+            'RiskQ1S1s':RiskQ1S1s,
+            'RiskQ1S2s':RiskQ1S2s,
+            'RiskQ1S3s':RiskQ1S3s,
+            'RiskQ1S4s':RiskQ1S4s,
+            'RiskQ2S1s':RiskQ2S1s,
+            'RiskQ2S2s':RiskQ2S2s,
+            'RiskQ2S3s':RiskQ2S3s,
+            'RiskQ2S4s':RiskQ2S4s,
+            'RiskQ3S1s':RiskQ3S1s,
+            'RiskQ3S2s':RiskQ3S2s,
+            'RiskQ3S3s':RiskQ3S3s,
+            'RiskQ3S4s':RiskQ3S4s,
+            'BenevlonceQ1S1s':BenevlonceQ1S1s,
+            'BenevlonceQ1S2s':BenevlonceQ1S2s,
+            'BenevlonceQ1S3s':BenevlonceQ1S3s,
+            'BenevlonceQ1S4s':BenevlonceQ1S4s,
+            'BenevlonceQ2S1s':BenevlonceQ2S1s,
+            'BenevlonceQ2S2s':BenevlonceQ2S2s,
+            'BenevlonceQ2S3s':BenevlonceQ2S3s,
+            'BenevlonceQ2S4s':BenevlonceQ2S4s,
+            'BenevlonceQ3S1s':BenevlonceQ3S1s,
+            'BenevlonceQ3S2s':BenevlonceQ3S2s,
+            'BenevlonceQ3S3s':BenevlonceQ3S3s,
+            'BenevlonceQ3S4s':BenevlonceQ3S4s,
+            'CompetenceQ1S1s':CompetenceQ1S1s,
+            'CompetenceQ1S2s':CompetenceQ1S2s,
+            'CompetenceQ1S3s':CompetenceQ1S3s,
+            'CompetenceQ1S4s':CompetenceQ1S4s,
+            'CompetenceQ2S1s':CompetenceQ2S1s,
+            'CompetenceQ2S2s':CompetenceQ2S2s,
+            'CompetenceQ2S3s':CompetenceQ2S3s,
+            'CompetenceQ2S4s':CompetenceQ2S4s,
+            'CompetenceQ3S1s':CompetenceQ3S1s,
+            'CompetenceQ3S2s':CompetenceQ3S2s,
+            'CompetenceQ3S3s':CompetenceQ3S3s,
+            'CompetenceQ3S4s':CompetenceQ3S4s,
+            'ReciprocityQ1S1s':ReciprocityQ1S1s,
+            'ReciprocityQ1S2s':ReciprocityQ1S2s,
+            'ReciprocityQ1S3s':ReciprocityQ1S3s,
+            'ReciprocityQ1S4s':ReciprocityQ1S4s,
+            'ReciprocityQ2S1s':ReciprocityQ2S1s,
+            'ReciprocityQ2S2s':ReciprocityQ2S2s,
+            'ReciprocityQ2S3s':ReciprocityQ2S3s,
+            'ReciprocityQ2S4s':ReciprocityQ2S4s,
+            'GtrustQ1S1s':GtrustQ1S1s,
+            'GtrustQ1S2s':GtrustQ1S2s,
+            'GtrustQ1S3s':GtrustQ1S3s,
+            'GtrustQ1S4s':GtrustQ1S4s,
+            'GtrustQ2S1s':GtrustQ2S1s,
+            'GtrustQ2S2s':GtrustQ2S2s,
+            'GtrustQ2S3s':GtrustQ2S3s,
+            'GtrustQ2S4s':GtrustQ2S4s,
+            'GtrustQ3S1s':GtrustQ3S1s,
+            'GtrustQ3S2s':GtrustQ3S2s,
+            'GtrustQ3S3s':GtrustQ3S3s,
+            'GtrustQ3S4s':GtrustQ3S4s
+
             })
-    elif y==5:
-        labels = []
-        data1 = []
-        data2=[]
-        data3=[]
-        data4=[]
-        data5=[]
-        labels11 = []
-        data11 = []
-        data22=[]
-        data33=[]
-        data44=[]
-        data55=[]
-        queryset = Submission.objects.aggregate(
+    elif NumberOfSurveys==5:
+        #get the link ids for the two surveys
+        LID1 = Link.objects.filter(survey_id=SID[0]).values_list('id', flat=True)
+        LID2 = Link.objects.filter(survey_id=SID[1]).values_list('id', flat=True)
+        LID3 = Link.objects.filter(survey_id=SID[2]).values_list('id', flat=True)
+        LID4 = Link.objects.filter(survey_id=SID[3]).values_list('id', flat=True)
+        LID5 = Link.objects.filter(survey_id=SID[4]).values_list('id', flat=True)
+        #get the number of respondents by survey
+        S1Count = Submission.objects.aggregate(
+            responseS1= Count("q1", filter=(Q(link_id=LID1[0])), output_field=IntegerField()))
+        S2Count = Submission.objects.aggregate(
+            responseS1= Count("q1", filter=(Q(link_id=LID2[0])), output_field=IntegerField()))
+        S3Count = Submission.objects.aggregate(
+            responseS1= Count("q1", filter=(Q(link_id=LID3[0])), output_field=IntegerField()))
+        S4Count = Submission.objects.aggregate(
+            responseS1= Count("q1", filter=(Q(link_id=LID4[0])), output_field=IntegerField()))
+        S5Count = Submission.objects.aggregate(
+            responseS1= Count("q1", filter=(Q(link_id=LID5[0])), output_field=IntegerField()))
+        S1Counts=[]
+        S2Counts=[]
+        S3Counts=[]
+        S4Counts=[]
+        S5Counts=[]
+        for key, entry in S1Count.items():
+            if entry is None:
+                   S1Counts.append(0)
+            else:
+                S1Counts.append(entry)
+        for key, entry in S2Count.items():
+            if entry is None:
+                S2Counts.append(0)
+            else:
+                S2Counts.append(entry)
+        for key, entry in S3Count.items():
+            if entry is None:
+                S3Counts.append(0)
+            else:
+                S3Counts.append(entry)
+        for key, entry in S4Count.items():
+            if entry is None:
+                S4Counts.append(0)
+            else:
+                S4Counts.append(entry)
+        for key, entry in S5Count.items():
+            if entry is None:
+                S5Counts.append(0)
+            else:
+                S5Counts.append(entry)
+        survey1Counts= S1Counts[0]
+        survey2Counts= S2Counts[0]
+        survey3Counts= S3Counts[0]
+        survey4Counts= S4Counts[0]
+        survey5Counts= S5Counts[0]
+        #get number gender details for each survey
+        S1CountMale = AnonyData.objects.filter(link_id=LID1[0], gender="M").count()
+        S1CountFeMale = AnonyData.objects.filter(link_id=LID1[0], gender="F").count()
+        S1CountOthers = AnonyData.objects.filter(link_id=LID1[0], gender="O").count()
+
+        S2CountMale = AnonyData.objects.filter(link_id=LID2[0], gender="M").count()
+        S2CountFeMale = AnonyData.objects.filter(link_id=LID2[0], gender="F").count()
+        S2CountOthers = AnonyData.objects.filter(link_id=LID2[0], gender="O").count()
+
+        S3CountMale = AnonyData.objects.filter(link_id=LID3[0], gender="M").count()
+        S3CountFeMale = AnonyData.objects.filter(link_id=LID3[0], gender="F").count()
+        S3CountOthers = AnonyData.objects.filter(link_id=LID3[0], gender="O").count()
+
+        S4CountMale = AnonyData.objects.filter(link_id=LID4[0], gender="M").count()
+        S4CountFeMale = AnonyData.objects.filter(link_id=LID4[0], gender="F").count()
+        S4CountOthers = AnonyData.objects.filter(link_id=LID4[0], gender="O").count()
+
+
+        S5CountMale = AnonyData.objects.filter(link_id=LID5[0], gender="M").count()
+        S5CountFeMale = AnonyData.objects.filter(link_id=LID5[0], gender="F").count()
+        S5CountOthers = AnonyData.objects.filter(link_id=LID5[0], gender="O").count()
+            #appending the results to an array because the chartjs piechart expects the data in an array format
+        S1CountGender = [S1CountMale, S1CountFeMale, S1CountOthers]
+        S2CountGender = [S2CountMale, S2CountFeMale, S2CountOthers]
+        S3CountGender = [S3CountMale, S3CountFeMale, S3CountOthers]
+        S4CountGender = [S4CountMale, S4CountFeMale, S4CountOthers]
+        S5CountGender = [S5CountMale, S4CountFeMale, S4CountOthers]
+        #getting the age distribution for each survey
+        #survey 1
+        S1Count17Below = AnonyData.objects.filter(link_id=LID1[0], age="1").count()
+        S1Count18To27 = AnonyData.objects.filter(link_id=LID1[0], age="2").count()
+        S1Count28To37 = AnonyData.objects.filter(link_id=LID1[0], age="3").count()
+        S1Count38To47 = AnonyData.objects.filter(link_id=LID1[0], age="4").count()
+        S1Count48To57 = AnonyData.objects.filter(link_id=LID1[0], age="5").count()
+        S1Count58Above = AnonyData.objects.filter(link_id=LID1[0], age="6").count()
+        #survey 2
+        S2Count17Below = AnonyData.objects.filter(link_id=LID2[0], age="1").count()
+        S2Count18To27 = AnonyData.objects.filter(link_id=LID2[0], age="2").count()
+        S2Count28To37 = AnonyData.objects.filter(link_id=LID2[0], age="3").count()
+        S2Count38To47 = AnonyData.objects.filter(link_id=LID2[0], age="4").count()
+        S2Count48To57 = AnonyData.objects.filter(link_id=LID2[0], age="5").count()
+        S2Count58Above = AnonyData.objects.filter(link_id=LID2[0], age="6").count()
+        #survey 3
+        S3Count17Below = AnonyData.objects.filter(link_id=LID3[0], age="1").count()
+        S3Count18To27 = AnonyData.objects.filter(link_id=LID3[0], age="2").count()
+        S3Count28To37 = AnonyData.objects.filter(link_id=LID3[0], age="3").count()
+        S3Count38To47 = AnonyData.objects.filter(link_id=LID3[0], age="4").count()
+        S3Count48To57 = AnonyData.objects.filter(link_id=LID3[0], age="5").count()
+        S3Count58Above = AnonyData.objects.filter(link_id=LID3[0], age="6").count()
+
+        #survey 4
+        S4Count17Below = AnonyData.objects.filter(link_id=LID4[0], age="1").count()
+        S4Count18To27 = AnonyData.objects.filter(link_id=LID4[0], age="2").count()
+        S4Count28To37 = AnonyData.objects.filter(link_id=LID4[0], age="3").count()
+        S4Count38To47 = AnonyData.objects.filter(link_id=LID4[0], age="4").count()
+        S4Count48To57 = AnonyData.objects.filter(link_id=LID4[0], age="5").count()
+        S4Count58Above = AnonyData.objects.filter(link_id=LID4[0], age="6").count()
+
+        #survey 4
+        S5Count17Below = AnonyData.objects.filter(link_id=LID5[0], age="1").count()
+        S5Count18To27 = AnonyData.objects.filter(link_id=LID5[0], age="2").count()
+        S5Count28To37 = AnonyData.objects.filter(link_id=LID5[0], age="3").count()
+        S5Count38To47 = AnonyData.objects.filter(link_id=LID5[0], age="4").count()
+        S5Count48To57 = AnonyData.objects.filter(link_id=LID5[0], age="5").count()
+        S5Count58Above = AnonyData.objects.filter(link_id=LID5[0], age="6").count()
+
+            #appending the results to an array because the chartjs piechart expects the data in an array format
+        S1CountAge = [S1Count17Below, S1Count18To27, S1Count28To37, S1Count38To47, S1Count48To57, S1Count58Above ]
+        S2CountAge = [S2Count17Below, S2Count18To27, S2Count28To37, S2Count38To47, S2Count48To57, S2Count58Above ]
+        S3CountAge = [S3Count17Below, S3Count18To27, S3Count28To37, S3Count38To47, S3Count48To57, S3Count58Above ]
+        S4CountAge = [S4Count17Below, S4Count18To27, S4Count28To37, S4Count38To47, S4Count48To57, S4Count58Above ]
+        S5CountAge = [S5Count17Below, S5Count18To27, S5Count28To37, S5Count38To47, S5Count48To57, S5Count58Above ]
+        #check for null entries and replace them with 0
+        for i in S1CountAge:
+            if i == '':
+                S1CountAge[i]=0
+            else:
+                S1CountAge[i] = S1CountAge[i]
+
+        for i in S2CountAge:
+            if i == '':
+                S2CountAge[i]=0
+            else:
+                S2CountAge[i] = S2CountAge[i]
+
+        for i in S3CountAge:
+            if i == '':
+                S3CountAge[i]=0
+            else:
+                S3CountAge[i] = S2CountAge[i]
+
+        for i in S4CountAge:
+            if i == '':
+                S4CountAge[i]=0
+            else:
+                S4CountAge[i] = S4CountAge[i]
+
+        for i in S5CountAge:
+            if i == '':
+                S5CountAge[i]=0
+            else:
+                S5CountAge[i] = S5CountAge[i]
+        #print(S1CountAge)
+        #print(S2CountAge)
+        #get all response for each survey
+        allRespS1= Submission.objects.values('q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14').filter(Q(link_id=LID1[0])).all()
+        allRespS2= Submission.objects.values('q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14').filter(Q(link_id=LID2[0])).all()
+        allRespS3= Submission.objects.values('q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14').filter(Q(link_id=LID3[0])).all()
+        allRespS4= Submission.objects.values('q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14').filter(Q(link_id=LID4[0])).all()
+        allRespS5= Submission.objects.values('q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14').filter(Q(link_id=LID5[0])).all()
+        #convert the querryset into dataframe
+        allRespS1=df.DataFrame.from_records(allRespS1)
+        allRespS2=df.DataFrame.from_records(allRespS2)
+        allRespS3=df.DataFrame.from_records(allRespS3)
+        allRespS4=df.DataFrame.from_records(allRespS4)
+        allRespS5=df.DataFrame.from_records(allRespS5)
+        #compute the crobanch alpha for each survey using the aggregated responses in dataframe form above
+        CrobanchAlphaS1=cronbach_alpha(allRespS1)
+        CrobanchAlphaS2=cronbach_alpha(allRespS2)
+        CrobanchAlphaS3=cronbach_alpha(allRespS3)
+        CrobanchAlphaS4=cronbach_alpha(allRespS4)
+        CrobanchAlphaS5=cronbach_alpha(allRespS5)
+        #reducing the result to two decimal places
+        CrobanchAlphaS1=float("{0:.4f}".format(CrobanchAlphaS1))
+        CrobanchAlphaS2=float("{0:.4f}".format(CrobanchAlphaS2))
+        CrobanchAlphaS3=float("{0:.4f}".format(CrobanchAlphaS3))
+        CrobanchAlphaS4=float("{0:.4f}".format(CrobanchAlphaS4))
+        CrobanchAlphaS5=float("{0:.4f}".format(CrobanchAlphaS5))
+
+        if math.isnan(CrobanchAlphaS1):
+            CrobanchAlphaS1=0.0
+        else:
+            CrobanchAlphaS1=CrobanchAlphaS1
+
+        if math.isnan(CrobanchAlphaS2):
+            CrobanchAlphaS2=0.0
+        else:
+            CrobanchAlphaS2=CrobanchAlphaS2
+
+        if math.isnan(CrobanchAlphaS3):
+            CrobanchAlphaS3=0.0
+        else:
+            CrobanchAlphaS3=CrobanchAlphaS3
+
+        if math.isnan(CrobanchAlphaS4):
+            CrobanchAlphaS4=0.0
+        else:
+            CrobanchAlphaS4=CrobanchAlphaS4
+
+        if math.isnan(CrobanchAlphaS5):
+            CrobanchAlphaS5=0.0
+        else:
+            CrobanchAlphaS5=CrobanchAlphaS5
+        print(CrobanchAlphaS5)
+#compute overall trust score for each survey begins from here
+        OvrallTrustS1= Submission.objects.aggregate(
             overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[0]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            labels.append(key)
-            data1.append(entry)
-        queryset = Submission.objects.aggregate(
+                Sum("q1", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q4", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q7", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q10", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q12", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        OvrallTrustS2= Submission.objects.aggregate(
             overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[1]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            data2.append(entry)
-        queryset = Submission.objects.aggregate(
+                Sum("q1", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q4", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q7", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q10", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q12", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        OvrallTrustS3= Submission.objects.aggregate(
             overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[2]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[2])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[2])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            data3.append(entry)
-        queryset = Submission.objects.aggregate(
+                Sum("q1", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q4", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q7", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q10", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q12", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        OvrallTrustS4= Submission.objects.aggregate(
             overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[3]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[3])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[3])), output_field=FloatField())
-                )
-        print(queryset)
-        for key, entry in queryset.items():
-            data4.append(entry)
-        queryset = Submission.objects.aggregate(
+                Sum("q1", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q4", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q7", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q10", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q12", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        OvrallTrustS5= Submission.objects.aggregate(
             overaltrust=
-                Avg("q1", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q4", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q7", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q10", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q12", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            overalrisk=
-                Avg("q1", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q2", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q3", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            overalbenevolence =
-                Avg("q4", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q5", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q6", filter=(Q(link_id=LID[4]))),
-            overalcompetence=
-                Avg("q7", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q8", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q9", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            overalreciprocity=
-                Avg("q10", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q11", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            generaltrust=
-                Avg("q12", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q13", filter=(Q(link_id=LID[4])), output_field=FloatField())+
-                Avg("q14", filter=(Q(link_id=LID[4])), output_field=FloatField())
+                Sum("q1", filter=(Q(link_id=LID5[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID5[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID5[0])), output_field=FloatField())+
+                Sum("q4", filter=(Q(link_id=LID5[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID5[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID5[0])), output_field=FloatField())+
+                Sum("q7", filter=(Q(link_id=LID5[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID5[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID5[0])), output_field=FloatField())+
+                Sum("q10", filter=(Q(link_id=LID5[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID5[0])), output_field=FloatField())+
+                Sum("q12", filter=(Q(link_id=LID5[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID5[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID5[0])), output_field=FloatField()))
+        OvrallTrustS1s=[]
+        OvrallTrustS2s=[]
+        OvrallTrustS3s=[]
+        OvrallTrustS4s=[]
+        OvrallTrustS5s=[]
+        for key, entry in OvrallTrustS1.items():
+            if entry is None:
+                   OvrallTrustS1s.append(0)
+            else:
+                OvrallTrustS1s.append(entry)
+
+        for key, entry in OvrallTrustS2.items():
+            if entry is None:
+                OvrallTrustS2s.append(0)
+            else:
+                OvrallTrustS2s.append(entry)
+
+        for key, entry in OvrallTrustS3.items():
+            if entry is None:
+                OvrallTrustS3s.append(0)
+            else:
+                OvrallTrustS3s.append(entry)
+
+        for key, entry in OvrallTrustS4.items():
+            if entry is None:
+                OvrallTrustS4s.append(0)
+            else:
+                OvrallTrustS4s.append(entry)
+
+        for key, entry in OvrallTrustS5.items():
+            if entry is None:
+                OvrallTrustS5s.append(0)
+            else:
+                OvrallTrustS5s.append(entry)
+
+        OvrallTrustS1s= OvrallTrustS1s[0]
+        OvrallTrustS2s= OvrallTrustS2s[0]
+        OvrallTrustS3s= OvrallTrustS3s[0]
+        OvrallTrustS4s= OvrallTrustS4s[0]
+        OvrallTrustS5s= OvrallTrustS5s[0]
+
+        OvrallTrustS1s= (OvrallTrustS1s*100) / (70*survey1Counts)
+        OvrallTrustS2s= (OvrallTrustS2s*100) / (70*survey2Counts)
+        OvrallTrustS3s= (OvrallTrustS3s*100) / (70*survey3Counts)
+        OvrallTrustS4s= (OvrallTrustS4s*100) / (70*survey4Counts)
+        OvrallTrustS5s= (OvrallTrustS5s*100) / (70*survey5Counts)
+
+        OvrallTrustS1s=float("{0:.1f}".format(OvrallTrustS1s))
+        OvrallTrustS2s=float("{0:.1f}".format(OvrallTrustS2s))
+        OvrallTrustS3s=float("{0:.1f}".format(OvrallTrustS3s))
+        OvrallTrustS4s=float("{0:.1f}".format(OvrallTrustS4s))
+        OvrallTrustS5s=float("{0:.1f}".format(OvrallTrustS5s))
+#computing overall risk for each survey
+        OvrallRiskS1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID1[0])), output_field=FloatField())
                 )
-        print(queryset)
-        for key, entry in queryset.items():
-            data5.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[0])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[0])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            labels11.append(key)
-            data11.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[1])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[1])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            data22.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[2])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[2])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            data33.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[3])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[3])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            data44.append(entry)
-        queryset = Submission.objects.aggregate(
-            risk1=Avg("q1", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            risk2=Avg("q2", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            risk3=Avg("q3", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            benevolence1=Avg("q4", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            benevolence2=Avg("q5", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            benevolence3=Avg("q6", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            competence1=Avg("q7", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            competence2=Avg("q8", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            competence3=Avg("q9", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            reciprocity1=Avg("q10", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            reciprocity2=Avg("q11", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            generalTrust1=Avg("q12", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            generalTrust2=Avg("q13", filter=(Q(link_id=LID[4])), output_field=FloatField()),
-            generalTrust3=Avg("q14", filter=(Q(link_id=LID[4])), output_field=FloatField())
-            )
-        print(queryset)
-        for key, entry in queryset.items():
-            data55.append(entry)
+        OvrallRiskS2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        OvrallRiskS3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        OvrallRiskS4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        OvrallRiskS5= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID5[0])), output_field=FloatField())+
+                Sum("q2", filter=(Q(link_id=LID5[0])), output_field=FloatField())+
+                Sum("q3", filter=(Q(link_id=LID5[0])), output_field=FloatField()))
+
+        OvrallRiskS1s=[]
+        OvrallRiskS2s=[]
+        OvrallRiskS3s=[]
+        OvrallRiskS4s=[]
+        OvrallRiskS5s=[]
+        for key, entry in OvrallRiskS1.items():
+            if entry is None:
+                   OvrallRiskS1s.append(0)
+            else:
+                OvrallRiskS1s.append(entry)
+
+        for key, entry in OvrallRiskS2.items():
+            if entry is None:
+                OvrallRiskS2s.append(0)
+            else:
+                OvrallRiskS2s.append(entry)
+
+        for key, entry in OvrallRiskS3.items():
+            if entry is None:
+                OvrallRiskS3s.append(0)
+            else:
+                OvrallRiskS3s.append(entry)
+
+        for key, entry in OvrallRiskS4.items():
+            if entry is None:
+                OvrallRiskS4s.append(0)
+            else:
+                OvrallRiskS4s.append(entry)
+
+        for key, entry in OvrallRiskS5.items():
+            if entry is None:
+                OvrallRiskS5s.append(0)
+            else:
+                OvrallRiskS5s.append(entry)
+
+        OvrallRiskS1s= OvrallRiskS1s[0]
+        OvrallRiskS2s= OvrallRiskS2s[0]
+        OvrallRiskS3s= OvrallRiskS3s[0]
+        OvrallRiskS4s= OvrallRiskS4s[0]
+        OvrallRiskS5s= OvrallRiskS5s[0]
+        OvrallRiskS1s= (OvrallRiskS1s*100) / (15*survey1Counts)
+        OvrallRiskS2s= (OvrallRiskS2s*100) / (15*survey2Counts)
+        OvrallRiskS3s= (OvrallRiskS3s*100) / (15*survey3Counts)
+        OvrallRiskS4s= (OvrallRiskS4s*100) / (15*survey4Counts)
+        OvrallRiskS5s= (OvrallRiskS5s*100) / (15*survey5Counts)
+
+        OvrallRiskS1s=float("{0:.1f}".format(OvrallRiskS1s))
+        OvrallRiskS2s=float("{0:.1f}".format(OvrallRiskS2s))
+        OvrallRiskS3s=float("{0:.1f}".format(OvrallRiskS3s))
+        OvrallRiskS4s=float("{0:.1f}".format(OvrallRiskS4s))
+        OvrallRiskS5s=float("{0:.1f}".format(OvrallRiskS5s))
+#computing benevolencerisk for each survey
+        OvrallBenevolenceS1= Submission.objects.aggregate(
+            overalBenevolence=
+                Sum("q4", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID1[0])), output_field=FloatField())
+                )
+        OvrallBenevolenceS2= Submission.objects.aggregate(
+            overalBenevolence=
+                Sum("q4", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        OvrallBenevolenceS3= Submission.objects.aggregate(
+            overalBenevolence=
+                Sum("q4", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        OvrallBenevolenceS4= Submission.objects.aggregate(
+            overalBenevolence=
+                Sum("q4", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        OvrallBenevolenceS5= Submission.objects.aggregate(
+            overalBenevolence=
+                Sum("q4", filter=(Q(link_id=LID5[0])), output_field=FloatField())+
+                Sum("q5", filter=(Q(link_id=LID5[0])), output_field=FloatField())+
+                Sum("q6", filter=(Q(link_id=LID5[0])), output_field=FloatField()))
+        OvrallBenevolenceS1s=[]
+        OvrallBenevolenceS2s=[]
+        OvrallBenevolenceS3s=[]
+        OvrallBenevolenceS4s=[]
+        OvrallBenevolenceS5s=[]
+        for key, entry in OvrallBenevolenceS1.items():
+            if entry is None:
+                   OvrallBenevolenceS1s.append(0)
+            else:
+                OvrallBenevolenceS1s.append(entry)
+
+        for key, entry in OvrallBenevolenceS2.items():
+            if entry is None:
+                OvrallBenevolenceS2s.append(0)
+            else:
+                OvrallBenevolenceS2s.append(entry)
+
+        for key, entry in OvrallBenevolenceS3.items():
+            if entry is None:
+                OvrallBenevolenceS3s.append(0)
+            else:
+                OvrallBenevolenceS3s.append(entry)
+
+        for key, entry in OvrallBenevolenceS4.items():
+            if entry is None:
+                OvrallBenevolenceS4s.append(0)
+            else:
+                OvrallBenevolenceS4s.append(entry)
+
+        for key, entry in OvrallBenevolenceS5.items():
+            if entry is None:
+                OvrallBenevolenceS5s.append(0)
+            else:
+                OvrallBenevolenceS5s.append(entry)
+
+        OvrallBenevolenceS1s= OvrallBenevolenceS1s[0]
+        OvrallBenevolenceS2s= OvrallBenevolenceS2s[0]
+        OvrallBenevolenceS3s= OvrallBenevolenceS3s[0]
+        OvrallBenevolenceS4s= OvrallBenevolenceS4s[0]
+        OvrallBenevolenceS5s= OvrallBenevolenceS5s[0]
+
+        OvrallBenevolenceS1s= (OvrallBenevolenceS1s*100) / (15*survey1Counts)
+        OvrallBenevolenceS2s= (OvrallBenevolenceS2s*100) / (15*survey2Counts)
+        OvrallBenevolenceS3s= (OvrallBenevolenceS3s*100) / (15*survey3Counts)
+        OvrallBenevolenceS4s= (OvrallBenevolenceS4s*100) / (15*survey4Counts)
+        OvrallBenevolenceS5s= (OvrallBenevolenceS5s*100) / (15*survey5Counts)
+
+        OvrallBenevolenceS1s=float("{0:.1f}".format(OvrallBenevolenceS1s))
+        OvrallBenevolenceS2s=float("{0:.1f}".format(OvrallBenevolenceS2s))
+        OvrallBenevolenceS3s=float("{0:.1f}".format(OvrallBenevolenceS3s))
+        OvrallBenevolenceS4s=float("{0:.1f}".format(OvrallBenevolenceS4s))
+        OvrallBenevolenceS5s=float("{0:.1f}".format(OvrallBenevolenceS5s))
+
+# computing competence for each survey
+        OvrallCompetenceS1= Submission.objects.aggregate(
+            overalCompetence=
+                Sum("q7", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        OvrallCompetenceS2= Submission.objects.aggregate(
+            overalCompetence=
+                Sum("q7", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        OvrallCompetenceS3= Submission.objects.aggregate(
+            overalCompetence=
+                Sum("q7", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        OvrallCompetenceS4= Submission.objects.aggregate(
+            overalCompetence=
+                Sum("q7", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        OvrallCompetenceS5= Submission.objects.aggregate(
+            overalCompetence=
+                Sum("q7", filter=(Q(link_id=LID5[0])), output_field=FloatField())+
+                Sum("q8", filter=(Q(link_id=LID5[0])), output_field=FloatField())+
+                Sum("q9", filter=(Q(link_id=LID5[0])), output_field=FloatField()))
+
+
+
+        OvrallCompetenceS1s=[]
+        OvrallCompetenceS2s=[]
+        OvrallCompetenceS3s=[]
+        OvrallCompetenceS4s=[]
+        OvrallCompetenceS5s=[]
+
+        for key, entry in OvrallCompetenceS1.items():
+            if entry is None:
+                   OvrallCompetenceS1s.append(0)
+            else:
+                OvrallCompetenceS1s.append(entry)
+
+        for key, entry in OvrallCompetenceS2.items():
+            if entry is None:
+                OvrallCompetenceS2s.append(0)
+            else:
+                OvrallCompetenceS2s.append(entry)
+
+        for key, entry in OvrallCompetenceS3.items():
+            if entry is None:
+                OvrallCompetenceS3s.append(0)
+            else:
+                OvrallCompetenceS3s.append(entry)
+
+        for key, entry in OvrallCompetenceS4.items():
+            if entry is None:
+                OvrallCompetenceS4s.append(0)
+            else:
+                OvrallCompetenceS4s.append(entry)
+
+        for key, entry in OvrallCompetenceS5.items():
+            if entry is None:
+                OvrallCompetenceS5s.append(0)
+            else:
+                OvrallCompetenceS5s.append(entry)
+
+        OvrallCompetenceS1s= OvrallCompetenceS1s[0]
+        OvrallCompetenceS2s= OvrallCompetenceS2s[0]
+        OvrallCompetenceS3s= OvrallCompetenceS3s[0]
+        OvrallCompetenceS4s= OvrallCompetenceS4s[0]
+        OvrallCompetenceS5s= OvrallCompetenceS5s[0]
+
+        OvrallCompetenceS1s= (OvrallCompetenceS1s*100) / (15*survey1Counts)
+        OvrallCompetenceS2s= (OvrallCompetenceS2s*100) / (15*survey2Counts)
+        OvrallCompetenceS3s= (OvrallCompetenceS3s*100) / (15*survey3Counts)
+        OvrallCompetenceS4s= (OvrallCompetenceS4s*100) / (15*survey4Counts)
+        OvrallCompetenceS5s= (OvrallCompetenceS5s*100) / (15*survey5Counts)
+
+        OvrallCompetenceS1s=float("{0:.1f}".format(OvrallCompetenceS1s))
+        OvrallCompetenceS2s=float("{0:.1f}".format(OvrallCompetenceS2s))
+        OvrallCompetenceS3s=float("{0:.1f}".format(OvrallCompetenceS3s))
+        OvrallCompetenceS4s=float("{0:.1f}".format(OvrallCompetenceS4s))
+        OvrallCompetenceS5s=float("{0:.1f}".format(OvrallCompetenceS5s))
+# computing reciprocity
+        OvrallReciprocityS1= Submission.objects.aggregate(
+            overalReciprocity=
+                Sum("q10", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        OvrallReciprocityS2= Submission.objects.aggregate(
+            overalReciprocity=
+                Sum("q10", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        OvrallReciprocityS3= Submission.objects.aggregate(
+            overalReciprocity=
+                Sum("q10", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        OvrallReciprocityS4= Submission.objects.aggregate(
+            overalReciprocity=
+                Sum("q10", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        OvrallReciprocityS5= Submission.objects.aggregate(
+            overalReciprocity=
+                Sum("q10", filter=(Q(link_id=LID5[0])), output_field=FloatField())+
+                Sum("q11", filter=(Q(link_id=LID5[0])), output_field=FloatField()))
+
+        OvrallReciprocityS1s=[]
+        OvrallReciprocityS2s=[]
+        OvrallReciprocityS3s=[]
+        OvrallReciprocityS4s=[]
+        OvrallReciprocityS5s=[]
+        for key, entry in OvrallReciprocityS1.items():
+            if entry is None:
+                   OvrallReciprocityS1s.append(0)
+            else:
+                OvrallReciprocityS1s.append(entry)
+
+        for key, entry in OvrallReciprocityS2.items():
+            if entry is None:
+                OvrallReciprocityS2s.append(0)
+            else:
+                OvrallReciprocityS2s.append(entry)
+
+        for key, entry in OvrallReciprocityS3.items():
+            if entry is None:
+                OvrallReciprocityS3s.append(0)
+            else:
+                OvrallReciprocityS3s.append(entry)
+        for key, entry in OvrallReciprocityS4.items():
+            if entry is None:
+                OvrallReciprocityS4s.append(0)
+            else:
+                OvrallReciprocityS4s.append(entry)
+        for key, entry in OvrallReciprocityS5.items():
+            if entry is None:
+                OvrallReciprocityS5s.append(0)
+            else:
+                OvrallReciprocityS5s.append(entry)
+
+        OvrallReciprocityS1s= OvrallReciprocityS1s[0]
+        OvrallReciprocityS2s= OvrallReciprocityS2s[0]
+        OvrallReciprocityS3s= OvrallReciprocityS3s[0]
+        OvrallReciprocityS4s= OvrallReciprocityS4s[0]
+        OvrallReciprocityS5s= OvrallReciprocityS5s[0]
+        OvrallReciprocityS1s= (OvrallReciprocityS1s*100) / (10*survey1Counts)
+        OvrallReciprocityS2s= (OvrallReciprocityS2s*100) / (10*survey2Counts)
+        OvrallReciprocityS3s= (OvrallReciprocityS3s*100) / (10*survey3Counts)
+        OvrallReciprocityS4s= (OvrallReciprocityS4s*100) / (10*survey4Counts)
+        OvrallReciprocityS5s= (OvrallReciprocityS5s*100) / (10*survey5Counts)
+
+        OvrallReciprocityS1s=float("{0:.1f}".format(OvrallReciprocityS1s))
+        OvrallReciprocityS2s=float("{0:.1f}".format(OvrallReciprocityS2s))
+        OvrallReciprocityS3s=float("{0:.1f}".format(OvrallReciprocityS3s))
+        OvrallReciprocityS4s=float("{0:.1f}".format(OvrallReciprocityS4s))
+        OvrallReciprocityS5s=float("{0:.1f}".format(OvrallReciprocityS5s))
+
+#Computing general trust for each survey
+        OvrallGeneralTrustS1= Submission.objects.aggregate(
+            overalGeneralTrust=
+                Sum("q12", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID1[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        OvrallGeneralTrustS2= Submission.objects.aggregate(
+            overalGeneralTrust=
+                Sum("q12", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID2[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        OvrallGeneralTrustS3= Submission.objects.aggregate(
+            overalGeneralTrust=
+                Sum("q12", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID3[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        OvrallGeneralTrustS4= Submission.objects.aggregate(
+            overalGeneralTrust=
+                Sum("q12", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID4[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        OvrallGeneralTrustS5= Submission.objects.aggregate(
+            overalGeneralTrust=
+                Sum("q12", filter=(Q(link_id=LID5[0])), output_field=FloatField())+
+                Sum("q13", filter=(Q(link_id=LID5[0])), output_field=FloatField())+
+                Sum("q14", filter=(Q(link_id=LID5[0])), output_field=FloatField()))
+
+        OvrallGeneralTrustS1s=[]
+        OvrallGeneralTrustS2s=[]
+        OvrallGeneralTrustS3s=[]
+        OvrallGeneralTrustS4s=[]
+        OvrallGeneralTrustS5s=[]
+        for key, entry in OvrallGeneralTrustS1.items():
+            if entry is None:
+                   OvrallGeneralTrustS1s.append(0)
+            else:
+                OvrallGeneralTrustS1s.append(entry)
+
+        for key, entry in OvrallGeneralTrustS2.items():
+            if entry is None:
+                OvrallGeneralTrustS2s.append(0)
+            else:
+                OvrallGeneralTrustS2s.append(entry)
+
+        for key, entry in OvrallGeneralTrustS3.items():
+            if entry is None:
+                OvrallGeneralTrustS3s.append(0)
+            else:
+                OvrallGeneralTrustS3s.append(entry)
+        for key, entry in OvrallGeneralTrustS4.items():
+            if entry is None:
+                OvrallGeneralTrustS4s.append(0)
+            else:
+                OvrallGeneralTrustS4s.append(entry)
+        for key, entry in OvrallGeneralTrustS5.items():
+            if entry is None:
+                OvrallGeneralTrustS5s.append(0)
+            else:
+                OvrallGeneralTrustS5s.append(entry)
+
+        OvrallGeneralTrustS1s= OvrallGeneralTrustS1s[0]
+        OvrallGeneralTrustS2s= OvrallGeneralTrustS2s[0]
+        OvrallGeneralTrustS3s= OvrallGeneralTrustS3s[0]
+        OvrallGeneralTrustS4s= OvrallGeneralTrustS4s[0]
+        OvrallGeneralTrustS5s= OvrallGeneralTrustS5s[0]
+
+        OvrallGeneralTrustS1s= (OvrallGeneralTrustS1s*100) / (15*survey1Counts)
+        OvrallGeneralTrustS2s= (OvrallGeneralTrustS2s*100) / (15*survey2Counts)
+        OvrallGeneralTrustS3s= (OvrallGeneralTrustS3s*100) / (15*survey3Counts)
+        OvrallGeneralTrustS4s= (OvrallGeneralTrustS4s*100) / (15*survey4Counts)
+        OvrallGeneralTrustS5s= (OvrallGeneralTrustS5s*100) / (15*survey5Counts)
+
+        OvrallGeneralTrustS1s=float("{0:.1f}".format(OvrallGeneralTrustS1s))
+        OvrallGeneralTrustS2s=float("{0:.1f}".format(OvrallGeneralTrustS2s))
+        OvrallGeneralTrustS3s=float("{0:.1f}".format(OvrallGeneralTrustS3s))
+        OvrallGeneralTrustS4s=float("{0:.1f}".format(OvrallGeneralTrustS4s))
+        OvrallGeneralTrustS5s=float("{0:.1f}".format(OvrallGeneralTrustS5s))
+
+#Riesk Q1 for both questioniares
+        RiskQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        RiskQ1S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        RiskQ1S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        RiskQ1S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        RiskQ1S5= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q1", filter=(Q(link_id=LID5[0])), output_field=FloatField()))
+
+        RiskQ1S1s=[]
+        RiskQ1S2s=[]
+        RiskQ1S3s=[]
+        RiskQ1S4s=[]
+        RiskQ1S5s=[]
+        for key, entry in RiskQ1S1.items():
+            if entry is None:
+                   RiskQ1S1s.append(0)
+            else:
+                RiskQ1S1s.append(entry)
+
+        for key, entry in RiskQ1S2.items():
+            if entry is None:
+                RiskQ1S2s.append(0)
+            else:
+                RiskQ1S2s.append(entry)
+
+        for key, entry in RiskQ1S3.items():
+            if entry is None:
+                RiskQ1S3s.append(0)
+            else:
+                RiskQ1S3s.append(entry)
+        for key, entry in RiskQ1S4.items():
+            if entry is None:
+                RiskQ1S4s.append(0)
+            else:
+                RiskQ1S4s.append(entry)
+        for key, entry in RiskQ1S5.items():
+            if entry is None:
+                RiskQ1S5s.append(0)
+            else:
+                RiskQ1S5s.append(entry)
+
+        RiskQ1S1s= RiskQ1S1s[0]
+        RiskQ1S2s= RiskQ1S2s[0]
+        RiskQ1S3s= RiskQ1S3s[0]
+        RiskQ1S4s= RiskQ1S4s[0]
+        RiskQ1S5s= RiskQ1S5s[0]
+
+        RiskQ1S1s= (RiskQ1S1s*100) / (5*survey1Counts)
+        RiskQ1S2s= (RiskQ1S2s*100) / (5*survey2Counts)
+        RiskQ1S3s= (RiskQ1S3s*100) / (5*survey3Counts)
+        RiskQ1S4s= (RiskQ1S4s*100) / (5*survey4Counts)
+        RiskQ1S4s= (RiskQ1S5s*100) / (5*survey5Counts)
+
+        RiskQ1S1s=float("{0:.1f}".format(RiskQ1S1s))
+        RiskQ1S2s=float("{0:.1f}".format(RiskQ1S2s))
+        RiskQ1S3s=float("{0:.1f}".format(RiskQ1S3s))
+        RiskQ1S4s=float("{0:.1f}".format(RiskQ1S4s))
+        RiskQ1S5s=float("{0:.1f}".format(RiskQ1S5s))
+#Riesk Q2 for both questioniares
+        RiskQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q2", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        RiskQ2S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q2", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        RiskQ2S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q2", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        RiskQ2S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q2", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        RiskQ2S5= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q2", filter=(Q(link_id=LID5[0])), output_field=FloatField()))
+        RiskQ2S1s=[]
+        RiskQ2S2s=[]
+        RiskQ2S3s=[]
+        RiskQ2S4s=[]
+        RiskQ2S5s=[]
+        for key, entry in RiskQ2S1.items():
+            if entry is None:
+                   RiskQ2S1s.append(0)
+            else:
+                RiskQ2S1s.append(entry)
+
+        for key, entry in RiskQ2S2.items():
+            if entry is None:
+                RiskQ2S2s.append(0)
+            else:
+                RiskQ2S2s.append(entry)
+
+        for key, entry in RiskQ2S3.items():
+            if entry is None:
+                RiskQ2S3s.append(0)
+            else:
+                RiskQ2S3s.append(entry)
+        for key, entry in RiskQ2S4.items():
+            if entry is None:
+                RiskQ2S4s.append(0)
+            else:
+                RiskQ2S4s.append(entry)
+        for key, entry in RiskQ2S5.items():
+            if entry is None:
+                RiskQ2S5s.append(0)
+            else:
+                RiskQ2S5s.append(entry)
+        RiskQ2S1s= RiskQ2S1s[0]
+        RiskQ2S2s= RiskQ2S2s[0]
+        RiskQ2S3s= RiskQ2S3s[0]
+        RiskQ2S4s= RiskQ2S4s[0]
+        RiskQ2S5s= RiskQ2S5s[0]
+        RiskQ2S1s= (RiskQ2S1s*100) / (5*survey1Counts)
+        RiskQ2S2s= (RiskQ2S2s*100) / (5*survey1Counts)
+        RiskQ2S3s= (RiskQ2S3s*100) / (5*survey3Counts)
+        RiskQ2S4s= (RiskQ2S4s*100) / (5*survey4Counts)
+        RiskQ2S5s= (RiskQ2S5s*100) / (5*survey5Counts)
+
+
+        RiskQ2S1s=float("{0:.1f}".format(RiskQ2S1s))
+        RiskQ2S2s=float("{0:.1f}".format(RiskQ2S2s))
+        RiskQ2S3s=float("{0:.1f}".format(RiskQ2S3s))
+        RiskQ2S4s=float("{0:.1f}".format(RiskQ2S4s))
+        RiskQ2S5s=float("{0:.1f}".format(RiskQ2S5s))
+#Riesk Q3 for both questioniares
+        RiskQ3S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q3", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        RiskQ3S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q3", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        RiskQ3S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q3", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        RiskQ3S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q3", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        RiskQ3S5= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q3", filter=(Q(link_id=LID5[0])), output_field=FloatField()))
+
+        RiskQ3S1s=[]
+        RiskQ3S2s=[]
+        RiskQ3S3s=[]
+        RiskQ3S4s=[]
+        RiskQ3S5s=[]
+        for key, entry in RiskQ3S1.items():
+            if entry is None:
+                   RiskQ3S1s.append(0)
+            else:
+                RiskQ3S1s.append(entry)
+
+        for key, entry in RiskQ3S2.items():
+            if entry is None:
+                RiskQ3S2s.append(0)
+            else:
+                RiskQ3S2s.append(entry)
+
+        for key, entry in RiskQ3S3.items():
+            if entry is None:
+                RiskQ3S3s.append(0)
+            else:
+                RiskQ3S3s.append(entry)
+
+        for key, entry in RiskQ3S4.items():
+            if entry is None:
+                RiskQ3S4s.append(0)
+            else:
+                RiskQ3S4s.append(entry)
+
+        for key, entry in RiskQ3S5.items():
+            if entry is None:
+                RiskQ3S5s.append(0)
+            else:
+                RiskQ3S5s.append(entry)
+
+        RiskQ3S1s= RiskQ3S1s[0]
+        RiskQ3S2s= RiskQ3S2s[0]
+        RiskQ3S3s= RiskQ3S3s[0]
+        RiskQ3S4s= RiskQ3S4s[0]
+        RiskQ3S5s= RiskQ3S5s[0]
+        RiskQ3S1s= (RiskQ3S1s*100) / (5*survey1Counts)
+        RiskQ3S2s= (RiskQ3S2s*100) / (5*survey1Counts)
+        RiskQ3S3s= (RiskQ3S3s*100) / (5*survey3Counts)
+        RiskQ3S4s= (RiskQ3S4s*100) / (5*survey4Counts)
+        RiskQ3S5s= (RiskQ3S5s*100) / (5*survey5Counts)
+
+        RiskQ3S1s=float("{0:.1f}".format(RiskQ3S1s))
+        RiskQ3S2s=float("{0:.1f}".format(RiskQ3S2s))
+        RiskQ3S3s=float("{0:.1f}".format(RiskQ3S3s))
+        RiskQ3S4s=float("{0:.1f}".format(RiskQ3S4s))
+        RiskQ3S5s=float("{0:.1f}".format(RiskQ3S5s))
+
+#benevolence Q1 for both questioniares
+        BenevlonceQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q4", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        BenevlonceQ1S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q4", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        BenevlonceQ1S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q4", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        BenevlonceQ1S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q4", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        BenevlonceQ1S5= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q4", filter=(Q(link_id=LID5[0])), output_field=FloatField()))
+
+        BenevlonceQ1S1s=[]
+        BenevlonceQ1S2s=[]
+        BenevlonceQ1S3s=[]
+        BenevlonceQ1S4s=[]
+        BenevlonceQ1S5s=[]
+        for key, entry in BenevlonceQ1S1.items():
+            if entry is None:
+                   BenevlonceQ1S1s.append(0)
+            else:
+                BenevlonceQ1S1s.append(entry)
+
+        for key, entry in BenevlonceQ1S2.items():
+            if entry is None:
+                BenevlonceQ1S2s.append(0)
+            else:
+                BenevlonceQ1S2s.append(entry)
+
+        for key, entry in BenevlonceQ1S3.items():
+            if entry is None:
+                BenevlonceQ1S3s.append(0)
+            else:
+                BenevlonceQ1S3s.append(entry)
+        for key, entry in BenevlonceQ1S4.items():
+            if entry is None:
+                BenevlonceQ1S4s.append(0)
+            else:
+                BenevlonceQ1S4s.append(entry)
+        for key, entry in BenevlonceQ1S5.items():
+            if entry is None:
+                BenevlonceQ1S5s.append(0)
+            else:
+                BenevlonceQ1S5s.append(entry)
+
+        BenevlonceQ1S1s= BenevlonceQ1S1s[0]
+        BenevlonceQ1S2s= BenevlonceQ1S2s[0]
+        BenevlonceQ1S3s= BenevlonceQ1S3s[0]
+        BenevlonceQ1S4s= BenevlonceQ1S4s[0]
+        BenevlonceQ1S5s= BenevlonceQ1S5s[0]
+
+        BenevlonceQ1S1s= (BenevlonceQ1S1s*100) / (5*survey1Counts)
+        BenevlonceQ1S2s= (BenevlonceQ1S2s*100) / (5*survey1Counts)
+        BenevlonceQ1S3s= (BenevlonceQ1S3s*100) / (5*survey3Counts)
+        BenevlonceQ1S4s= (BenevlonceQ1S4s*100) / (5*survey4Counts)
+        BenevlonceQ1S5s= (BenevlonceQ1S5s*100) / (5*survey5Counts)
+
+        BenevlonceQ1S1s=float("{0:.1f}".format(BenevlonceQ1S1s))
+        BenevlonceQ1S2s=float("{0:.1f}".format(BenevlonceQ1S2s))
+        BenevlonceQ1S3s=float("{0:.1f}".format(BenevlonceQ1S3s))
+        BenevlonceQ1S4s=float("{0:.1f}".format(BenevlonceQ1S4s))
+        BenevlonceQ1S5s=float("{0:.1f}".format(BenevlonceQ1S5s))
+#benevolence Q2 for both questioniares
+        BenevlonceQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q5", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        BenevlonceQ2S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q5", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        BenevlonceQ2S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q5", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        BenevlonceQ2S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q5", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        BenevlonceQ2S5= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q5", filter=(Q(link_id=LID5[0])), output_field=FloatField()))
+
+        BenevlonceQ2S1s=[]
+        BenevlonceQ2S2s=[]
+        BenevlonceQ2S3s=[]
+        BenevlonceQ2S4s=[]
+        BenevlonceQ2S5s=[]
+        for key, entry in BenevlonceQ2S1.items():
+            if entry is None:
+                   BenevlonceQ2S1s.append(0)
+            else:
+                BenevlonceQ2S1s.append(entry)
+
+        for key, entry in BenevlonceQ2S2.items():
+            if entry is None:
+                BenevlonceQ2S2s.append(0)
+            else:
+                BenevlonceQ2S2s.append(entry)
+
+        for key, entry in BenevlonceQ2S3.items():
+            if entry is None:
+                BenevlonceQ2S3s.append(0)
+            else:
+                BenevlonceQ2S3s.append(entry)
+
+        for key, entry in BenevlonceQ2S4.items():
+            if entry is None:
+                BenevlonceQ2S4s.append(0)
+            else:
+                BenevlonceQ2S4s.append(entry)
+
+        for key, entry in BenevlonceQ2S5.items():
+            if entry is None:
+                BenevlonceQ2S5s.append(0)
+            else:
+                BenevlonceQ2S5s.append(entry)
+
+
+        BenevlonceQ2S1s= BenevlonceQ2S1s[0]
+        BenevlonceQ2S2s= BenevlonceQ2S2s[0]
+        BenevlonceQ2S3s= BenevlonceQ2S3s[0]
+        BenevlonceQ2S4s= BenevlonceQ2S4s[0]
+        BenevlonceQ2S5s= BenevlonceQ2S5s[0]
+
+
+        BenevlonceQ2S1s= (BenevlonceQ2S1s*100) / (5*survey1Counts)
+        BenevlonceQ2S2s= (BenevlonceQ2S2s*100) / (5*survey1Counts)
+        BenevlonceQ2S3s= (BenevlonceQ2S3s*100) / (5*survey3Counts)
+        BenevlonceQ2S4s= (BenevlonceQ2S4s*100) / (5*survey4Counts)
+        BenevlonceQ2S5s= (BenevlonceQ2S5s*100) / (5*survey5Counts)
+
+        BenevlonceQ2S1s=float("{0:.1f}".format(BenevlonceQ2S1s))
+        BenevlonceQ2S2s=float("{0:.1f}".format(BenevlonceQ2S2s))
+        BenevlonceQ2S3s=float("{0:.1f}".format(BenevlonceQ2S3s))
+        BenevlonceQ2S4s=float("{0:.1f}".format(BenevlonceQ2S4s))
+        BenevlonceQ2S5s=float("{0:.1f}".format(BenevlonceQ2S5s))
+
+#benevolence Q3 for both questioniares
+        BenevlonceQ3S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q6", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        BenevlonceQ3S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q6", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        BenevlonceQ3S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q6", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        BenevlonceQ3S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q6", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        BenevlonceQ3S5= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q6", filter=(Q(link_id=LID5[0])), output_field=FloatField()))
+
+        BenevlonceQ3S1s=[]
+        BenevlonceQ3S2s=[]
+        BenevlonceQ3S3s=[]
+        BenevlonceQ3S4s=[]
+        BenevlonceQ3S5s=[]
+        for key, entry in BenevlonceQ3S1.items():
+            if entry is None:
+                   BenevlonceQ3S1s.append(0)
+            else:
+                BenevlonceQ3S1s.append(entry)
+
+        for key, entry in BenevlonceQ3S2.items():
+            if entry is None:
+                BenevlonceQ3S2s.append(0)
+            else:
+                BenevlonceQ3S2s.append(entry)
+
+        for key, entry in BenevlonceQ3S3.items():
+            if entry is None:
+                BenevlonceQ3S3s.append(0)
+            else:
+                BenevlonceQ3S3s.append(entry)
+
+        for key, entry in BenevlonceQ3S4.items():
+            if entry is None:
+                BenevlonceQ3S4s.append(0)
+            else:
+                BenevlonceQ3S4s.append(entry)
+
+        for key, entry in BenevlonceQ3S5.items():
+            if entry is None:
+                BenevlonceQ3S5s.append(0)
+            else:
+                BenevlonceQ3S5s.append(entry)
+
+
+        BenevlonceQ3S1s= BenevlonceQ3S1s[0]
+        BenevlonceQ3S2s= BenevlonceQ3S2s[0]
+        BenevlonceQ3S3s= BenevlonceQ3S3s[0]
+        BenevlonceQ3S4s= BenevlonceQ3S4s[0]
+        BenevlonceQ3S5s= BenevlonceQ3S5s[0]
+
+
+        BenevlonceQ3S1s= (BenevlonceQ3S1s*100) / (5*survey1Counts)
+        BenevlonceQ3S2s= (BenevlonceQ3S2s*100) / (5*survey2Counts)
+        BenevlonceQ3S3s= (BenevlonceQ3S3s*100) / (5*survey3Counts)
+        BenevlonceQ3S4s= (BenevlonceQ3S4s*100) / (5*survey4Counts)
+        BenevlonceQ3S5s= (BenevlonceQ3S5s*100) / (5*survey5Counts)
+
+
+        BenevlonceQ3S1s=float("{0:.1f}".format(BenevlonceQ3S1s))
+        BenevlonceQ3S2s=float("{0:.1f}".format(BenevlonceQ3S2s))
+        BenevlonceQ3S3s=float("{0:.1f}".format(BenevlonceQ3S3s))
+        BenevlonceQ3S4s=float("{0:.1f}".format(BenevlonceQ3S4s))
+        BenevlonceQ3S5s=float("{0:.1f}".format(BenevlonceQ3S5s))
+
+#Riesk Q1 for both questioniares
+        CompetenceQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        CompetenceQ1S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        CompetenceQ1S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        CompetenceQ1S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        CompetenceQ1S5= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID5[0])), output_field=FloatField()))
+        CompetenceQ1S1s=[]
+        CompetenceQ1S2s=[]
+        CompetenceQ1S3s=[]
+        CompetenceQ1S4s=[]
+        CompetenceQ1S5s=[]
+        for key, entry in CompetenceQ1S1.items():
+            if entry is None:
+                   CompetenceQ1S1s.append(0)
+            else:
+                CompetenceQ1S1s.append(entry)
+
+        for key, entry in CompetenceQ1S2.items():
+            if entry is None:
+                CompetenceQ1S2s.append(0)
+            else:
+                CompetenceQ1S2s.append(entry)
+
+        for key, entry in CompetenceQ1S3.items():
+            if entry is None:
+                CompetenceQ1S3s.append(0)
+            else:
+                CompetenceQ1S3s.append(entry)
+
+        for key, entry in CompetenceQ1S4.items():
+            if entry is None:
+                CompetenceQ1S4s.append(0)
+            else:
+                CompetenceQ1S4s.append(entry)
+
+        for key, entry in CompetenceQ1S5.items():
+            if entry is None:
+                CompetenceQ1S5s.append(0)
+            else:
+                CompetenceQ1S5s.append(entry)
+
+        CompetenceQ1S1s= CompetenceQ1S1s[0]
+        CompetenceQ1S2s= CompetenceQ1S2s[0]
+        CompetenceQ1S3s= CompetenceQ1S3s[0]
+        CompetenceQ1S4s= CompetenceQ1S4s[0]
+        CompetenceQ1S5s= CompetenceQ1S5s[0]
+
+        CompetenceQ1S1s= (CompetenceQ1S1s*100) / (5*survey1Counts)
+        CompetenceQ1S2s= (CompetenceQ1S2s*100) / (5*survey2Counts)
+        CompetenceQ1S3s= (CompetenceQ1S3s*100) / (5*survey3Counts)
+        CompetenceQ1S4s= (CompetenceQ1S4s*100) / (5*survey4Counts)
+        CompetenceQ1S5s= (CompetenceQ1S5s*100) / (5*survey5Counts)
+
+        CompetenceQ1S1s=float("{0:.1f}".format(CompetenceQ1S1s))
+        CompetenceQ1S2s=float("{0:.1f}".format(CompetenceQ1S2s))
+        CompetenceQ1S3s=float("{0:.1f}".format(CompetenceQ1S3s))
+        CompetenceQ1S4s=float("{0:.1f}".format(CompetenceQ1S4s))
+        CompetenceQ1S5s=float("{0:.1f}".format(CompetenceQ1S5s))
+
+#Riesk Q2 for both questioniares
+        CompetenceQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        CompetenceQ2S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        CompetenceQ2S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        CompetenceQ2S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        CompetenceQ2S5= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID5[0])), output_field=FloatField()))
+
+        CompetenceQ2S1s=[]
+        CompetenceQ2S2s=[]
+        CompetenceQ2S3s=[]
+        CompetenceQ2S4s=[]
+        CompetenceQ2S5s=[]
+
+        for key, entry in CompetenceQ2S1.items():
+            if entry is None:
+                   CompetenceQ2S1s.append(0)
+            else:
+                CompetenceQ2S1s.append(entry)
+
+        for key, entry in CompetenceQ2S2.items():
+            if entry is None:
+                CompetenceQ2S2s.append(0)
+            else:
+                CompetenceQ2S2s.append(entry)
+
+        for key, entry in CompetenceQ2S3.items():
+            if entry is None:
+                CompetenceQ2S3s.append(0)
+            else:
+                CompetenceQ2S3s.append(entry)
+        for key, entry in CompetenceQ2S4.items():
+            if entry is None:
+                CompetenceQ2S4s.append(0)
+            else:
+                CompetenceQ2S4s.append(entry)
+        for key, entry in CompetenceQ2S5.items():
+            if entry is None:
+                CompetenceQ2S5s.append(0)
+            else:
+                CompetenceQ2S5s.append(entry)
+
+        CompetenceQ2S1s= CompetenceQ2S1s[0]
+        CompetenceQ2S2s= CompetenceQ2S2s[0]
+        CompetenceQ2S3s= CompetenceQ2S3s[0]
+        CompetenceQ2S4s= CompetenceQ2S4s[0]
+        CompetenceQ2S5s= CompetenceQ2S5s[0]
+
+        CompetenceQ2S1s= (CompetenceQ2S1s*100) / (5*survey1Counts)
+        CompetenceQ2S2s= (CompetenceQ2S2s*100) / (5*survey2Counts)
+        CompetenceQ2S3s= (CompetenceQ2S3s*100) / (5*survey3Counts)
+        CompetenceQ2S4s= (CompetenceQ2S4s*100) / (5*survey4Counts)
+        CompetenceQ2S5s= (CompetenceQ2S5s*100) / (5*survey5Counts)
+
+        CompetenceQ2S1s=float("{0:.1f}".format(CompetenceQ2S1s))
+        CompetenceQ2S2s=float("{0:.1f}".format(CompetenceQ2S2s))
+        CompetenceQ2S3s=float("{0:.1f}".format(CompetenceQ2S3s))
+        CompetenceQ2S4s=float("{0:.1f}".format(CompetenceQ2S4s))
+        CompetenceQ2S5s=float("{0:.1f}".format(CompetenceQ2S5s))
+#Riesk Q3 for both questioniares
+        CompetenceQ3S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q9", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        CompetenceQ3S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q9", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        CompetenceQ3S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q9", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        CompetenceQ3S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q9", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        CompetenceQ3S5= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q9", filter=(Q(link_id=LID5[0])), output_field=FloatField()))
+
+        CompetenceQ3S1s=[]
+        CompetenceQ3S2s=[]
+        CompetenceQ3S3s=[]
+        CompetenceQ3S4s=[]
+        CompetenceQ3S5s=[]
+        for key, entry in CompetenceQ3S1.items():
+            if entry is None:
+                   CompetenceQ3S1s.append(0)
+            else:
+                CompetenceQ3S1s.append(entry)
+
+        for key, entry in CompetenceQ3S2.items():
+            if entry is None:
+                CompetenceQ3S2s.append(0)
+            else:
+                CompetenceQ3S2s.append(entry)
+
+        for key, entry in CompetenceQ3S3.items():
+            if entry is None:
+                CompetenceQ3S3s.append(0)
+            else:
+                CompetenceQ3S3s.append(entry)
+
+        for key, entry in CompetenceQ3S4.items():
+            if entry is None:
+                CompetenceQ3S4s.append(0)
+            else:
+                CompetenceQ3S4s.append(entry)
+
+        for key, entry in CompetenceQ3S5.items():
+            if entry is None:
+                CompetenceQ3S5s.append(0)
+            else:
+                CompetenceQ3S5s.append(entry)
+
+        CompetenceQ3S1s= CompetenceQ3S1s[0]
+        CompetenceQ3S2s= CompetenceQ3S2s[0]
+        CompetenceQ3S3s= CompetenceQ3S3s[0]
+        CompetenceQ3S4s= CompetenceQ3S4s[0]
+        CompetenceQ3S5s= CompetenceQ3S5s[0]
+
+        CompetenceQ3S1s= (CompetenceQ3S1s*100) / (5*survey1Counts)
+        CompetenceQ3S2s= (CompetenceQ3S2s*100) / (5*survey2Counts)
+        CompetenceQ3S3s= (CompetenceQ3S3s*100) / (5*survey3Counts)
+        CompetenceQ3S4s= (CompetenceQ3S4s*100) / (5*survey4Counts)
+        CompetenceQ3S5s= (CompetenceQ3S5s*100) / (5*survey5Counts)
+
+        CompetenceQ3S1s=float("{0:.1f}".format(CompetenceQ3S1s))
+        CompetenceQ3S2s=float("{0:.1f}".format(CompetenceQ3S2s))
+        CompetenceQ3S3s=float("{0:.1f}".format(CompetenceQ3S3s))
+        CompetenceQ3S4s=float("{0:.1f}".format(CompetenceQ3S4s))
+        CompetenceQ3S5s=float("{0:.1f}".format(CompetenceQ3S5s))
+#Recirptocity Q1 for both questioniares
+        ReciprocityQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        ReciprocityQ1S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        ReciprocityQ1S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        ReciprocityQ1S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        ReciprocityQ1S5= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q7", filter=(Q(link_id=LID5[0])), output_field=FloatField()))
+
+        ReciprocityQ1S1s=[]
+        ReciprocityQ1S2s=[]
+        ReciprocityQ1S3s=[]
+        ReciprocityQ1S4s=[]
+        ReciprocityQ1S5s=[]
+
+        for key, entry in ReciprocityQ1S1.items():
+            if entry is None:
+                   ReciprocityQ1S1s.append(0)
+            else:
+                ReciprocityQ1S1s.append(entry)
+
+        for key, entry in ReciprocityQ1S2.items():
+            if entry is None:
+                ReciprocityQ1S2s.append(0)
+            else:
+                ReciprocityQ1S2s.append(entry)
+
+        for key, entry in ReciprocityQ1S3.items():
+            if entry is None:
+                ReciprocityQ1S3s.append(0)
+            else:
+                ReciprocityQ1S3s.append(entry)
+        for key, entry in ReciprocityQ1S4.items():
+            if entry is None:
+                ReciprocityQ1S4s.append(0)
+            else:
+                ReciprocityQ1S4s.append(entry)
+        for key, entry in ReciprocityQ1S5.items():
+            if entry is None:
+                ReciprocityQ1S5s.append(0)
+            else:
+                ReciprocityQ1S5s.append(entry)
+
+        ReciprocityQ1S1s= ReciprocityQ1S1s[0]
+        ReciprocityQ1S2s= ReciprocityQ1S2s[0]
+        ReciprocityQ1S3s= ReciprocityQ1S3s[0]
+        ReciprocityQ1S4s= ReciprocityQ1S4s[0]
+        ReciprocityQ1S5s= ReciprocityQ1S5s[0]
+
+        ReciprocityQ1S1s= (ReciprocityQ1S1s*100) / (5*survey1Counts)
+        ReciprocityQ1S2s= (ReciprocityQ1S2s*100) / (5*survey2Counts)
+        ReciprocityQ1S3s= (ReciprocityQ1S3s*100) / (5*survey3Counts)
+        ReciprocityQ1S4s= (ReciprocityQ1S4s*100) / (5*survey4Counts)
+        ReciprocityQ1S5s= (ReciprocityQ1S5s*100) / (5*survey5Counts)
+
+        ReciprocityQ1S1s=float("{0:.1f}".format(ReciprocityQ1S1s))
+        ReciprocityQ1S2s=float("{0:.1f}".format(ReciprocityQ1S2s))
+        ReciprocityQ1S3s=float("{0:.1f}".format(ReciprocityQ1S3s))
+        ReciprocityQ1S4s=float("{0:.1f}".format(ReciprocityQ1S4s))
+        ReciprocityQ1S5s=float("{0:.1f}".format(ReciprocityQ1S5s))
+
+
+#Recirprocity Q2 for both questioniares
+        ReciprocityQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        ReciprocityQ2S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        ReciprocityQ2S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        ReciprocityQ2S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        ReciprocityQ2S5= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q8", filter=(Q(link_id=LID5[0])), output_field=FloatField()))
+
+        ReciprocityQ2S1s=[]
+        ReciprocityQ2S2s=[]
+        ReciprocityQ2S3s=[]
+        ReciprocityQ2S4s=[]
+        ReciprocityQ2S5s=[]
+
+        for key, entry in ReciprocityQ2S1.items():
+            if entry is None:
+                   ReciprocityQ2S1s.append(0)
+            else:
+                ReciprocityQ2S1s.append(entry)
+
+        for key, entry in ReciprocityQ2S2.items():
+            if entry is None:
+                ReciprocityQ2S2s.append(0)
+            else:
+                ReciprocityQ2S2s.append(entry)
+
+        for key, entry in ReciprocityQ2S3.items():
+            if entry is None:
+                ReciprocityQ2S3s.append(0)
+            else:
+                ReciprocityQ2S3s.append(entry)
+
+        for key, entry in ReciprocityQ2S4.items():
+            if entry is None:
+                ReciprocityQ2S4s.append(0)
+            else:
+                ReciprocityQ2S4s.append(entry)
+        for key, entry in ReciprocityQ2S5.items():
+            if entry is None:
+                ReciprocityQ2S5s.append(0)
+            else:
+                ReciprocityQ2S5s.append(entry)
+
+        ReciprocityQ2S1s= ReciprocityQ2S1s[0]
+        ReciprocityQ2S2s= ReciprocityQ2S2s[0]
+        ReciprocityQ2S3s= ReciprocityQ2S3s[0]
+        ReciprocityQ2S4s= ReciprocityQ2S4s[0]
+        ReciprocityQ2S5s= ReciprocityQ2S5s[0]
+
+        ReciprocityQ2S1s= (ReciprocityQ2S1s*100) / (5*survey1Counts)
+        ReciprocityQ2S2s= (ReciprocityQ2S2s*100) / (5*survey2Counts)
+        ReciprocityQ2S3s= (ReciprocityQ2S3s*100) / (5*survey3Counts)
+        ReciprocityQ2S4s= (ReciprocityQ2S4s*100) / (5*survey4Counts)
+        ReciprocityQ2S5s= (ReciprocityQ2S5s*100) / (5*survey5Counts)
+
+        ReciprocityQ2S1s=float("{0:.1f}".format(ReciprocityQ2S1s))
+        ReciprocityQ2S2s=float("{0:.1f}".format(ReciprocityQ2S2s))
+        ReciprocityQ2S3s=float("{0:.1f}".format(ReciprocityQ2S3s))
+        ReciprocityQ2S4s=float("{0:.1f}".format(ReciprocityQ2S4s))
+        ReciprocityQ2S5s=float("{0:.1f}".format(ReciprocityQ2S5s))
+#Riesk Q1 for both questioniares
+        GtrustQ1S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q12", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        GtrustQ1S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q12", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        GtrustQ1S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q12", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        GtrustQ1S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q12", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        GtrustQ1S5= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q12", filter=(Q(link_id=LID5[0])), output_field=FloatField()))
+        GtrustQ1S1s=[]
+        GtrustQ1S2s=[]
+        GtrustQ1S3s=[]
+        GtrustQ1S4s=[]
+        GtrustQ1S5s=[]
+        for key, entry in GtrustQ1S1.items():
+            if entry is None:
+                   GtrustQ1S1s.append(0)
+            else:
+                GtrustQ1S1s.append(entry)
+
+        for key, entry in GtrustQ1S2.items():
+            if entry is None:
+                GtrustQ1S2s.append(0)
+            else:
+                GtrustQ1S2s.append(entry)
+
+        for key, entry in GtrustQ1S3.items():
+            if entry is None:
+                GtrustQ1S3s.append(0)
+            else:
+                GtrustQ1S3s.append(entry)
+
+        for key, entry in GtrustQ1S4.items():
+            if entry is None:
+                GtrustQ1S4s.append(0)
+            else:
+                GtrustQ1S4s.append(entry)
+
+        for key, entry in GtrustQ1S5.items():
+            if entry is None:
+                GtrustQ1S5s.append(0)
+            else:
+                GtrustQ1S5s.append(entry)
+
+        GtrustQ1S1s= GtrustQ1S1s[0]
+        GtrustQ1S2s= GtrustQ1S2s[0]
+        GtrustQ1S3s= GtrustQ1S3s[0]
+        GtrustQ1S4s= GtrustQ1S4s[0]
+        GtrustQ1S5s= GtrustQ1S5s[0]
+        GtrustQ1S1s= (GtrustQ1S1s*100) / (5*survey1Counts)
+        GtrustQ1S2s= (GtrustQ1S2s*100) / (5*survey2Counts)
+        GtrustQ1S3s= (GtrustQ1S3s*100) / (5*survey3Counts)
+        GtrustQ1S4s= (GtrustQ1S4s*100) / (5*survey4Counts)
+        GtrustQ1S5s= (GtrustQ1S5s*100) / (5*survey5Counts)
+
+        GtrustQ1S1s=float("{0:.1f}".format(GtrustQ1S1s))
+        GtrustQ1S2s=float("{0:.1f}".format(GtrustQ1S2s))
+        GtrustQ1S3s=float("{0:.1f}".format(GtrustQ1S3s))
+        GtrustQ1S4s=float("{0:.1f}".format(GtrustQ1S4s))
+        GtrustQ1S5s=float("{0:.1f}".format(GtrustQ1S5s))
+
+#Riesk Q2 for both questioniares
+        GtrustQ2S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q13", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        GtrustQ2S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q13", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        GtrustQ2S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q13", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        GtrustQ2S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q13", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        GtrustQ2S5= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q13", filter=(Q(link_id=LID5[0])), output_field=FloatField()))
+        GtrustQ2S1s=[]
+        GtrustQ2S2s=[]
+        GtrustQ2S3s=[]
+        GtrustQ2S4s=[]
+        GtrustQ2S5s=[]
+        for key, entry in GtrustQ2S1.items():
+            if entry is None:
+                   GtrustQ2S1s.append(0)
+            else:
+                GtrustQ2S1s.append(entry)
+
+        for key, entry in GtrustQ2S2.items():
+            if entry is None:
+                GtrustQ2S2s.append(0)
+            else:
+                GtrustQ2S2s.append(entry)
+
+        for key, entry in GtrustQ2S3.items():
+            if entry is None:
+                GtrustQ2S3s.append(0)
+            else:
+                GtrustQ2S3s.append(entry)
+
+        for key, entry in GtrustQ2S4.items():
+            if entry is None:
+                GtrustQ2S4s.append(0)
+            else:
+                GtrustQ2S4s.append(entry)
+
+        for key, entry in GtrustQ2S5.items():
+            if entry is None:
+                GtrustQ2S5s.append(0)
+            else:
+                GtrustQ2S5s.append(entry)
+
+        GtrustQ2S1s= GtrustQ2S1s[0]
+        GtrustQ2S2s= GtrustQ2S2s[0]
+        GtrustQ2S3s= GtrustQ2S3s[0]
+        GtrustQ2S4s= GtrustQ2S4s[0]
+        GtrustQ2S5s= GtrustQ2S5s[0]
+
+        GtrustQ2S1s= (GtrustQ2S1s*100) / (5*survey1Counts)
+        GtrustQ2S2s= (GtrustQ2S2s*100) / (5*survey2Counts)
+        GtrustQ2S3s= (GtrustQ2S3s*100) / (5*survey3Counts)
+        GtrustQ2S4s= (GtrustQ2S4s*100) / (5*survey4Counts)
+        GtrustQ2S5s= (GtrustQ2S5s*100) / (5*survey5Counts)
+
+        GtrustQ2S1s=float("{0:.1f}".format(GtrustQ2S1s))
+        GtrustQ2S2s=float("{0:.1f}".format(GtrustQ2S2s))
+        GtrustQ2S3s=float("{0:.1f}".format(GtrustQ2S3s))
+        GtrustQ2S4s=float("{0:.1f}".format(GtrustQ2S4s))
+        GtrustQ2S5s=float("{0:.1f}".format(GtrustQ2S5s))
+#Riesk Q3 for both questioniares
+        GtrustQ3S1= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q14", filter=(Q(link_id=LID1[0])), output_field=FloatField()))
+        GtrustQ3S2= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q14", filter=(Q(link_id=LID2[0])), output_field=FloatField()))
+        GtrustQ3S3= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q14", filter=(Q(link_id=LID3[0])), output_field=FloatField()))
+        GtrustQ3S4= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q14", filter=(Q(link_id=LID4[0])), output_field=FloatField()))
+        GtrustQ3S5= Submission.objects.aggregate(
+            overaltrust=
+                Sum("q14", filter=(Q(link_id=LID5[0])), output_field=FloatField()))
+
+        GtrustQ3S1s=[]
+        GtrustQ3S2s=[]
+        GtrustQ3S3s=[]
+        GtrustQ3S4s=[]
+        GtrustQ3S5s=[]
+
+        for key, entry in GtrustQ3S1.items():
+            if entry is None:
+                   GtrustQ3S1s.append(0)
+            else:
+                GtrustQ3S1s.append(entry)
+
+        for key, entry in GtrustQ3S2.items():
+            if entry is None:
+                GtrustQ3S2s.append(0)
+            else:
+                GtrustQ3S2s.append(entry)
+
+        for key, entry in GtrustQ3S3.items():
+            if entry is None:
+                GtrustQ3S3s.append(0)
+            else:
+                GtrustQ3S3s.append(entry)
+        for key, entry in GtrustQ3S4.items():
+            if entry is None:
+                GtrustQ3S4s.append(0)
+            else:
+                GtrustQ3S4s.append(entry)
+
+        for key, entry in GtrustQ3S5.items():
+            if entry is None:
+                GtrustQ3S5s.append(0)
+            else:
+                GtrustQ3S5s.append(entry)
+
+        GtrustQ3S1s= GtrustQ3S1s[0]
+        GtrustQ3S2s= GtrustQ3S2s[0]
+        GtrustQ3S3s= GtrustQ3S3s[0]
+        GtrustQ3S4s= GtrustQ3S4s[0]
+        GtrustQ3S5s= GtrustQ3S5s[0]
+
+
+        GtrustQ3S1s= (GtrustQ3S1s*100) / (5*survey1Counts)
+        GtrustQ3S2s= (GtrustQ3S2s*100) / (5*survey2Counts)
+        GtrustQ3S3s= (GtrustQ3S3s*100) / (5*survey3Counts)
+        GtrustQ3S4s= (GtrustQ3S4s*100) / (5*survey4Counts)
+        GtrustQ3S5s= (GtrustQ3S5s*100) / (5*survey5Counts)
+
+        GtrustQ3S1s=float("{0:.1f}".format(GtrustQ3S1s))
+        GtrustQ3S2s=float("{0:.1f}".format(GtrustQ3S2s))
+        GtrustQ3S3s=float("{0:.1f}".format(GtrustQ3S3s))
+        GtrustQ3S4s=float("{0:.1f}".format(GtrustQ3S4s))
+        GtrustQ3S5s=float("{0:.1f}".format(GtrustQ3S5s))
+
         return render(request, 'pie_chart5.html', {
-            'labels': labels,
-            'data1': data1,
-            'data2': data2,
-            'data3': data3,
-            'data4': data4,
-            'data5': data5,
-            'labels11': labels11,
-            'data11': data11,
-            'data22': data22,
-            'data33': data33,
-            'data44': data44,
-            'data55': data55,
-            'project':studyidd,
-            'project_id':project_id
+            'project_id':project_id,
+            'productname':productname,
+            'survey1Counts':survey1Counts,
+            'survey2Counts':survey2Counts,
+            'survey3Counts':survey3Counts,
+            'survey4Counts':survey4Counts,
+            'survey5Counts':survey5Counts,
+            'S1CountGender':S1CountGender,
+            'S2CountGender':S2CountGender,
+            'S3CountGender':S3CountGender,
+            'S4CountGender':S4CountGender,
+            'S5CountGender':S5CountGender,
+            'S1CountAge':S1CountAge,
+            'S2CountAge':S2CountAge,
+            'S3CountAge':S3CountAge,
+            'S4CountAge':S4CountAge,
+            'S5CountAge':S5CountAge,
+            'CrobanchAlphaS1':CrobanchAlphaS1,
+            'CrobanchAlphaS2':CrobanchAlphaS2,
+            'CrobanchAlphaS3':CrobanchAlphaS3,
+            'CrobanchAlphaS4':CrobanchAlphaS4,
+            'CrobanchAlphaS5':CrobanchAlphaS5,
+            'OvrallTrustS1s':OvrallTrustS1s,
+            'OvrallTrustS2s':OvrallTrustS2s,
+            'OvrallTrustS3s':OvrallTrustS3s,
+            'OvrallTrustS4s':OvrallTrustS4s,
+            'OvrallTrustS5s':OvrallTrustS5s,
+            'OvrallRiskS1s':OvrallRiskS1s,
+            'OvrallRiskS2s':OvrallRiskS2s,
+            'OvrallRiskS3s':OvrallRiskS3s,
+            'OvrallRiskS4s':OvrallRiskS4s,
+            'OvrallRiskS5s':OvrallRiskS5s,
+            'OvrallBenevolenceS1s':OvrallBenevolenceS1s,
+            'OvrallBenevolenceS2s':OvrallBenevolenceS2s,
+            'OvrallBenevolenceS3s':OvrallBenevolenceS3s,
+            'OvrallBenevolenceS4s':OvrallBenevolenceS4s,
+            'OvrallBenevolenceS5s':OvrallBenevolenceS5s,
+            'OvrallCompetenceS1s':OvrallCompetenceS1s,
+            'OvrallCompetenceS2s':OvrallCompetenceS2s,
+            'OvrallCompetenceS3s':OvrallCompetenceS3s,
+            'OvrallCompetenceS4s':OvrallCompetenceS4s,
+            'OvrallCompetenceS5s':OvrallCompetenceS5s,
+            'OvrallReciprocityS1s':OvrallReciprocityS1s,
+            'OvrallReciprocityS2s':OvrallReciprocityS2s,
+            'OvrallReciprocityS3s':OvrallReciprocityS3s,
+            'OvrallReciprocityS4s':OvrallReciprocityS4s,
+            'OvrallReciprocityS5s':OvrallReciprocityS5s,
+            'OvrallGeneralTrustS1s':OvrallGeneralTrustS1s,
+            'OvrallGeneralTrustS2s':OvrallGeneralTrustS2s,
+            'OvrallGeneralTrustS3s':OvrallGeneralTrustS3s,
+            'OvrallGeneralTrustS4s':OvrallGeneralTrustS4s,
+            'OvrallGeneralTrustS5s':OvrallGeneralTrustS5s,
+            'RiskQ1S1s':RiskQ1S1s,
+            'RiskQ1S2s':RiskQ1S2s,
+            'RiskQ1S3s':RiskQ1S3s,
+            'RiskQ1S4s':RiskQ1S4s,
+            'RiskQ1S5s':RiskQ1S5s,
+            'RiskQ2S1s':RiskQ2S1s,
+            'RiskQ2S2s':RiskQ2S2s,
+            'RiskQ2S3s':RiskQ2S3s,
+            'RiskQ2S4s':RiskQ2S4s,
+            'RiskQ2S5s':RiskQ2S5s,
+            'RiskQ3S1s':RiskQ3S1s,
+            'RiskQ3S2s':RiskQ3S2s,
+            'RiskQ3S3s':RiskQ3S3s,
+            'RiskQ3S4s':RiskQ3S4s,
+            'RiskQ3S5s':RiskQ3S5s,
+            'BenevlonceQ1S1s':BenevlonceQ1S1s,
+            'BenevlonceQ1S2s':BenevlonceQ1S2s,
+            'BenevlonceQ1S3s':BenevlonceQ1S3s,
+            'BenevlonceQ1S4s':BenevlonceQ1S4s,
+            'BenevlonceQ1S5s':BenevlonceQ1S5s,
+            'BenevlonceQ2S1s':BenevlonceQ2S1s,
+            'BenevlonceQ2S2s':BenevlonceQ2S2s,
+            'BenevlonceQ2S3s':BenevlonceQ2S3s,
+            'BenevlonceQ2S4s':BenevlonceQ2S4s,
+            'BenevlonceQ2S5s':BenevlonceQ2S5s,
+            'BenevlonceQ3S1s':BenevlonceQ3S1s,
+            'BenevlonceQ3S2s':BenevlonceQ3S2s,
+            'BenevlonceQ3S3s':BenevlonceQ3S3s,
+            'BenevlonceQ3S4s':BenevlonceQ3S4s,
+            'BenevlonceQ3S5s':BenevlonceQ3S5s,
+            'CompetenceQ1S1s':CompetenceQ1S1s,
+            'CompetenceQ1S2s':CompetenceQ1S2s,
+            'CompetenceQ1S3s':CompetenceQ1S3s,
+            'CompetenceQ1S4s':CompetenceQ1S4s,
+            'CompetenceQ1S5s':CompetenceQ1S5s,
+            'CompetenceQ2S1s':CompetenceQ2S1s,
+            'CompetenceQ2S2s':CompetenceQ2S2s,
+            'CompetenceQ2S3s':CompetenceQ2S3s,
+            'CompetenceQ2S4s':CompetenceQ2S4s,
+            'CompetenceQ2S5s':CompetenceQ2S5s,
+            'CompetenceQ3S1s':CompetenceQ3S1s,
+            'CompetenceQ3S2s':CompetenceQ3S2s,
+            'CompetenceQ3S3s':CompetenceQ3S3s,
+            'CompetenceQ3S4s':CompetenceQ3S4s,
+            'CompetenceQ3S5s':CompetenceQ3S5s,
+            'ReciprocityQ1S1s':ReciprocityQ1S1s,
+            'ReciprocityQ1S2s':ReciprocityQ1S2s,
+            'ReciprocityQ1S3s':ReciprocityQ1S3s,
+            'ReciprocityQ1S4s':ReciprocityQ1S4s,
+            'ReciprocityQ1S5s':ReciprocityQ1S5s,
+            'ReciprocityQ2S1s':ReciprocityQ2S1s,
+            'ReciprocityQ2S2s':ReciprocityQ2S2s,
+            'ReciprocityQ2S3s':ReciprocityQ2S3s,
+            'ReciprocityQ2S4s':ReciprocityQ2S4s,
+            'ReciprocityQ2S5s':ReciprocityQ2S5s,
+            'GtrustQ1S1s':GtrustQ1S1s,
+            'GtrustQ1S2s':GtrustQ1S2s,
+            'GtrustQ1S3s':GtrustQ1S3s,
+            'GtrustQ1S4s':GtrustQ1S4s,
+            'GtrustQ1S5s':GtrustQ1S5s,
+            'GtrustQ2S1s':GtrustQ2S1s,
+            'GtrustQ2S2s':GtrustQ2S2s,
+            'GtrustQ2S3s':GtrustQ2S3s,
+            'GtrustQ2S4s':GtrustQ2S4s,
+            'GtrustQ2S5s':GtrustQ2S5s,
+            'GtrustQ3S1s':GtrustQ3S1s,
+            'GtrustQ3S2s':GtrustQ3S2s,
+            'GtrustQ3S3s':GtrustQ3S3s,
+            'GtrustQ3S4s':GtrustQ3S4s,
+            'GtrustQ3S5s':GtrustQ3S5s
+
             })
 
 
@@ -2416,11 +6197,12 @@ def generateSurvey(request,link):
 
 
 
+
 # Create your views here.
 def overview(request):
     projects = Project.objects.all().filter(user=request.user,archived=False).order_by('-created_at')
     current_site = get_current_site(request)
-    domain = 'trustedux.herokuapp.com' #current_site.domain
+    domain = current_site.domain
     print(current_site)
     print('domain:',domain)
 

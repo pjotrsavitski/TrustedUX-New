@@ -193,6 +193,8 @@
                 {PROJECT_NAME}: Name of project <br/>
                 {PRODCUT_NAME}: Name of product <br/>
                 {TODAY}: Today's date <br/>
+                {OWNER_NAME}: Survey owner's full name <br/>
+                {OWNER_EMAIL}: Survey owner's email<br/>
 
               </div>
 
@@ -320,7 +322,7 @@
 
 </div>
 <br/><br/>
-<a class='mr-2'  href="{% url 'project_home'%}">{% trans "Cancel" %} </a>
+<a class='mr-2' style='text-decoration:underline;'  href="{% url 'project_home'%}">{% trans "Cancel" %} </a>
 {% if wizard.steps.prev %}
 
 <button class="btn btn-outline-primary" formnovalidate="formnovalidate" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" >{% trans "Back" %}</button>

@@ -95,7 +95,7 @@
   </div>
 </div>
 <br/><br/>
-<a class='mr-2'  href="{% url 'project_home'%}">{% trans "Cancel" %} </a>
+<a class='mr-2' style='text-decoration:underline;'   href="{% url 'project_home'%}">{% trans "Cancel" %} </a>
 {% if wizard.steps.prev %}
 
 <button class="btn btn-outline-primary" formnovalidate="formnovalidate" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" >{% trans "Back" %}</button>

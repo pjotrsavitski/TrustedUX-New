@@ -33,7 +33,7 @@ class contactforms(forms.Form):
 
 
 project_choices = [(1,'Individual'),(2,'Comparision A and B'),(3, 'Comparision A, B and C'),(4, 'Comparision A, B, C and D'),(5, 'Comparision A, B, C, D and E')]
-industry_choices = [('Advanced Technologies and Innovation','Advanced Technologies and Innovation'),('Education/Training','Education/Training'),('Finance','Finance'),('Government','Government'),('Healthcare and sport','Healthcare and sport'),('Information technologies','Information technologies'),('Manufacturing / Materials','Manufacturing / Materials'),('Privacy and security','Privacy and security'),('Travel/Tourism','Travel/Tourism')] 
+industry_choices = [('Advanced Technologies and Innovation','Advanced Technologies and Innovation'),('Education/Training','Education/Training'),('Finance','Finance'),('Government','Government'),('Healthcare and sport','Healthcare and sport'),('Information technologies','Information technologies'),('Manufacturing / Materials','Manufacturing / Materials'),('Privacy and security','Privacy and security'),('Travel/Tourism','Travel/Tourism')]
 type_choices = [('Hardware','Hardware'),('Software','Software'),('Mobile application','Mobile application'),('Web application','Web application'),('Social network','Social network'),('Website','Website'),('Cloud technology','Cloud technology'),('Other','Other')]
 
 class CreateForm1(forms.Form):
@@ -74,9 +74,9 @@ class CreateForm2(forms.Form):
     survey_owner_email1=forms.CharField(label="Survey owner email", widget=forms.EmailInput(attrs={'class':'form-control  mb-4'}))
 
     # Survey group front page
-    title1 = forms.CharField(initial="Assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
+    title1 = forms.CharField(label='Title',initial="Assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
     #subtitle1 = forms.CharField(initial="Welcome to the assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
-    paragraph1 = forms.CharField(initial='Welcome to the assessment of {PRODUCT_NAME}! <br/><br/> Thank you for taking time to participate in this stdy. My name is {OWNER_NAME}. Through this survey, I would like to undertsand how likely you are to trust {PRODUCT_NAME}. <br/><br/> I would be very grateful if you complete this survey. This survey is anonymous. The record of your survey responses does not contain any identifying information about you. \n It will require approximately 10 minutes of your time. In case you have any questions, you can contact me via email {OWNER_EMAIL}',required=False,widget=RichTextWidget(),help_text=mark_safe('You can use following variables to use in title, subtitle and paragraph: <br/>{PROJECT_NAME} - Name of project <br/> {PRODUCT_NAME} - Name of product<br/> {SURVEY_NAME} - Name of survey <br/> {TODAY} - for today date.'))
+    paragraph1 = forms.CharField(label='Paragraph',initial='Welcome to the assessment of {PRODUCT_NAME}! <br/><br/> Thank you for taking time to participate in this stdy. My name is {OWNER_NAME}. Through this survey, I would like to undertsand how likely you are to trust {PRODUCT_NAME}. <br/><br/> I would be very grateful if you complete this survey. This survey is anonymous. The record of your survey responses does not contain any identifying information about you. \n It will require approximately 10 minutes of your time. In case you have any questions, you can contact me via email {OWNER_EMAIL}',required=False,widget=RichTextWidget(),help_text=mark_safe('You can use following variables to use in title, subtitle and paragraph: <br/>{PROJECT_NAME} - Name of project <br/> {PRODUCT_NAME} - Name of product<br/> {SURVEY_NAME} - Name of survey <br/> {TODAY} - for today date.'))
 
 
     # survey-2
@@ -91,9 +91,9 @@ class CreateForm2(forms.Form):
     survey_owner_email2=forms.CharField(label="Survey owner email", widget=forms.EmailInput(attrs={'class':'form-control  mb-4'}))
 
     # Survey group front page
-    title2 = forms.CharField(initial="Assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
+    title2 = forms.CharField(label='Title',initial="Assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
     #subtitle2 = forms.CharField(initial="Welcome to the assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
-    paragraph2 = forms.CharField(initial='Welcome to the assessment of {PRODUCT_NAME}! <br/><br/> Thank you for taking time to participate in this stdy. My name is {OWNER_NAME}. Through this survey, I would like to undertsand how likely you are to trust {PRODUCT_NAME}. <br/><br/> I would be very grateful if you complete this survey. This survey is anonymous. The record of your survey responses does not contain any identifying information about you. \n It will require approximately 10 minutes of your time. In case you have any questions, you can contact me via email {OWNER_EMAIL}',required=False,widget=RichTextWidget(),help_text=mark_safe('You can use following variables to use in title, subtitle and paragraph: <br/>{PROJECT_NAME} - Name of project <br/> {PRODUCT_NAME} - Name of product<br/> {SURVEY_NAME} - Name of survey <br/> {TODAY} - for today date.'))
+    paragraph2 = forms.CharField(label='Paragraph',initial='Welcome to the assessment of {PRODUCT_NAME}! <br/><br/> Thank you for taking time to participate in this stdy. My name is {OWNER_NAME}. Through this survey, I would like to undertsand how likely you are to trust {PRODUCT_NAME}. <br/><br/> I would be very grateful if you complete this survey. This survey is anonymous. The record of your survey responses does not contain any identifying information about you. \n It will require approximately 10 minutes of your time. In case you have any questions, you can contact me via email {OWNER_EMAIL}',required=False,widget=RichTextWidget(),help_text=mark_safe('You can use following variables to use in title, subtitle and paragraph: <br/>{PROJECT_NAME} - Name of project <br/> {PRODUCT_NAME} - Name of product<br/> {SURVEY_NAME} - Name of survey <br/> {TODAY} - for today date.'))
 
 
     ## survey-3
@@ -107,9 +107,9 @@ class CreateForm2(forms.Form):
     survey_owner_email3=forms.CharField(label="Survey owner email", widget=forms.EmailInput(attrs={'class':'form-control  mb-4'}))
 
     # Survey group front page
-    title3 = forms.CharField(initial="Assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
+    title3 = forms.CharField(label='Title',initial="Assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
     #subtitle3 = forms.CharField(initial="Welcome to the assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
-    paragraph3 = forms.CharField(initial='Welcome to the assessment of {PRODUCT_NAME}! <br/><br/> Thank you for taking time to participate in this stdy. My name is {OWNER_NAME}. Through this survey, I would like to undertsand how likely you are to trust {PRODUCT_NAME}. <br/><br/> I would be very grateful if you complete this survey. This survey is anonymous. The record of your survey responses does not contain any identifying information about you. \n It will require approximately 10 minutes of your time. In case you have any questions, you can contact me via email {OWNER_EMAIL}',required=False,widget=RichTextWidget(),help_text=mark_safe('You can use following variables to use in title, subtitle and paragraph: <br/>{PROJECT_NAME} - Name of project <br/> {PRODUCT_NAME} - Name of product<br/> {SURVEY_NAME} - Name of survey <br/> {TODAY} - for today date.'))
+    paragraph3 = forms.CharField(label='Paragraph',initial='Welcome to the assessment of {PRODUCT_NAME}! <br/><br/> Thank you for taking time to participate in this stdy. My name is {OWNER_NAME}. Through this survey, I would like to undertsand how likely you are to trust {PRODUCT_NAME}. <br/><br/> I would be very grateful if you complete this survey. This survey is anonymous. The record of your survey responses does not contain any identifying information about you. \n It will require approximately 10 minutes of your time. In case you have any questions, you can contact me via email {OWNER_EMAIL}',required=False,widget=RichTextWidget(),help_text=mark_safe('You can use following variables to use in title, subtitle and paragraph: <br/>{PROJECT_NAME} - Name of project <br/> {PRODUCT_NAME} - Name of product<br/> {SURVEY_NAME} - Name of survey <br/> {TODAY} - for today date.'))
 
 
     ## survey-4
@@ -123,9 +123,9 @@ class CreateForm2(forms.Form):
     survey_owner_email4=forms.CharField(label="Survey owner email", widget=forms.EmailInput(attrs={'class':'form-control  mb-4'}))
 
     # Survey group front page
-    title4 = forms.CharField(initial="Assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
+    title4 = forms.CharField(label='Title',initial="Assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
     #subtitle4 = forms.CharField(initial="Welcome to the assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
-    paragraph4 = forms.CharField(initial='Welcome to the assessment of {PRODUCT_NAME}! <br/><br/> Thank you for taking time to participate in this stdy. My name is {OWNER_NAME}. Through this survey, I would like to undertsand how likely you are to trust {PRODUCT_NAME}. <br/><br/> I would be very grateful if you complete this survey. This survey is anonymous. The record of your survey responses does not contain any identifying information about you. \n It will require approximately 10 minutes of your time. In case you have any questions, you can contact me via email {OWNER_EMAIL}',required=False,widget=RichTextWidget(),help_text=mark_safe('You can use following variables to use in title, subtitle and paragraph: <br/>{PROJECT_NAME} - Name of project <br/> {PRODUCT_NAME} - Name of product<br/> {SURVEY_NAME} - Name of survey <br/> {TODAY} - for today date.'))
+    paragraph4 = forms.CharField(label='Paragraph',initial='Welcome to the assessment of {PRODUCT_NAME}! <br/><br/> Thank you for taking time to participate in this stdy. My name is {OWNER_NAME}. Through this survey, I would like to undertsand how likely you are to trust {PRODUCT_NAME}. <br/><br/> I would be very grateful if you complete this survey. This survey is anonymous. The record of your survey responses does not contain any identifying information about you. \n It will require approximately 10 minutes of your time. In case you have any questions, you can contact me via email {OWNER_EMAIL}',required=False,widget=RichTextWidget(),help_text=mark_safe('You can use following variables to use in title, subtitle and paragraph: <br/>{PROJECT_NAME} - Name of project <br/> {PRODUCT_NAME} - Name of product<br/> {SURVEY_NAME} - Name of survey <br/> {TODAY} - for today date.'))
 
 
     ## survey-5
@@ -141,7 +141,7 @@ class CreateForm2(forms.Form):
     # Survey group front page
     title5 = forms.CharField(label="Title",initial="Assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
     #subtitle5 = forms.CharField(initial="Welcome to the assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
-    paragraph5 = forms.CharField(initial='Welcome to the assessment of {PRODUCT_NAME}! <br/><br/> Thank you for taking time to participate in this stdy. My name is {OWNER_NAME}. Through this survey, I would like to undertsand how likely you are to trust {PRODUCT_NAME}. <br/><br/> I would be very grateful if you complete this survey. This survey is anonymous. The record of your survey responses does not contain any identifying information about you. \n It will require approximately 10 minutes of your time. In case you have any questions, you can contact me via email {OWNER_EMAIL}',required=False,widget=RichTextWidget(),help_text=mark_safe('You can use following variables to use in title, subtitle and paragraph: <br/>{PROJECT_NAME} - Name of project <br/> {PRODUCT_NAME} - Name of product<br/> {SURVEY_NAME} - Name of survey <br/> {TODAY} - for today date.'))
+    paragraph5 = forms.CharField(label='Paragraph',initial='Welcome to the assessment of {PRODUCT_NAME}! <br/><br/> Thank you for taking time to participate in this stdy. My name is {OWNER_NAME}. Through this survey, I would like to undertsand how likely you are to trust {PRODUCT_NAME}. <br/><br/> I would be very grateful if you complete this survey. This survey is anonymous. The record of your survey responses does not contain any identifying information about you. \n It will require approximately 10 minutes of your time. In case you have any questions, you can contact me via email {OWNER_EMAIL}',required=False,widget=RichTextWidget(),help_text=mark_safe('You can use following variables to use in title, subtitle and paragraph: <br/>{PROJECT_NAME} - Name of project <br/> {PRODUCT_NAME} - Name of product<br/> {SURVEY_NAME} - Name of survey <br/> {TODAY} - for today date.'))
 
 
 
@@ -197,7 +197,8 @@ class CreateForm5(forms.Form):
 
 class lastForm(forms.Form):
     CHOICES=[(True,'Activate now'),(False,'Activate later')]
-    project_status = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect(attrs={'class': "custom-radio-list"}),initial=True)
+    #project_status = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect(attrs={'class': "custom-radio-list"}),initial=True)
+    project_status = forms.BooleanField( widget=forms.HiddenInput(),initial=True)
 
 class SurveyQuestion(forms.Form):
 

@@ -1,0 +1,187 @@
+{% extends 'survey-base.html' %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% block content%}
+<h2>{{survey}}</h2>
+
+{% language lang %}
+<style>
+  .first-cap::first-letter{
+    text-transform: uppercase;
+  }
+  </style>
+
+<form method='post'>
+{{ wizard.management_form }}
+{% csrf_token %}
+{% if wizard.form.forms %}
+    {{ wizard.form.management_form }}
+    {% for form in wizard.form.forms %}
+        {{ form  }}
+    {% endfor %}
+{% else %}
+    {{ wizard.form }}
+{% endif %}
+
+<div class="table-responsive">
+<table id='survey' class="table table-striped">
+<thead>
+  <tr>
+    <th></th>
+    <th> {% trans  "Strogly disagree" %} </th>
+    <th> {% trans "Disagree" %} </th>
+    <th> {% trans "Neutral" %} </th>
+    <th>{% trans "Agree" %} </th>
+    <th>{% trans "Strogly agree" %} </th>
+  </tr>
+</thead>
+
+<tbody>
+  <tr>
+    <td> <p class='first-cap'>{% blocktrans %} I believe that there could be negative consequences from using {{product}}{%endblocktrans%}</p></td>
+    <td> <input type="radio" value="1" name="survey-q1" required> </td>
+    <td> <input type="radio" value="2" name="survey-q1"> </td>
+    <td> <input type="radio" value="3" name="survey-q1"> </td>
+    <td> <input type="radio" value="4" name="survey-q1"> </td>
+    <td> <input type="radio" value="5" name="survey-q1"> </td>
+  </tr>
+
+
+  <tr>
+    <td> <p class='first-cap'>{% blocktrans %}I feel I must be cautious when using  {{product}}{%endblocktrans%}</p></td>
+    <td> <input type="radio" value="1" name="survey-q2" required> </td>
+    <td> <input type="radio" value="2" name="survey-q2"> </td>
+    <td> <input type="radio"  value="3" name="survey-q2"> </td>
+    <td> <input type="radio"  value="4" name="survey-q2"> </td>
+    <td> <input type="radio" value="5"  name="survey-q2"> </td>
+  </tr>
+
+
+  <tr>
+    <td><p class='first-cap'>{% blocktrans %} It is risky to use  {{product}}{%endblocktrans%}</p></td>
+    <td> <input type="radio" value="1"  name="survey-q3" required> </td>
+    <td> <input type="radio" value="2"  name="survey-q3"> </td>
+    <td> <input type="radio" value="3"  name="survey-q3"> </td>
+    <td> <input type="radio" value="4"  name="survey-q3"> </td>
+    <td> <input type="radio" value="5"  name="survey-q3"> </td>
+  </tr>
+
+
+  <tr>
+    <td><p class='first-cap'>{% blocktrans %} I believe {{product}} will act in my best interest{%endblocktrans%}</p> </td>
+    <td> <input type="radio" value="1"  name="survey-q4" required> </td>
+    <td> <input type="radio" value="2"  name="survey-q4"> </td>
+    <td> <input type="radio" value="3"  name="survey-q4"> </td>
+    <td> <input type="radio" value="4"  name="survey-q4"> </td>
+    <td> <input type="radio" value="5"  name="survey-q4"> </td>
+  </tr>
+
+
+  <tr>
+    <td> <p class='first-cap'>{% blocktrans %}I believe that {{product}} will do its best to help me if I need help {%endblocktrans%}</p></td>
+    <td> <input type="radio" value="1"  name="survey-q5" required> </td>
+    <td> <input type="radio" value="2"  name="survey-q5"> </td>
+    <td> <input type="radio" value="3"  name="survey-q5"> </td>
+    <td> <input type="radio" value="4"  name="survey-q5"> </td>
+    <td> <input type="radio" value="5"  name="survey-q5"> </td>
+  </tr>
+
+  <tr>
+    <td><p class='first-cap'>{% blocktrans %}I believe that {{product}} is interested in understanding my needs and preferences {%endblocktrans%}</p></td>
+    <td> <input type="radio" value="1"  name="survey-q6" required> </td>
+    <td> <input type="radio" value="2"  name="survey-q6"> </td>
+    <td> <input type="radio" value="3"  name="survey-q6"> </td>
+    <td> <input type="radio" value="4"  name="survey-q6"> </td>
+    <td> <input type="radio" value="5"  name="survey-q6"> </td>
+  </tr>
+
+  <tr>
+    <td> <p class='first-cap'>{% blocktrans %}{{product}} is competent and effective in providing personal care and  assistance {%endblocktrans%}</p> </td>
+    <td> <input type="radio" value="1"  name="survey-q7" required> </td>
+    <td> <input type="radio" value="2"  name="survey-q7"> </td>
+    <td> <input type="radio" value="3"  name="survey-q7"> </td>
+    <td> <input type="radio" value="4"  name="survey-q7"> </td>
+    <td> <input type="radio" value="5"  name="survey-q7"> </td>
+  </tr>
+
+  <tr>
+    <td> <p class='first-cap'>{% blocktrans %}I believe {{product}} has all the functionalities I would expect from an intelligent personal assistant{%endblocktrans%}</p></td>
+    <td> <input type="radio" value="1"  name="survey-q8" required> </td>
+    <td> <input type="radio" value="2"  name="survey-q8"> </td>
+    <td> <input type="radio" value="3"  name="survey-q8"> </td>
+    <td> <input type="radio" value="4"  name="survey-q8"> </td>
+    <td> <input type="radio" value="5"  name="survey-q8"> </td>
+  </tr>
+
+  <tr>
+    <td><p class='first-cap'>{% blocktrans %} {{product}} performs its role as an intelligent personal assistant very well {%endblocktrans%} </p></td>
+    <td> <input type="radio" value="1"  name="survey-q9" required> </td>
+    <td> <input type="radio" value="2"  name="survey-q9"> </td>
+    <td> <input type="radio" value="3"  name="survey-q9"> </td>
+    <td> <input type="radio" value="4"  name="survey-q9"> </td>
+    <td> <input type="radio" value="5"  name="survey-q9"> </td>
+  </tr>
+
+  <tr>
+    <td> <p class='first-cap'>{% blocktrans %}When sharing something with {{product}} I expect to get back a meaningful  and knowledgeable response {%endblocktrans%} </p></td>
+    <td> <input type="radio" value="1"  name="survey-q10" required> </td>
+    <td> <input type="radio" value="2"  name="survey-q10"> </td>
+    <td> <input type="radio" value="3"  name="survey-q10"> </td>
+    <td> <input type="radio" value="4"  name="survey-q10"> </td>
+    <td> <input type="radio" value="5"  name="survey-q10"> </td>
+  </tr>
+
+  <tr>
+    <td> <p class='first-cap'>{% blocktrans %}When sharing something with {{product}} I believe that I will get an answer{%endblocktrans%}</p></td>
+    <td> <input type="radio" value="1"  name="survey-q11" required> </td>
+    <td> <input type="radio" value="2"  name="survey-q11"> </td>
+    <td> <input type="radio" value="3"  name="survey-q11"> </td>
+    <td> <input type="radio" value="4"  name="survey-q11"> </td>
+    <td> <input type="radio" value="5"  name="survey-q11"> </td>
+  </tr>
+
+  <tr>
+    <td><p class='first-cap'>{% blocktrans %}If I use {{product}} I think i would be able to depend on it completely {%endblocktrans%}</p></td>
+    <td> <input type="radio" value="1"  name="survey-q12" required> </td>
+    <td> <input type="radio" value="2"  name="survey-q12"> </td>
+    <td> <input type="radio" value="3"  name="survey-q12"> </td>
+    <td> <input type="radio" value="4"  name="survey-q12"> </td>
+    <td> <input type="radio" value="5"  name="survey-q12"> </td>
+  </tr>
+
+  <tr>
+    <td> <p class='first-cap'>{% blocktrans %}I can always rely on {{product}} for personal care and assistance {%endblocktrans%}</p></td>
+    <td> <input type="radio" value="1"  name="survey-q13" required> </td>
+    <td> <input type="radio" value="2"  name="survey-q13"> </td>
+    <td> <input type="radio" value="3"  name="survey-q13"> </td>
+    <td> <input type="radio" value="4"  name="survey-q13"> </td>
+    <td> <input type="radio" value="5"  name="survey-q13"> </td>
+  </tr>
+
+  <tr>
+    <td> <p class='first-cap'>{% blocktrans %}I can trust the information presented to me by {{product}}{%endblocktrans%}</p></td>
+    <td> <input type="radio" value="1"  name="survey-q14"  required> </td>
+    <td> <input type="radio" value="2"  name="survey-q14"> </td>
+    <td> <input type="radio" value="3"  name="survey-q14"> </td>
+    <td> <input type="radio" value="4"  name="survey-q14"> </td>
+    <td> <input type="radio" value="5"  name="survey-q14"> </td>
+  </tr>
+
+
+
+</tbody>
+
+
+
+
+
+
+
+
+</table>
+</div>
+<br/>
+<input type="submit" class='btn btn-success'  value="{% trans "Continue" %}" />
+</form>
+{% endlanguage %}
+{% endblock %}

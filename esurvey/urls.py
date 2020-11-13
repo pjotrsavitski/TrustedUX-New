@@ -16,7 +16,7 @@ urlpatterns = [
     path("projects/new/",login_required(CompleteForm.as_view(CREATE_FORMS,initial_dict=initial)), name="create"),
     path("GotoReport/",login_required(views.GotoReport), name="GotoReport"),
     path('csv_view/', login_required(views.csvview), name='csv_view'),
-    path('Visualize/', login_required(views.Visualize), name='Visualize'),
+    #path('Visualize/', login_required(views.Visualize), name='Visualize'),
     path('projects/report/<project_id>/download', login_required(views.reportDownload), name='report_download'),
     path('projects/report/<project_id>/visualize', login_required(views.reportView), name='report_view'),
 
