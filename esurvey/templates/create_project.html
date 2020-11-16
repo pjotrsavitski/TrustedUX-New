@@ -4,8 +4,8 @@
 {% load i18n %}
 {% load crispy_forms_tags %}
 
-{% block title %}Create Project {% endblock %}
-
+{% block title %}  New  survey {% endblock %}
+{{ new }}
 
 
 {% block content %}
@@ -19,9 +19,9 @@
     <div class="col">
       <div class="multisteps-form__progress">
         {% if wizard.steps.step1 >= 1   %}
-        <button id='b1' class="multisteps-form__progress-btn js-active" name="wizard_goto_step" type="submit" value="project">Step 1: Project settings</button>
+        <button id='b1' class="multisteps-form__progress-btn js-active" name="wizard_goto_step" type="submit" value="project">Step 1: General </button>
         {% else %}
-        <button id='b2' class="multisteps-form__progress-btn" type="button" name="wizard_goto_step" type="submit" value="project">Step 1: Project settings</button>
+        <button id='b2' class="multisteps-form__progress-btn" type="button" name="wizard_goto_step" type="submit" value="project">Step 1: General </button>
         {% endif %}
 
         {% if wizard.steps.step1 >= 2  %}
@@ -62,8 +62,8 @@
   <div class='row'>{{form.project_name.label}}{{form.project_name}}</div>
   <div class='row'>  {{form.project_type.label}}<span><i style='color:#007bff;' class='fa fa-info-circle ml-2'  data-toggle='modal' data-placement='top' data-target="#study_type"></i></span>{{form.project_type}}</div>
 
-  <div class='row'>{{form.product_type.label}}{{form.product_type}}</div>
-  <div class='row'>  {{form.product_industry.label}}{{form.product_industry}}</div>
+  <div class='row'>{{form.product_type.label}}<span><i style='color:#007bff;' class='fa fa-info-circle ml-2'  data-toggle='modal' data-placement='top' data-target="#product_type"></i></span>{{form.product_type}}</div>
+  <div class='row'>  {{form.product_industry.label}}<span><i style='color:#007bff;' class='fa fa-info-circle ml-2'  data-toggle='modal' data-placement='top' data-target="#industry"></i></span>{{form.product_industry}}</div>
 
   {{form.new}}
   {{form.project_id}}
@@ -91,6 +91,47 @@
 
         </div>
       </div>
+    <!-- End -->
+    </div>
+
+    <div class="modal fade" id="product_type" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header border-bottom-0">
+            <h5 class="modal-title" id="exampleModalLabel"><span><i style='color:#007bff;' class='fa fa-info-circle mr-2'></i></span>Product type</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class='modal-body'>
+
+            <p>Select a product type that you are planning to evaluate.</p>
+
+          </div>
+
+        </div>
+      </div>
+    <!-- End -->
+    </div>
+
+    <div class="modal fade" id="industry" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header border-bottom-0">
+            <h5 class="modal-title" id="exampleModalLabel"><span><i style='color:#007bff;' class='fa fa-info-circle mr-2'></i></span>Industry type</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class='modal-body'>
+          
+            <p>Select an industry of evaluated product.</p>
+              </div>
+
+        </div>
+      </div>
+    <!-- End -->
+
     </div>
   </div>
 </div>

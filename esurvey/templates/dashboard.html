@@ -1,22 +1,22 @@
 {% extends "base.html" %}
 
-{%block title%} Projects {%endblock%}
+{%block title%} My Surveys {%endblock%}
 {%block content%}
 
 
   <div class="btn-group">
    <button type="button" class="btn btn-danger dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-     <i class="fa fa-search"> </i> Projects
+     <i class="fa fa-search"> </i> Surveys
    </button>
    <div class="dropdown-menu">
-     <a class="dropdown-item" href="{% url 'project_filter' filter='all'%}">All</a>
-     <a class="dropdown-item" href="{% url 'project_filter' filter='running'%}">Running</a>
-     <a class="dropdown-item" href="{% url 'project_filter' filter='archived'%}">Archived</a>
-     <a class="dropdown-item" href="{% url 'project_filter' filter='closed'%}">Closed</a>
+     <a class="dropdown-item" href="{% url 'project_filter' filter='all'%}">All Surveys</a>
+     <a class="dropdown-item" href="{% url 'project_filter' filter='running'%}">Running Surveys</a>
+     <a class="dropdown-item" href="{% url 'project_filter' filter='archived'%}">Archived Surveys</a>
+     <a class="dropdown-item" href="{% url 'project_filter' filter='closed'%}">Closed Surveys</a>
    </div>
    </div>
 
- <a href="{% url 'create'%}" class="btn btn-success ml-auto"  > New Project </a>
+ <a href="{% url 'create'%}" class="btn btn-outline-primary ml-auto"  > New Survey </a>
 
 <br/><br/>
 <p>

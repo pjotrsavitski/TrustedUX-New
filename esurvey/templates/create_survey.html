@@ -124,8 +124,12 @@
 
 
 <nav>
-<div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
 
+{% if type == 1 %}
+<div class="nav nav-tabs" id="nav-tab" role="tablist">
+{% else %}
+<div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+{% endif %}
 <a class="nav-item nav-link active" id="nav-s1-tab" data-toggle="tab" href="#nav-s1" role="tab" aria-controls="nav-s1" aria-selected="true">Survey-1</a>
 {% if type > 1 %}
 <a class="nav-item nav-link" id="nav-s2-tab" data-toggle="tab" href="#nav-s2" role="tab" aria-controls="nav-s2" aria-selected="false">Survey-2</a>
@@ -148,11 +152,11 @@
 
 
       <!-- Form start -->
-      <div class='row'>{{form.name_of_survey1.label}}{{form.name_of_survey1}}</div>
-      <div class='row'>  {{form.questionnaire_language1.label}}{{form.questionnaire_language1}}</div>
 
-      <div class='row'><div style="padding-left:0px" class='col col-lg-6 col-md-6'>{{form.start_date1.label}}{{form.start_date1}}</div><div style="padding-right:0px" class='col col-lg-6 col-md-6'>{{form.end_date1.label}}{{form.end_date1}}</div></div>
+      <div class='row'>  {{form.questionnaire_language1.label}}{{form.questionnaire_language1}}</div>
       <div class='row'>{{form.product_name1.label}}{{form.product_name1}}</div>
+      <div class='row'><div style="padding-left:0px" class='col col-lg-6 col-md-6'>{{form.start_date1.label}}{{form.start_date1}}</div><div style="padding-right:0px" class='col col-lg-6 col-md-6'>{{form.end_date1.label}}{{form.end_date1}}</div></div>
+
       <br/>
       <b> Contact information </b><span><i style='color:#007bff;' class='fa fa-info-circle ml-2'  data-toggle='modal' data-placement='top' data-target="#contact_info"></i></span>
       <div class="modal fade" id="contact_info" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -174,7 +178,30 @@
       <br/>
         <div class='row'>  {{form.survey_owner1.label}}{{form.survey_owner1}}</div>
       <div class='row'>  {{form.survey_owner_email1.label}}{{form.survey_owner_email1}}</div>
-      <b> Survey front page setup</b><br/><br/>
+      <b> Front page setup</b>  <span><i style='color:#007bff;' class='fa fa-info-circle ml-2'  data-toggle='modal' data-placement='top' data-target="#front_page"></i></span><br/><br/>
+      <!-- help text -->
+      <div class="modal fade" id="front_page" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header border-bottom-0">
+              <h5 class="modal-title" id="exampleModalLabel"><span><i style='color:#007bff;' class='fa fa-info-circle mr-2'></i></span>Front page setup</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class='modal-body'>
+              Survey front page which participants will see firstly when open the survey.
+            </div>
+
+          </div>
+        </div>
+      </div>
+    <!-- Help text end -->
+
+
+
+
+
       <div class='row'>{{form.title1.label}}{{form.title1}}</div>
       <div class='row'>  {{form.paragraph1.label}} (Provide a context for the survey)<span><i style='color:#007bff;' class='fa fa-info-circle ml-2'  data-toggle='modal' data-placement='top' data-target="#para"></i></span>
         <div class="modal fade" id="para" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -213,7 +240,7 @@
 
 
       <!-- Form start -->
-      <div class='row'>{{form.name_of_survey2.label}}{{form.name_of_survey2}}</div>
+
       <div class='row'>  {{form.questionnaire_language2.label}}{{form.questionnaire_language2}}</div>
         <div class='row'>{{form.product_name2.label}}{{form.product_name2}}</div>
       <div class='row'><div style="padding-left:0px" class='col col-lg-6 col-md-6'>{{form.start_date2.label}}{{form.start_date2}}</div><div style="padding-right:0px" class='col col-lg-6 col-md-6'>{{form.end_date2.label}}{{form.end_date2}}</div></div>
@@ -223,7 +250,7 @@
       <br/>
         <div class='row'>  {{form.survey_owner2.label}}{{form.survey_owner2}}</div>
       <div class='row'>  {{form.survey_owner_email2.label}}{{form.survey_owner_email2}}</div>
-      <b> Survey front page setup</b><br/><br/>
+      <b> Front page setup</b><br/><br/>
       <div class='row'>{{form.title2.label}}{{form.title2}}</div>
       <div class='row'>  {{form.paragraph2.label}} (Provide a context for the survey)
           <br/><br/>
@@ -238,7 +265,7 @@
 
 
       <!-- Form start -->
-      <div class='row'>{{form.name_of_survey3.label}}{{form.name_of_survey3}}</div>
+
       <div class='row'>  {{form.questionnaire_language3.label}}{{form.questionnaire_language3}}</div>
 
       <div class='row'><div style="padding-left:0px" class='col col-lg-6 col-md-6'>{{form.start_date3.label}}{{form.start_date3}}</div><div style="padding-right:0px" class='col col-lg-6 col-md-6'>{{form.end_date3.label}}{{form.end_date3}}</div></div>
@@ -250,7 +277,7 @@
       <br/>
         <div class='row'>  {{form.survey_owner3.label}}{{form.survey_owner3}}</div>
       <div class='row'>  {{form.survey_owner_email3.label}}{{form.survey_owner_email3}}</div>
-      <b> Survey front page setup</b><br/><br/>
+      <b> Front page setup</b><br/><br/>
       <div class='row'>{{form.title3.label}}{{form.title3}}</div>
       <div class='row'>  {{form.paragraph3.label}} (Provide a context for the survey)
 
@@ -266,7 +293,7 @@
 
 
       <!-- Form start -->
-      <div class='row'>{{form.name_of_survey4.label}}{{form.name_of_survey4}}</div>
+
       <div class='row'>  {{form.questionnaire_language4.label}}{{form.questionnaire_language4}}</div>
 
       <div class='row'><div style="padding-left:0px" class='col col-lg-6 col-md-6'>{{form.start_date4.label}}{{form.start_date4}}</div><div style="padding-right:0px" class='col col-lg-6 col-md-6'>{{form.end_date4.label}}{{form.end_date4}}</div></div>
@@ -277,7 +304,7 @@
       <br/>
         <div class='row'>  {{form.survey_owner4.label}}{{form.survey_owner4}}</div>
       <div class='row'>  {{form.survey_owner_email4.label}}{{form.survey_owner_email4}}</div>
-      <b> Survey front page setup</b><br/><br/>
+      <b> Front page setup</b><br/><br/>
       <div class='row'>{{form.title4.label}}{{form.title4}}</div>
       <div class='row'>  {{form.paragraph4.label}} (Provide a context for the survey)
 
@@ -293,7 +320,7 @@
 
 
       <!-- Form start -->
-      <div class='row'>{{form.name_of_survey5.label}}{{form.name_of_survey5}}</div>
+
       <div class='row'>  {{form.questionnaire_language5.label}}{{form.questionnaire_language5}}</div>
 
       <div class='row'><div style="padding-left:0px" class='col col-lg-6 col-md-6'>{{form.start_date5.label}}{{form.start_date5}}</div><div style="padding-right:0px" class='col col-lg-6 col-md-6'>{{form.end_date5.label}}{{form.end_date5}}</div></div>
@@ -346,7 +373,7 @@
       console.log('calling '+i);
 
 
-          $("#id_survey-name_of_survey"+i).val("lemo");
+          //$("#id_survey-name_of_survey"+i).val("lemo");
           $("#id_survey-questionnaire_language"+i).val("En");
           $("#id_survey-start_date"+i).val(today);
           $("#id_survey-end_date"+i).val(tomorrow);

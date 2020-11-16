@@ -19,9 +19,9 @@
     <div class="col">
       <div class="multisteps-form__progress">
         {% if wizard.steps.step1 >= 1   %}
-        <button id='b1' class="multisteps-form__progress-btn js-active" name="wizard_goto_step" type="submit" value="project">Step 1: Project settings</button>
+        <button id='b1' class="multisteps-form__progress-btn js-active" name="wizard_goto_step" type="submit" value="project">Step 1: General </button>
         {% else %}
-        <button id='b2' class="multisteps-form__progress-btn" type="button" name="wizard_goto_step" type="submit" value="project">Step 1: Project settings</button>
+        <button id='b2' class="multisteps-form__progress-btn" type="button" name="wizard_goto_step" type="submit" value="project">Step 1: General </button>
         {% endif %}
 
         {% if wizard.steps.step1 >= 2  %}

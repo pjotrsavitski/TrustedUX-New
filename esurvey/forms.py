@@ -38,12 +38,12 @@ type_choices = [('Hardware','Hardware'),('Software','Software'),('Mobile applica
 
 class CreateForm1(forms.Form):
 
-    project_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
-    project_type = forms.CharField(label='Study type',widget=forms.Select(choices=project_choices,attrs={'class':'form-control mb-4'}))
+    project_name = forms.CharField(label='Survey name',widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
+    project_type = forms.CharField(label='Evaluation type',widget=forms.Select(choices=project_choices,attrs={'class':'form-control mb-4'}))
     new = forms.BooleanField(widget=forms.HiddenInput(),required=False,initial=True)
     project_id = forms.IntegerField(widget=forms.HiddenInput(),required=False)
-    product_type = forms.CharField(label='Product type',widget=forms.Select(choices=type_choices,attrs={'class':'form-control mb-4'}),max_length=100)
-    product_industry = forms.CharField(widget=forms.Select(choices=industry_choices,attrs={'class':'form-control mb-4'}))
+    product_type = forms.CharField(label='Product',widget=forms.Select(choices=type_choices,attrs={'class':'form-control mb-4'}),max_length=100)
+    product_industry = forms.CharField(label='Industry',widget=forms.Select(choices=industry_choices,attrs={'class':'form-control mb-4'}))
 
 
 
@@ -63,15 +63,15 @@ class CreateForm2(forms.Form):
 
 
     ## survey-1 Project is successfully updated
-    name_of_survey1 = forms.CharField(label="Survey name",widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
-    questionnaire_language1=forms.CharField(label="Survey language", widget=forms.Select(choices=lang_choices,attrs={'class':'form-control  mb-4'}))
+    #name_of_survey1 = forms.CharField(label="Survey name",widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
+    questionnaire_language1=forms.CharField(label="Language", widget=forms.Select(choices=lang_choices,attrs={'class':'form-control  mb-4'}))
     start_date1 = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control  mb-4','type':'date'}))
     end_date1 = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control  mb-4','type':'date'}))
     product_name1 = forms.CharField(label='Product name',widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
 
 
-    survey_owner1=forms.CharField(label="Survey owner full name", widget=forms.TextInput(attrs={'class':'form-control  mb-4'}))
-    survey_owner_email1=forms.CharField(label="Survey owner email", widget=forms.EmailInput(attrs={'class':'form-control  mb-4'}))
+    survey_owner1=forms.CharField(label="Name", widget=forms.TextInput(attrs={'class':'form-control  mb-4'}))
+    survey_owner_email1=forms.CharField(label="Email", widget=forms.EmailInput(attrs={'class':'form-control  mb-4'}))
 
     # Survey group front page
     title1 = forms.CharField(label='Title',initial="Assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
@@ -80,15 +80,15 @@ class CreateForm2(forms.Form):
 
 
     # survey-2
-    name_of_survey2 = forms.CharField(label="Survey name",widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
-    questionnaire_language2=forms.CharField(label="Survey language", widget=forms.Select(choices=lang_choices,attrs={'class':'form-control  mb-4'}))
+    #name_of_survey2 = forms.CharField(label="Survey name",widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
+    questionnaire_language2=forms.CharField(label="Language", widget=forms.Select(choices=lang_choices,attrs={'class':'form-control  mb-4'}))
     start_date2 = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control  mb-4','type':'date'}))
     end_date2 = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control  mb-4','type':'date'}))
     product_name2 = forms.CharField(label='Product name',widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
 
 
-    survey_owner2=forms.CharField(label="Survey owner full name", widget=forms.TextInput(attrs={'class':'form-control  mb-4'}))
-    survey_owner_email2=forms.CharField(label="Survey owner email", widget=forms.EmailInput(attrs={'class':'form-control  mb-4'}))
+    survey_owner2=forms.CharField(label="Name", widget=forms.TextInput(attrs={'class':'form-control  mb-4'}))
+    survey_owner_email2=forms.CharField(label="s_owner_email_key", widget=forms.EmailInput(attrs={'class':'form-control  mb-4'}))
 
     # Survey group front page
     title2 = forms.CharField(label='Title',initial="Assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
@@ -97,14 +97,14 @@ class CreateForm2(forms.Form):
 
 
     ## survey-3
-    name_of_survey3 = forms.CharField(label="Survey name",widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
-    questionnaire_language3=forms.CharField(label="Survey language", widget=forms.Select(choices=lang_choices,attrs={'class':'form-control  mb-4'}))
+    #name_of_survey3 = forms.CharField(label="Survey name",widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
+    questionnaire_language3=forms.CharField(label="Language", widget=forms.Select(choices=lang_choices,attrs={'class':'form-control  mb-4'}))
     start_date3 = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control  mb-4','type':'date'}))
     end_date3 = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control  mb-4','type':'date'}))
     product_name3 = forms.CharField(label='Product name',widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
 
-    survey_owner3=forms.CharField(label="Survey owner full name", widget=forms.TextInput(attrs={'class':'form-control  mb-4'}))
-    survey_owner_email3=forms.CharField(label="Survey owner email", widget=forms.EmailInput(attrs={'class':'form-control  mb-4'}))
+    survey_owner3=forms.CharField(label="Name", widget=forms.TextInput(attrs={'class':'form-control  mb-4'}))
+    survey_owner_email3=forms.CharField(label="Email", widget=forms.EmailInput(attrs={'class':'form-control  mb-4'}))
 
     # Survey group front page
     title3 = forms.CharField(label='Title',initial="Assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
@@ -113,14 +113,14 @@ class CreateForm2(forms.Form):
 
 
     ## survey-4
-    name_of_survey4 = forms.CharField(label="Survey name",widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
-    questionnaire_language4=forms.CharField(label="Survey language", widget=forms.Select(choices=lang_choices,attrs={'class':'form-control  mb-4'}))
+    #name_of_survey4 = forms.CharField(label="Survey name",widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
+    questionnaire_language4=forms.CharField(label="Language", widget=forms.Select(choices=lang_choices,attrs={'class':'form-control  mb-4'}))
     start_date4 = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control  mb-4','type':'date'}))
     end_date4 = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control  mb-4','type':'date'}))
     product_name4 = forms.CharField(label='Product name',widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
 
-    survey_owner4=forms.CharField(label="Survey owner full name", widget=forms.TextInput(attrs={'class':'form-control  mb-4'}))
-    survey_owner_email4=forms.CharField(label="Survey owner email", widget=forms.EmailInput(attrs={'class':'form-control  mb-4'}))
+    survey_owner4=forms.CharField(label="Name", widget=forms.TextInput(attrs={'class':'form-control  mb-4'}))
+    survey_owner_email4=forms.CharField(label="Email", widget=forms.EmailInput(attrs={'class':'form-control  mb-4'}))
 
     # Survey group front page
     title4 = forms.CharField(label='Title',initial="Assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
@@ -129,8 +129,8 @@ class CreateForm2(forms.Form):
 
 
     ## survey-5
-    name_of_survey5 = forms.CharField(label="Survey name",widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
-    questionnaire_language5=forms.CharField(label="Survey language", widget=forms.Select(choices=lang_choices,attrs={'class':'form-control  mb-4'}))
+    #name_of_survey5 = forms.CharField(label="Survey name",widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
+    questionnaire_language5=forms.CharField(label="Language", widget=forms.Select(choices=lang_choices,attrs={'class':'form-control  mb-4'}))
     start_date5 = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control  mb-4','type':'date'}))
     end_date5 = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control  mb-4','type':'date'}))
     product_name5 = forms.CharField(label='Product name',widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
@@ -156,20 +156,82 @@ class CreateForm2(forms.Form):
     #product_type = forms.CharField(widget=forms.Select(choices=type_choices,attrs={'class':'form-control'}),max_length=100)
     #product_industry = forms.CharField(widget=forms.Select(choices=industry_choices,attrs={'class':'form-control'}))
 
-    def clean_start_date(self):
-        start_date = self.cleaned_data['start_date']
+    def clean_start_date1(self):
+        start_date = self.cleaned_data['start_date1']
+        if start_date < date.today():
+            raise ValidationError('You can not choose start date in past.')
+        else:
+            return start_date
+    def clean_start_date2(self):
+        start_date = self.cleaned_data['start_date2']
         if start_date < date.today():
             raise ValidationError('You can not choose start date in past.')
         else:
             return start_date
 
+    def clean_start_date3(self):
+        start_date = self.cleaned_data['start_date3']
+        if start_date < date.today():
+            raise ValidationError('You can not choose start date in past.')
+        else:
+            return start_date
+    def clean_start_date4(self):
+        start_date = self.cleaned_data['start_date4']
+        if start_date < date.today():
+            raise ValidationError('You can not choose start date in past.')
+        else:
+            return start_date
+    def clean_start_date5(self):
+        start_date = self.cleaned_data['start_date5']
+        if start_date < date.today():
+            raise ValidationError('You can not choose start date in past.')
+        else:
+            return start_date
+
+
     def clean(self):
         cleaned_data = super().clean()
-        start_date = cleaned_data.get('start_date')
-        end_date = cleaned_data.get('end_date')
 
-        if start_date and end_date:
-            if start_date > end_date:
+        
+
+
+
+        start_date1 = cleaned_data.get('start_date1')
+        end_date1 = cleaned_data.get('end_date1')
+
+
+
+        clean_start_date2 = cleaned_data.get('start_date2')
+        end_date2 = cleaned_data.get('end_date2')
+
+        start_date3 = cleaned_data.get('start_date3')
+        end_date3 = cleaned_data.get('end_date3')
+
+        start_date4 = cleaned_data.get('start_date4')
+        end_date4 = cleaned_data.get('end_date4')
+
+        start_date5 = cleaned_data.get('start_date5')
+        end_date5 = cleaned_data.get('end_date5')
+
+
+        if start_date1 and end_date1:
+            if start_date1 > end_date1:
+                raise ValidationError('Project end date must be after the start date.')
+
+        if start_date2 and end_date:
+            if start_date2 > end_date2:
+                raise ValidationError('Project end date must be after the start date.')
+
+        if start_date3 and end_date3:
+            if start_date3 > end_date3:
+                raise ValidationError('Project end date must be after the start date.')
+
+        if start_date4 and end_date4:
+            if start_date4 > end_date4:
+                raise ValidationError('Project end date must be after the start date.')
+
+        if start_date5 and end_date5:
+            if start_date5 > end_date5:
                 raise ValidationError('Project end date must be after the start date.')
 
 
