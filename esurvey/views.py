@@ -6238,7 +6238,7 @@ def edit(request,project_id):
     print('setting:',form1['project_id'],type(form1['project_id']))
 
     # form2 data
-    survey = Survey.objects.all().filter(project=project)
+    survey = Survey.objects.all().filter(project=project,deleted=False)
 
 
     form2['name_of_survey1'] = survey[0].survey_name
@@ -6475,9 +6475,9 @@ class CompleteForm(SessionWizardView):
             project_id = int(all_data['project_id'])
 
             project = Project.objects.get(id=project_id)
-            surveys = Survey.objects.all().filter(project=project).delete()
+            surveys = Survey.objects.all().filter(project=project)
 
-
+            org_count = surveys.count()
             surveys_count = int(all_data['project_type'])
 
             project.project_name = all_data['project_name']
@@ -6503,7 +6503,7 @@ class CompleteForm(SessionWizardView):
                 s_product_name_key = 'product_name' + str(k)
 
                 if k > org_count:
-                    survey = Survey.objects.create(project=project,product_name=all_data[s_product_name_key],survey_name = "",start_date=all_data[s_start_key],end_date=all_data[s_end_key],title=all_data[s_title_key],paragraph=all_data[s_paragraph_key],owner=all_data[s_owner_key],owner_email=all_data[s_owner_email_key],language=all_data[s_lang_key])
+                    survey = Survey.objects.create(project=project,deleted=False,product_name=all_data[s_product_name_key],survey_name = "",start_date=all_data[s_start_key],end_date=all_data[s_end_key],title=all_data[s_title_key],paragraph=all_data[s_paragraph_key],owner=all_data[s_owner_key],owner_email=all_data[s_owner_email_key],language=all_data[s_lang_key])
 
                     survey_url = Link.objects.create(survey=survey,sequence=k)
                 else:
@@ -6518,12 +6518,26 @@ class CompleteForm(SessionWizardView):
 
                     surveys[k-1].save()
 
+            for i,v in enumerate(surveys):
+                print(i,' ',v)
+
             # if number of surveys link reduced then mark deleted flag as True
             if org_count > surveys_count:
-                survey_del = survyes_count
-                while (surveys_del <= org_count):
-                    surveys[surveys_del].deleted = True
-                    surveys_del += 1
+                print('condition checked-->',surveys_count,org_count)
+                survey_del = surveys_count
+                print(surveys)
+                while (survey_del < org_count):
+                    print('deleting..',survey_del,org_count)
+                    sur_obj = surveys[survey_del]
+
+
+
+                    sur_obj.delete()
+
+
+
+
+                    survey_del += 1
 
 
 
