@@ -19,7 +19,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
-
+import random
 from django.utils.translation import gettext as _
 
 
@@ -34,6 +34,7 @@ api_key = '39b93cd219afa7bbfda355795fcf7b94'
 api_secret = 'f29eb65e1b46c83c577075c93612ba51'
 mailjet = Client(auth=(api_key, api_secret), version='v3.1')
 
+user_number = 1
 
 
 def login(request):
@@ -89,6 +90,7 @@ def register(request):
             print('form is valid')
             user = form.save(commit=False)
             user.is_active = False
+            user.username = user.email.split('@')[0] + str(random.randint(0,100000))
             user.save()
             current_site = get_current_site(request)
             subject = 'Activate Your TrustexUX Account'
@@ -100,7 +102,7 @@ def register(request):
                 })
 
             print('Domain:',current_site.domain)
-
+            print('user pk',user.pk)
             print('base64 code uid:',urlsafe_base64_encode(force_bytes(user.pk)))
             print(t.account_activation_token.make_token(user))
             data = {
@@ -129,6 +131,7 @@ def register(request):
                 print('user saved')
             print(result.status_code)
             messages.info(request, 'An email with instructions to activate your account has been sent.')
+
             return redirect('login')
 
 

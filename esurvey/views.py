@@ -6124,7 +6124,8 @@ def surveyForm(request,link):
         if checkSurveyLink(link):
             link_obj = Link.objects.get(url=link)
             Product = link_obj.survey.product_name
-            Survey = link_obj.survey.survey_name
+            Survey = link_obj.survey.title
+            print('survey--->',Survey)
             return render(request,"survey_form.html",{'product':Product,'title':Survey})
         else:
             return render(request, "survey_msg.html",{'msg_title':'Invalid Link','msg_body':'The survey link is invalid.'})
@@ -6160,6 +6161,8 @@ def generateSurvey(request,link):
     else:
         survey_url = Link.objects.get(url=link)
 
+        print(survey_url.survey.start_date)
+        print(datetime.now().date())
         if (survey_url.survey.start_date > datetime.now().date()):
             return render(request, "survey_msg.html",{'msg_title':'Not started yet','msg_body':'The survey is not started yet.'})
 
@@ -6181,12 +6184,14 @@ def generateSurvey(request,link):
             }
             print(variables)
             title = survey_url.survey.title
+            print(title)
             name = survey_url.survey.survey_name
             paragraph = survey_url.survey.paragraph
 
             lang = survey_url.survey.language
 
             title = title.format(**variables)
+            print('after',title)
 
             paragraph = paragraph.format(**variables)
 
@@ -6491,6 +6496,7 @@ class CompleteForm(SessionWizardView):
 
 
             for k in range(surveys_count):
+                print('loop:',k)
                 k += 1
                 s_name_key = 'name_of_survey'+str(k)
                 s_lang_key = 'questionnaire_language'+str(k)
@@ -6502,21 +6508,26 @@ class CompleteForm(SessionWizardView):
                 s_owner_email_key = 'survey_owner_email' + str(k)
                 s_product_name_key = 'product_name' + str(k)
 
+
+
                 if k > org_count:
                     survey = Survey.objects.create(project=project,deleted=False,product_name=all_data[s_product_name_key],survey_name = "",start_date=all_data[s_start_key],end_date=all_data[s_end_key],title=all_data[s_title_key],paragraph=all_data[s_paragraph_key],owner=all_data[s_owner_key],owner_email=all_data[s_owner_email_key],language=all_data[s_lang_key])
 
                     survey_url = Link.objects.create(survey=survey,sequence=k)
                 else:
-                    surveys[k-1].product_name=all_data[s_product_name_key],
-                    surveys[k-1].start_date=all_data[s_start_key]
-                    surveys[k-1].end_date=all_data[s_end_key]
-                    surveys[k-1].title=all_data[s_title_key]
-                    surveys[k-1].paragraph=all_data[s_paragraph_key]
-                    surveys[k-1].owner=all_data[s_owner_key]
-                    surveys[k-1].owner_email=all_data[s_owner_email_key]
-                    surveys[k-1].language=all_data[s_lang_key]
+                    cur_survey = surveys[k-1]
+                    cur_survey.product_name=all_data[s_product_name_key]
+                    cur_survey.start_date=all_data[s_start_key]
+                    cur_survey.end_date=all_data[s_end_key]
+                    cur_survey.title=all_data[s_title_key]
+                    cur_survey.paragraph=all_data[s_paragraph_key]
+                    cur_survey.owner=all_data[s_owner_key]
+                    cur_survey.owner_email=all_data[s_owner_email_key]
+                    cur_survey.language=all_data[s_lang_key]
 
-                    surveys[k-1].save()
+                    print('updating survey',k)
+
+                    cur_survey.save()
 
             for i,v in enumerate(surveys):
                 print(i,' ',v)
@@ -6557,7 +6568,7 @@ class CompleteSubmissionForm(SessionWizardView):
     def get_context_data(self, form, **kwargs):
         context = super().get_context_data(form=form, **kwargs)
         link_obj = Link.objects.get(url=self.kwargs['link'])
-        survey_name = link_obj.survey.survey_name
+        survey_name = link_obj.survey.title
         product = link_obj.survey.product_name
         project = link_obj.survey.project
 
@@ -6567,7 +6578,7 @@ class CompleteSubmissionForm(SessionWizardView):
         anony_setting = AnonyDataSetting.objects.get(project=project)
         print('Anonymous object:',anony_setting, anony_setting.age)
         if self.steps.current == 'survey':
-            context.update({'survey': survey_name,'product':product})
+            context.update({'survey': product,'product':product})
 
         if self.steps.current == 'anony':
             context.update({'all_data': self.get_all_cleaned_data(),'anony_setting':anony_setting})
