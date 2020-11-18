@@ -88,7 +88,7 @@ class CreateForm2(forms.Form):
 
 
     survey_owner2=forms.CharField(label="Name", widget=forms.TextInput(attrs={'class':'form-control  mb-4'}))
-    survey_owner_email2=forms.CharField(label="s_owner_email_key", widget=forms.EmailInput(attrs={'class':'form-control  mb-4'}))
+    survey_owner_email2=forms.CharField(label="Email", widget=forms.EmailInput(attrs={'class':'form-control  mb-4'}))
 
     # Survey group front page
     title2 = forms.CharField(label='Title',initial="Assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
@@ -135,8 +135,8 @@ class CreateForm2(forms.Form):
     end_date5 = forms.DateField(widget=forms.DateInput(attrs={'class':'form-control  mb-4','type':'date'}))
     product_name5 = forms.CharField(label='Product name',widget=forms.TextInput(attrs={'class':'form-control mb-4'}),max_length=100)
 
-    survey_owner5=forms.CharField(label="Survey owner full name", widget=forms.TextInput(attrs={'class':'form-control  mb-4'}))
-    survey_owner_email5=forms.CharField(label="Survey owner email", widget=forms.EmailInput(attrs={'class':'form-control  mb-4'}))
+    survey_owner5=forms.CharField(label="Name", widget=forms.TextInput(attrs={'class':'form-control  mb-4'}))
+    survey_owner_email5=forms.CharField(label="Email", widget=forms.EmailInput(attrs={'class':'form-control  mb-4'}))
 
     # Survey group front page
     title5 = forms.CharField(label="Title",initial="Assessment of {PRODUCT_NAME}",widget=forms.TextInput(attrs={'class':'form-control  mb-4'}),max_length=100)
@@ -155,7 +155,7 @@ class CreateForm2(forms.Form):
     #product_name = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}),max_length=100)
     #product_type = forms.CharField(widget=forms.Select(choices=type_choices,attrs={'class':'form-control'}),max_length=100)
     #product_industry = forms.CharField(widget=forms.Select(choices=industry_choices,attrs={'class':'form-control'}))
-
+    """
     def clean_start_date1(self):
         start_date = self.cleaned_data['start_date1']
         if start_date < date.today():
@@ -192,7 +192,7 @@ class CreateForm2(forms.Form):
     def clean(self):
         cleaned_data = super().clean()
 
-        
+
 
 
 
@@ -201,7 +201,7 @@ class CreateForm2(forms.Form):
 
 
 
-        clean_start_date2 = cleaned_data.get('start_date2')
+        start_date2 = cleaned_data.get('start_date2')
         end_date2 = cleaned_data.get('end_date2')
 
         start_date3 = cleaned_data.get('start_date3')
@@ -234,7 +234,7 @@ class CreateForm2(forms.Form):
             if start_date5 > end_date5:
                 raise ValidationError('Project end date must be after the start date.')
 
-
+    """
 
 
 

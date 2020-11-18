@@ -1,9 +1,9 @@
 
-{% extends "base.html" %}
+{% extends "base_form.html" %}
 {% load i18n %}
 {% load crispy_forms_tags %}
 
-{% block title %}Create Project {% endblock %}
+
 
 
 
@@ -53,7 +53,8 @@
 </style>
 
 <form action="" method="post">{% csrf_token %}
-
+  <h2> {%if NewOrEdit == False %}Edit {% else %} New {% endif %} survey </h2>
+  <hr/><br/>
 
 {{ wizard.management_form }}
 <div class="row">

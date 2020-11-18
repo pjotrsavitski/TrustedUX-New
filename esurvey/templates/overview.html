@@ -1,14 +1,22 @@
 
-{% extends "base.html" %}
+{% extends "base_form.html" %}
 {% load i18n %}
 {% load crispy_forms_tags %}
 
-{% block title %}Create Project {% endblock %}
+
 
 
 
 {% block content %}
 <form action="" method="post">{% csrf_token %}
+  <h2> {%if NewOrEdit == False %}Edit {% else %} New {% endif %} survey </h2>
+  <hr/><br/>
+
+{% if err_msg %}
+<div class="alert alert-danger" role="alert">
+  This update will result in loss of data if there are some data collected for this survey. As you are changing the evaluation type with less number of surveys link.
+</div>
+{% endif %}
   <div class="row">
       <div class="col">
         <div class="multisteps-form__progress">
@@ -152,9 +160,11 @@
 
 <button class="btn btn-outline-primary" formnovalidate="formnovalidate" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" >{% trans "Back" %}</button>
 {% endif %}
-
+{%if NewOrEdit %}
 <input type="submit" class='btn btn-primary'  value="{% trans "Create" %}" />
-
+{% else %}
+<input type="submit" class='btn btn-primary'  value="{% trans "Update" %}" />
+{% endif %}
 </form>
 
 </div>

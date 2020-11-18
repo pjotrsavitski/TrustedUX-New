@@ -6352,9 +6352,28 @@ class CompleteForm(SessionWizardView):
         if self.steps.current =='summary':
             data = self.get_all_cleaned_data()
             print('------------------->')
-            print(data['project_id'])
+            new = data['new']
+            print(new)
+            if not new:
+                project_id = int(data['project_id'])
+                project = Project.objects.get(id=project_id)
+                surveys = Survey.objects.all().filter(project=project)
+
+                org_count = surveys.count()
+                new_count = int(data['project_type'])
+
+                print(org_count,' ',new_count)
+
+                if org_count > new_count:
+                    context.update({'err_msg':True})
+                else:
+                    context.update({'err_msg':False})
+
+
+
 
             context.update({'all_data': self.get_all_cleaned_data()})
+            context.update({'NewOrEdit':data['new']})
             context.update({'type':self.type_of_study})
 
 
@@ -6367,7 +6386,7 @@ class CompleteForm(SessionWizardView):
             #survey_dict = self.fill_dummy()
             ##self.initial_dict['survey'] = survey_dict
 
-
+            context.update({'NewOrEdit':data['new']})
             context.update({'type':self.type_of_study})
             #form = self.fill_dummy(form)
             #initial = self.fill_dummy(form)
@@ -6378,6 +6397,12 @@ class CompleteForm(SessionWizardView):
             #context = super(CompleteForm, self).get_context_data(form=form, **kwargs)
 
             #print('Type:',data['project_type'])
+
+
+
+        if self.steps.current == 'participants':
+            data = self.get_all_cleaned_data()
+            context.update({'NewOrEdit':data['new']})
         return context
 
 
@@ -6429,7 +6454,7 @@ class CompleteForm(SessionWizardView):
                 s_owner_email_key = 'survey_owner_email' + str(k)
                 s_product_name_key = 'product_name' + str(k)
 
-                survey = Survey.objects.create(project=project,product_name=all_data[s_product_name_key],survey_name = all_data[s_name_key],start_date=all_data[s_start_key],end_date=all_data[s_end_key],title=all_data[s_title_key],paragraph=all_data[s_paragraph_key],owner=all_data[s_owner_key],owner_email=all_data[s_owner_email_key],language=all_data[s_lang_key])
+                survey = Survey.objects.create(project=project,product_name=all_data[s_product_name_key],survey_name = "",start_date=all_data[s_start_key],end_date=all_data[s_end_key],title=all_data[s_title_key],paragraph=all_data[s_paragraph_key],owner=all_data[s_owner_key],owner_email=all_data[s_owner_email_key],language=all_data[s_lang_key])
 
                 survey_url = Link.objects.create(survey=survey,sequence=k)
 
@@ -6457,10 +6482,13 @@ class CompleteForm(SessionWizardView):
 
             project.project_name = all_data['project_name']
             project.project_type = all_data['project_type']
-            project.product_name= all_data['product_name']
+
             project.product_type=all_data['project_type']
             project.product_industry=all_data['product_industry']
-            project.project_status=all_data['project_status']
+            #project.project_status=all_data['project_status']
+
+
+
 
             for k in range(surveys_count):
                 k += 1
@@ -6474,9 +6502,28 @@ class CompleteForm(SessionWizardView):
                 s_owner_email_key = 'survey_owner_email' + str(k)
                 s_product_name_key = 'product_name' + str(k)
 
-                survey = Survey.objects.create(project=project,product_name=all_data[s_product_name_key],survey_name = all_data[s_name_key],start_date=all_data[s_start_key],end_date=all_data[s_end_key],title=all_data[s_title_key],paragraph=all_data[s_paragraph_key],owner=all_data[s_owner_key],owner_email=all_data[s_owner_email_key],language=all_data[s_lang_key])
+                if k > org_count:
+                    survey = Survey.objects.create(project=project,product_name=all_data[s_product_name_key],survey_name = "",start_date=all_data[s_start_key],end_date=all_data[s_end_key],title=all_data[s_title_key],paragraph=all_data[s_paragraph_key],owner=all_data[s_owner_key],owner_email=all_data[s_owner_email_key],language=all_data[s_lang_key])
 
-                survey_url = Link.objects.create(survey=survey,sequence=k)
+                    survey_url = Link.objects.create(survey=survey,sequence=k)
+                else:
+                    surveys[k-1].product_name=all_data[s_product_name_key],
+                    surveys[k-1].start_date=all_data[s_start_key]
+                    surveys[k-1].end_date=all_data[s_end_key]
+                    surveys[k-1].title=all_data[s_title_key]
+                    surveys[k-1].paragraph=all_data[s_paragraph_key]
+                    surveys[k-1].owner=all_data[s_owner_key]
+                    surveys[k-1].owner_email=all_data[s_owner_email_key]
+                    surveys[k-1].language=all_data[s_lang_key]
+
+                    surveys[k-1].save()
+
+            # if number of surveys link reduced then mark deleted flag as True
+            if org_count > surveys_count:
+                survey_del = survyes_count
+                while (surveys_del <= org_count):
+                    surveys[surveys_del].deleted = True
+                    surveys_del += 1
 
 
 

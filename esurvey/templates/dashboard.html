@@ -54,12 +54,12 @@
      <p class='pb-2'><b>Study type: {% if project.project_type == 1 %} Individual {% endif %}{% if project.project_type == 2 %} Comparision A and B {% endif %}{% if project.project_type == 3 %} Comparision A, B and C {% endif %}{% if project.project_type == 4 %} Comparision A, B, C and D {% endif %}{% if project.project_type == 5 %} Comparision A, B, C, D and E {% endif %}</b></p>
 
      {% for survey in project.survey_set.all %}
-
+      <p class='mt-2'><b >Survey-{{forloop.counter}}:</b>
      {% for survey_url in survey.link_set.all%}
 
 
 
-     <p class='mt-2'><b >Survey-{{forloop.counter}}:</b> <a target='_blank' href="http://{{domain}}/esurvey/{{survey_url.url}}">http://{{domain}}/esurvey/{{survey_url.url}}</a><span style='cursor:pointer;' onclick='copyToClipboard' data-toggle='tooltip' title='Copied!'  class=' btn-sm fa fa-copy ml-4 small text-muted btn-copy' data-clipboard-text="http://{{domain}}/esurvey/{{survey_url.url}}"> copy</span> </p>
+     <a target='_blank' href="http://{{domain}}/esurvey/{{survey_url.url}}">http://{{domain}}/esurvey/{{survey_url.url}}</a><span style='cursor:pointer;' onclick='copyToClipboard' data-toggle='tooltip' title='Copied!'  class=' btn-sm fa fa-copy ml-4 small text-muted btn-copy' data-clipboard-text="http://{{domain}}/esurvey/{{survey_url.url}}"> copy</span> </p>
 
      <p>Product: {{survey.product_name}} </p>
      <p>Duration: {{survey.start_date}} - {{survey.end_date}}</p>

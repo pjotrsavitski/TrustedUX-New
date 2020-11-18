@@ -279,6 +279,7 @@ class Survey(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     language = models.CharField(choices=lang_choices,max_length=2)
     survey_name = models.CharField(max_length=100)
+    deleted = models.BooleanField(default=False)
     start_date = models.DateField()
     product_name = models.CharField(max_length=100)
     end_date = models.DateField()

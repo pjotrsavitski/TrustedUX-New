@@ -1,18 +1,19 @@
 
 
-{% extends "base.html" %}
+{% extends "base_form.html" %}
 {% load i18n %}
 {% load crispy_forms_tags %}
 
-{% block title %}  New  survey {% endblock %}
-{{ new }}
+{% block title %}   {% endblock %}
+
 
 
 {% block content %}
 <br/>
 
 <form action="" method="post">{% csrf_token %}
-
+  <h2> {%if form.new.value == False %}Edit {% else %} New {% endif %} survey </h2>
+  <hr/><br/>
 
 {{ wizard.management_form }}
 <div class="row">
@@ -124,7 +125,7 @@
             </button>
           </div>
           <div class='modal-body'>
-          
+
             <p>Select an industry of evaluated product.</p>
               </div>
 
