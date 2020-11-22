@@ -24,11 +24,11 @@ from django.views.static import serve
 from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('i18n/', include('django.conf.urls.i18n')),    
+    path('i18n/', include('django.conf.urls.i18n')),
     path("register/", v.register, name="register"),
     path("password_reset/",v.password_reset_request, name='password_reset'),
     path("password_reset/done",auth_views.PasswordResetDoneView.as_view(template_name='password_reset_done.html'), name='password_reset_done'),
-    path('password_reset/confirm/<slug:uidb64>/<slug:token>/',auth_views.PasswordResetConfirmView.as_view(template_name="password_reset_confirm.html"), name='password_reset_confirm'),
+    path('password_reset/confirm/<slug:uidb64>/<slug:token>/',auth_views.PasswordResetConfirmView.as_view(template_name="sign_pwd_reset_step2.html"), name='password_reset_confirm'),
     path('password_reset/complete/', auth_views.PasswordResetCompleteView.as_view(template_name='password_reset_complete.html'), name='password_reset_complete'),
     path('djrichtextfield/', include('djrichtextfield.urls')),
     path('account_activation_sent/', v.account_activation_sent, name='account_activation_sent'),

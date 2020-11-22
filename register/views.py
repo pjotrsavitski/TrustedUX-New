@@ -30,8 +30,8 @@ from django.contrib.auth.hashers import check_password
 from . import tokens as t
 from mailjet_rest import Client
 import os
-api_key = '39b93cd219afa7bbfda355795fcf7b94'
-api_secret = 'f29eb65e1b46c83c577075c93612ba51'
+api_key = '55286d691dca3cf4cb8f0a6db87a5fe5'
+api_secret = 'e564414aef8ddc313372ed55c2d1c81a'
 mailjet = Client(auth=(api_key, api_secret), version='v3.1')
 
 user_number = 1
@@ -78,7 +78,7 @@ def login(request):
             return redirect('project_home')
         else:
             form = LoginForm()
-    return render(request, "form_base.html", {"form":form,"title":'Login',"button":'Login'})
+    return render(request, "sign_in.html", {"form":form,"title":'Login',"button":'Login'})
 
 # Create your views here.
 def register(request):
@@ -109,7 +109,7 @@ def register(request):
               'Messages': [
                 {
                   "From": {
-                    "Email": "pankajch@tlu.ee",
+                    "Email": "pankajchejara23@gmail.com",
                     "Name": "TrustedUX Team "
                   },
                   "To": [
@@ -143,7 +143,9 @@ def register(request):
         print(c.domain)
         form = RegisterForm()
 
-    return render(request, "register.html", {"form":form})
+    #return render(request, "register.html", {"form":form})
+    return render(request, "sign_up.html", {"form":form})
+
 # Create your views here.
 
 
@@ -157,6 +159,8 @@ def activate(request, uidb64, token):
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
         print('user does not exists')
+    print('Account activation status:')
+    print(t.account_activation_token.check_token(user, token))
 
     if user is not None and t.account_activation_token.check_token(user, token):
         user.is_active = True
@@ -201,7 +205,7 @@ def password_reset_request(request):
                           'Messages': [
                             {
                               "From": {
-                                "Email": "pankajch@tlu.ee",
+                                "Email": "pankajchejara23@gmail.com",
                                 "Name": "TrustedUX Team "
                               },
                               "To": [
@@ -217,7 +221,8 @@ def password_reset_request(request):
                         result = mailjet.send.create(data=data)
                     except:
                         return HttpResponse('Error')
-                    return redirect ("/password_reset/done")
-    password_reset_form = PasswordResetForm()
-    messages.info(request,'We have emailed you instructions for setting your password, if an account exists with the email you entered. You should receive them shortly. If you do not receive an email, please make sure you have entered the address you registered with, and check your spam folder.')
-    return redirect('login')
+                    messages.info(request,'We have emailed you instructions for setting your password, if an account exists with the email you entered. You should receive them shortly. If you do not receive an email, please make sure you have entered the address you registered with, and check your spam folder.')
+                    return redirect('login')
+    else:
+        password_reset_form = PasswordResetForm()
+        return render(request,'sign_pwd_reset.html',{'form':password_reset_form})

@@ -7,10 +7,34 @@ class RegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['email'].required = True
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+
+        self.fields['first_name'].widget.attrs.update({'class': 'form-control'})
+        #self.fields['first_name'].widget.attrs.update({'placeholder': 'First Name'})
+
+        self.fields['last_name'].widget.attrs.update({'class': 'form-control'})
+        #self.fields['last_name'].widget.attrs.update({'placeholder': 'Last Name'})
+
+
+        self.fields['email'].widget.attrs.update({'class': 'form-control'})
+        #self.fields['email'].widget.attrs.update({'placeholder': 'Email'})
+
+        self.fields['password1'].widget.attrs.update({'class': 'form-control'})
+        #self.fields['password1'].widget.attrs.update({'placeholder': 'Password'})
+
+        self.fields['password2'].widget.attrs.update({'class': 'form-control'})
+        #self.fields['password2'].widget.attrs.update({'placeholder': 'Repeat password'})
+
+
+
+
+
 
     class Meta:
         model = User
         fields = ('first_name','last_name', 'email', 'password1', 'password2', )
+
 
     def clean_email(self):
         email = self.cleaned_data['email']
