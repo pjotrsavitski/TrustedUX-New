@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .forms import CreateForm1,CreateForm2,CreateForm3,CreateForm4, lastForm, AnonyForm, CreateForm5, SurveyQuestion, AnonyForm
+from .forms import CreateForm1,CreateForm2,CreateForm3,CreateForm4, lastForm, AnonyForm, CreateForm5, SurveyQuestion, AnonyForm, frontForm
 from formtools.wizard.views import SessionWizardView
 from django import forms
 from django.db import transaction
@@ -26,7 +26,7 @@ import math
 
 
 
-
+"""
 
 SUBMISSION_FORM = (
     ("survey", SurveyQuestion),
@@ -34,6 +34,19 @@ SUBMISSION_FORM = (
 )
 
 SUBMISSION_TEMPLATE = {'survey':"survey_form.html","anony":"survey_anony.html"}
+"""
+
+
+SUBMISSION_FORM = (
+
+    ("survey", SurveyQuestion),
+
+)
+
+SUBMISSION_TEMPLATE = {'survey':"survey_form_updated.html"}
+
+
+
 
 
 CREATE_FORMS = (
@@ -6064,7 +6077,7 @@ def filterProjects(request,filter):
 
 
 
-        return render(request, "dashboard.html",{'projects':projects,'site':current_site,'domain':domain})
+        return render(request, "dashboard.html",{'projects':projects,'projects_count':projects.count(),'site':current_site,'domain':domain})
 
 
 def projectAction(request,project_id,type):
@@ -6578,9 +6591,8 @@ class CompleteSubmissionForm(SessionWizardView):
         anony_setting = AnonyDataSetting.objects.get(project=project)
         print('Anonymous object:',anony_setting, anony_setting.age)
         if self.steps.current == 'survey':
-            context.update({'survey': product,'product':product})
-
-        if self.steps.current == 'anony':
+            print('Product:',product,' ',)
+            context.update({'survey': product,'product':product,'anony_setting':anony_setting})
             context.update({'all_data': self.get_all_cleaned_data(),'anony_setting':anony_setting})
             print(self.get_all_cleaned_data())
         return context

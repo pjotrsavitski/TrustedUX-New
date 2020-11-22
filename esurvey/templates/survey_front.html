@@ -4,8 +4,13 @@
 
 {% block content%}
 
+
+<div class="d-flex justify-content-center"> <h2 class='text-primary'> STEP 1  </h2> <h2  class='text-muted'> -  STEP 2 </h2> </div>
+<br/><br/>
+<div class='auth-box card'>
+  <div class='card-body bg-white p-4'>
 <div class="row">
-  <div class="col-lg-12">
+  <div class="col-md-12 col-lg-12">
     <h2 class="mt-5">{{project_title}}</h2>
     <hr/>
 
@@ -18,10 +23,20 @@
     <b> {% trans 'Name'%} : </b> {{survey.owner}} <br/>
     <b> {% trans 'Email'%} : </b>  {{survey.owner_email}}
     <br/><br/>
-    <a href="{% url 'survey_form' link %}" class='btn btn-success'> {% trans 'Start Survey' %} </a>
+
     {% endlanguage %}
+  </div>
+  </div>
   </div>
 
 
-</div>
+</div><br/><br/><br/><br/>
+
+
+
+
+
+<a href="{% url 'survey_form' link %}" class='btn btn-primary float-right pr-5 pl-5'> {% trans 'Next step' %} </a>
+
+
 {% endblock %}

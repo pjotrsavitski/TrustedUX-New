@@ -60,76 +60,94 @@
 
 
 <div class='card'>
-  <div class="card-header">
-    Survey
-  </div>
+
   <div class="card-body">
     <h4> General Information </h4>
     {{project}}
-    <p class="card-text pt-2"><b>Project name:</b> {{all_data.project_name}}</p>
-    <p class="card-text pt-2"><b>Project type (study):</b> {% if all_data.project_type == '1' %} Individual {% endif %}{% if all_data.project_type == '2' %} Comparision A and B {% endif %}{% if all_data.project_type == '3' %} Comparision A, B and C {% endif %}{% if all_data.project_type == '4' %} Comparision A, B, C and D {% endif %}{% if all_data.project_type == '5' %} Comparision A, B, C, D and E {% endif %}</p>
 
-    <p class="card-text pt-2"><b>Product:</b> {{all_data.product_type}}</p>
-    <p class="card-text pt-2"><b>Industry:</b> {{all_data.product_industry}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Study name:</b> {{all_data.project_name}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Project type (study):</b> {% if all_data.project_type == '1' %} Individual {% endif %}{% if all_data.project_type == '2' %} Comparision A and B {% endif %}{% if all_data.project_type == '3' %} Comparision A, B and C {% endif %}{% if all_data.project_type == '4' %} Comparision A, B, C and D {% endif %}{% if all_data.project_type == '5' %} Comparision A, B, C, D and E {% endif %}</p>
 
+    <p class="card-text pt-2"><b class='text-muted'>Product:</b> {{all_data.product_type}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Industry:</b> {{all_data.product_industry}}</p>
+<br/>
+    <h4> Survey settings </h4>
+      <p class="card-text pt-2"><b class='text-muted'>Demographics:</b> {% if all_data.age %}Age;{% endif %} {% if all_data.gender %}Gender;{% endif %}  {% if all_data.education %}Education;{% endif %}{% if all_data.nationality %}nationality;{% endif %}
 
     <h4 class='mt-4'>Survey-1 </h4>
-    <p class="card-text pt-2"><b>Product Name:</b> {{all_data.product_name1}}</p>
-    <p class="card-text pt-2"><span class='mr-4'><b>Start date:</b> {{all_data.start_date1}}</span><span><b>End date:</b> {{all_data.end_date1}}</span></p>
-    <p class="card-text pt-2"><b>Title:</b> {{all_data.title1}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Language:</b> {{all_data.questionnaire_language1}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Product Name:</b> {{all_data.product_name1}}</p>
+    <p class="card-text pt-2"><span class='mr-4'><b class='text-muted'>Start date:</b> {{all_data.start_date1}}</span><span><b class='text-muted'>End date:</b> {{all_data.end_date1}}</span></p>
+
 
 
     {% if all_data.project_type == '2' %}
     <h4 class='mt-4'>Survey-2 </h4>
-    <p class="card-text pt-2"><b>Product Name:</b> {{all_data.product_name2}}</p>
-    <p class="card-text pt-2"><span class='mr-4'><b>Start date:</b> {{all_data.start_date2}}</span><span><b>End date:</b> {{all_data.end_date2}}</span></p>
-    <p class="card-text pt-2"><b>Title:</b> {{all_data.title2}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Language:</b> {{all_data.questionnaire_language2}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Product Name:</b> {{all_data.product_name2}}</p>
+    <p class="card-text pt-2"><span class='mr-4'><b class='text-muted'>Start date:</b> {{all_data.start_date2}}</span><span><b class='text-muted'>End date:</b> {{all_data.end_date2}}</span></p>
+
     {% endif %}
 
 
     {% if all_data.project_type == '3' %}
     <h4 class='mt-4'>Survey-2 </h4>
-    <p class="card-text pt-2"><b>Product Name:</b> {{all_data.product_name2}}</p>
-    <p class="card-text pt-2"><span class='mr-4'><b>Start date:</b> {{all_data.start_date2}}</span><span><b>End date:</b> {{all_data.end_date2}}</span></p>
-    <p class="card-text pt-2"><b>Title:</b> {{all_data.title2}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Language:</b> {{all_data.questionnaire_language2}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Product Name:</b> {{all_data.product_name2}}</p>
+    <p class="card-text pt-2"><span class='mr-4'><b class='text-muted'>Start date:</b> {{all_data.start_date2}}</span><span><b class='text-muted'>End date:</b> {{all_data.end_date2}}</span></p>
+
     <h4 class='mt-4'>Survey-3 </h4>
-    <p class="card-text pt-2"><b>Product Name:</b> {{all_data.product_name3}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Language:</b> {{all_data.questionnaire_language3}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Product Name:</b> {{all_data.product_name3}}</p>
     <p class="card-text pt-2"><span class='mr-4'><b>Start date:</b> {{all_data.start_date3}}</span><span><b>End date:</b> {{all_data.end_date3}}</span></p>
-    <p class="card-text pt-2"><b>Title:</b> {{all_data.title3}}</p>
+
     {% endif %}
     {% if all_data.project_type == '4' %}
     <h4 class='mt-4'>Survey-2 </h4>
-    <p class="card-text pt-2"><b>Product Name:</b> {{all_data.product_name2}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Language:</b> {{all_data.questionnaire_language2}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Product Name:</b> {{all_data.product_name2}}</p>
     <p class="card-text pt-2"><span class='mr-4'><b>Start date:</b> {{all_data.start_date2}}</span><span><b>End date:</b> {{all_data.end_date2}}</span></p>
-    <p class="card-text pt-2"><b>Title:</b> {{all_data.title2}}</p>
+
     <h4 class='mt-4'>Survey-3 </h4>
-    <p class="card-text pt-2"><b>Product Name:</b> {{all_data.product_name3}}</p>
-    <p class="card-text pt-2"><span class='mr-4'><b>Start date:</b> {{all_data.start_date3}}</span><span><b>End date:</b> {{all_data.end_date3}}</span></p>
-    <p class="card-text pt-2"><b>Title:</b> {{all_data.title3}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Language:</b> {{all_data.questionnaire_language3}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Product Name:</b> {{all_data.product_name3}}</p>
+    <p class="card-text pt-2"><span class='mr-4'><b class='text-muted'>Start date:</b> {{all_data.start_date3}}</span><span><b class='text-muted'>End date:</b> {{all_data.end_date3}}</span></p>
+
     <h4 class='mt-4'>Survey-4 </h4>
-    <p class="card-text pt-2"><b>Product Name:</b> {{all_data.product_name4}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Language:</b> {{all_data.questionnaire_language4}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Product Name:</b> {{all_data.product_name4}}</p>
     <p class="card-text pt-2"><span class='mr-4'><b>Start date:</b> {{all_data.start_date4}}</span><span><b>End date:</b> {{all_data.end_date4}}</span></p>
-    <p class="card-text pt-2"><b>Title:</b> {{all_data.title4}}</p>
+
     {% endif %}
     {% if all_data.project_type == '5' %}
     <h4 class='mt-4'>Survey-2 </h4>
-    <p class="card-text pt-2"><b>Product Name:</b> {{all_data.product_name2}}</p>
-    <p class="card-text pt-2"><span class='mr-4'><b>Start date:</b> {{all_data.start_date2}}</span><span><b>End date:</b> {{all_data.end_date2}}</span></p>
-    <p class="card-text pt-2"><b>Title:</b> {{all_data.title2}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Language:</b> {{all_data.questionnaire_language2}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Product Name:</b> {{all_data.product_name2}}</p>
+    <p class="card-text pt-2"><span class='mr-4'><b class='text-muted'>Start date:</b> {{all_data.start_date2}}</span><span><b class='text-muted'>End date:</b> {{all_data.end_date2}}</span></p>
+
     <h4 class='mt-4'>Survey-3 </h4>
-    <p class="card-text pt-2"><b>Product Name:</b> {{all_data.product_name3}}</p>
-    <p class="card-text pt-2"><span class='mr-4'><b>Start date:</b> {{all_data.start_date3}}</span><span><b>End date:</b> {{all_data.end_date3}}</span></p>
-    <p class="card-text pt-2"><b>Title:</b> {{all_data.title3}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Language:</b> {{all_data.questionnaire_language3}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Product Name:</b> {{all_data.product_name3}}</p>
+    <p class="card-text pt-2"><span class='mr-4'><b>Start date:</b> {{all_data.start_date3}}</span><span><b class='text-muted'>End date:</b> {{all_data.end_date3}}</span></p>
+
     <h4 class='mt-4'>Survey-4 </h4>
-    <p class="card-text pt-2"><b>Product Name:</b> {{all_data.product_name4}}</p>
-    <p class="card-text pt-2"><span class='mr-4'><b>Start date:</b> {{all_data.start_date4}}</span><span><b>End date:</b> {{all_data.end_date4}}</span></p>
-    <p class="card-text pt-2"><b>Title:</b> {{all_data.title4}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Language:</b> {{all_data.questionnaire_language4}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Product Name:</b> {{all_data.product_name4}}</p>
+    <p class="card-text pt-2"><span class='mr-4'><b>Start date:</b> {{all_data.start_date4}}</span><span><b class='text-muted'>End date:</b> {{all_data.end_date4}}</span></p>
+
     <h4 class='mt-4'>Survey-5 </h4>
-    <p class="card-text pt-2"><b>Product Name:</b> {{all_data.product_name5}}</p>
-    <p class="card-text pt-2"><span class='mr-4'><b>Start date:</b> {{all_data.start_date5}}</span><span><b>End date:</b> {{all_data.end_date5}}</span></p>
-    <p class="card-text pt-2"><b>Title:</b> {{all_data.title5}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Language:</b> {{all_data.questionnaire_language5}}</p>
+    <p class="card-text pt-2"><b class='text-muted'>Product Name:</b> {{all_data.product_name5}}</p>
+    <p class="card-text pt-2"><span class='mr-4'><b>Start date:</b> {{all_data.start_date5}}</span><span><b class='text-muted'>End date:</b> {{all_data.end_date5}}</span></p>
+
     {% endif %}
+
+    </div>
+    </div>
     <br/>
+    <div class='card'>
+      <div class='card-body'>
+        <b>Study state</b>
       <p class="card-text pt-2">
         {{ wizard.management_form }}
         {% if wizard.form.forms %}
@@ -155,7 +173,7 @@
 
 
 
-<a class='mr-2' style='text-decoration:underline;'   href="{% url 'project_home'%}">{% trans "Cancel" %} </a>
+<a class='mr-2'  href="{% url 'project_home'%}">{% trans "Cancel" %} </a>
 {% if wizard.steps.prev %}
 
 <button class="btn btn-outline-primary" formnovalidate="formnovalidate" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" >{% trans "Back" %}</button>

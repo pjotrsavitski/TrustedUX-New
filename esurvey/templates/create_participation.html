@@ -59,10 +59,12 @@
     {% endfor %}
 
 {% else %}
-
+<div class='card'>
+  <div class='card-body bg-white'>
   <div class='row'>Invite participants <span><i style='color:#007bff;' class='fa fa-info-circle ml-2'  data-toggle='modal' data-placement='top' data-target="#invite"></i></span>
-{{form.type_of_participation}}</div> <br/><br/>
-
+    {{form.type_of_participation}}</div> <br/><br/>
+  </div>
+</div>
 
 {% endif %}
  </div>

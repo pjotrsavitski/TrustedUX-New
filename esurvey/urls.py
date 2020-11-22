@@ -8,7 +8,6 @@ urlpatterns = [
     path("esurvey/<link>/start", login_required(CompleteSubmissionForm.as_view(SUBMISSION_FORM)), name="survey_form"),
     path("esurvey/<link>", login_required(views.generateSurvey), name="get_survey"),
     path("projects/filter/<filter>", login_required(views.filterProjects), name="project_filter"),
-
     path("projects/", login_required(views.overview), name="project_home"),  # <-- added
     path("projects/edit/<project_id>",login_required(views.edit), name="edit"),
     path("projects/action/<type>/<project_id>", login_required(views.projectAction), name="project_action"),

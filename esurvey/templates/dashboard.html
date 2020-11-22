@@ -3,30 +3,32 @@
 {%block title%} My Studies {%endblock%}
 {%block content%}
 
+<div class='row'>
+  <div class="col col-md-3 col-lg-3 col-sm-6">
+<select class='form-control' onchange="location = this.value;">
+ <option value="{% url 'project_filter' 'all'%}"">All studies</option>
+ <option value="{% url 'project_filter' 'running'%}">Active</option>
+ <option value="{% url 'project_filter' 'archived'%}">Archived</option>
+</select>
+ </div>
+ <div class='col col-md-2 col-lg-2 col-sm-6'>
+   <a href="{% url 'create'%}" class="btn btn-success ml-auto"  > New Study </a>
 
-  <div class="btn-group">
-   <button type="button" class="btn btn-danger dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-     <i class="fa fa-search"> </i> Surveys
-   </button>
-   <div class="dropdown-menu">
-     <a class="dropdown-item" href="{% url 'project_filter' filter='all'%}">All Surveys</a>
-     <a class="dropdown-item" href="{% url 'project_filter' filter='running'%}">Running Surveys</a>
-     <a class="dropdown-item" href="{% url 'project_filter' filter='archived'%}">Archived Surveys</a>
-     <a class="dropdown-item" href="{% url 'project_filter' filter='closed'%}">Closed Surveys</a>
-   </div>
-   </div>
+ </div>
+</div>
 
- <a href="{% url 'create'%}" class="btn btn-outline-primary ml-auto"  > New Survey </a>
 
 <br/><br/>
 <p>
-
+{% if projects_count == 0 %}
+  You have no studies so far.
+{% endif %}
 
 {% for project in projects%}
 
   <div class="card" class="m-0 p-0">
    <div class="card-header">
-    <span class='text-uppercase' style="font-size:22px"> {{project.project_name}} </span>
+    <span  style="font-size:22px"> {{project.project_name}}  {% if project.project_status %}  </span><span class='text-success'  style="font-size:14px">Active</span>{%else%}<span class='text-danger' style="font-size:14px"> Draft </span> {% endif %} </span>
     <div class="btn-group float-right">
      <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
        <i class="fa fa-gears"> </i>
@@ -51,21 +53,21 @@
   </div>
    </div>
    <div class="card-body">
-     <p class='pb-2'><b>Study type: {% if project.project_type == 1 %} Individual {% endif %}{% if project.project_type == 2 %} Comparision A and B {% endif %}{% if project.project_type == 3 %} Comparision A, B and C {% endif %}{% if project.project_type == 4 %} Comparision A, B, C and D {% endif %}{% if project.project_type == 5 %} Comparision A, B, C, D and E {% endif %}</b></p>
+     <p class='pb-2'><b>Evaluation type: {% if project.project_type == 1 %} Individual {% endif %}{% if project.project_type == 2 %} Comparision A and B {% endif %}{% if project.project_type == 3 %} Comparision A, B and C {% endif %}{% if project.project_type == 4 %} Comparision A, B, C and D {% endif %}{% if project.project_type == 5 %} Comparision A, B, C, D and E {% endif %}</b></p>
 
      {% for survey in project.survey_set.all %}
 
      {% if survey.deleted == False %}
 
-      <p class='mt-2'><b >Survey-{{forloop.counter}}:</b>
+      <p class='mt-2'>Survey-{{forloop.counter}}:
      {% for survey_url in survey.link_set.all%}
 
 
      <a target='_blank' href="http://{{domain}}/esurvey/{{survey_url.url}}">http://{{domain}}/esurvey/{{survey_url.url}}</a><span style='cursor:pointer;' onclick='copyToClipboard' data-toggle='tooltip' title='Copied!'  class=' btn-sm fa fa-copy ml-4 small text-muted btn-copy' data-clipboard-text="http://{{domain}}/esurvey/{{survey_url.url}}"> copy</span> </p>
-
+     <!--
      <p>Product: {{survey.product_name}} </p>
-     <p>Duration: {{survey.start_date}} - {{survey.end_date}}</p>
-     <p>Submission: {{survey_url.submission_set.all.count}}</p> <br/>
+     <p>Duration: {{survey.start_date}} - {{survey.end_date}}</p> -->
+     <p>Submissions: {{survey_url.submission_set.all.count}}</p> <br/>
 
 
       {% endfor %}

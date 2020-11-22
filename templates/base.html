@@ -32,6 +32,10 @@
   <link href="{% static 'bs-step.css' %}" rel="stylesheet">
 
   <style>
+  .progress-bar-danger{background-color:#d9534f !important} .progress-bar-warning{background-color:#f0ad4e} .progress-bar-success{background-color:#5cb85c}
+
+
+
   .custom-radio-list {
       list-style-type: none;
       padding: 0;
@@ -83,7 +87,7 @@
           {{request.user.email}}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="{% url 'project_home'%}"><i class="fa fa-gear"></i> Surveys</a>
+          <a class="dropdown-item" href="{% url 'project_home'%}"><i class="fa fa-gear"></i> Studies</a>
 
 
           <div class="dropdown-divider"></div>

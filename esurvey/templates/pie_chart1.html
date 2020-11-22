@@ -4,21 +4,32 @@
 
 {% block content %}
   <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
-
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
-
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<style>
+  [data-toggle="collapse"]:after {
+      display: inline-block;
+      font: normal normal normal 14px/1 FontAwesome;
+      font-size: inherit;
+      text-rendering: auto;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    content: "\f054";
+    transform: rotate(90deg) ;
+    transition: all linear 0.25s;
+    }
+  [data-toggle="collapse"].collapsed:after {
+    transform: rotate(0deg) ;
+  }
 
+
+
+</style>
 
 <div class="container">
   <div class="row">
-<a href="{% url 'report_download' project_id=project_id %}" class='btn btn-success'> Download Data </a>  
+<a href="{% url 'report_download' project_id=project_id %}" class='btn btn-success'> Download Data </a>
   <div class="col-md-6" style='padding-right:200px'>
-<a href="{% url 'report_download' project_id=project_id %}" class='btn btn-success'> Download Report </a> 
+<a href="{% url 'report_download' project_id=project_id %}" class='btn btn-success'> Download Report </a>
   </div>
 </div>
 </div>
@@ -31,7 +42,7 @@
       <h2 class="mb-0">
 
         <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-          
+
            <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span> Participants
         </button>
       </h2>
@@ -51,7 +62,7 @@
 Overall participants  : {{survey1Counts}}
     </div>
     <div class="col-sm">
-Gender 
+Gender
         <canvas id="gender1" width="800" height="450"></canvas>
     </div>
     <div class="col-sm">
@@ -62,7 +73,7 @@ Age  <canvas id="age1" width="800" height="450"></canvas>
 
 </div>
 
-</div>  
+</div>
       </div>
     </div>
 
@@ -372,7 +383,7 @@ Age  <canvas id="age1" width="800" height="450"></canvas>
 
       {% endif %}
       </td>
- 
+
       <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
     </tr>
   </tbody>
@@ -530,7 +541,7 @@ Age  <canvas id="age1" width="800" height="450"></canvas>
     </div>
     <div id="collapseThree12" class="collapse">
       <div class="card-body">
- 
+
  <!-- risk questions  -->
 
 <div class="collapse" id="collapseExample1">
@@ -724,7 +735,7 @@ Age  <canvas id="age1" width="800" height="450"></canvas>
   <tbody>
       <tr>
       <th scope="col">Survey 1</th>
- 
+
       <!-- add a new th for a 3rd survey or etc -->
     </tr>
     <tr>
@@ -1014,7 +1025,7 @@ Age  <canvas id="age1" width="800" height="450"></canvas>
          <!-- Quention 3 competence -->
       <thead>
     <tr>
-      <th scope="col" colspan="2">Competence Q3: 
+      <th scope="col" colspan="2">Competence Q3:
         {{productname | safe}} performs its role  very well.
   </th>
     </tr>
@@ -1081,7 +1092,7 @@ Age  <canvas id="age1" width="800" height="450"></canvas>
 
 <div class="collapse" id="collapseExample4">
   <div class="card card-body">
- 
+
    <table class="table table-hover">
      <!-- Quention 1 reciprocity-->
       <thead>
@@ -1266,7 +1277,7 @@ Age  <canvas id="age1" width="800" height="450"></canvas>
 
       {% endif %}
       </td>
-           <!-- suvey 2 overall trust --> 
+           <!-- suvey 2 overall trust -->
 
       <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
     </tr>
@@ -1324,8 +1335,8 @@ Age  <canvas id="age1" width="800" height="450"></canvas>
 
       {% endif %}
       </td>
-           <!-- suvey 2 overall trust --> 
- 
+           <!-- suvey 2 overall trust -->
+
       <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
     </tr>
   </tbody>
@@ -1383,7 +1394,7 @@ Age  <canvas id="age1" width="800" height="450"></canvas>
 
       {% endif %}
       </td>
-  
+
       <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
     </tr>
   </tbody>
@@ -1423,7 +1434,7 @@ new Chart(document.getElementById("age1"), {
 
 
 <script type="text/javascript">
-  
+
 new Chart(document.getElementById("gender1"), {
     type: 'pie',
     data: {
@@ -1440,8 +1451,7 @@ new Chart(document.getElementById("gender1"), {
 
 
 
-  
+
 
 
 {% endblock %}
-  
