@@ -85,12 +85,16 @@ def register(request):
     if request.method == "POST":
         form=RegisterForm(request.POST)
 
+        print(form)
 
         if form.is_valid():
             print('form is valid')
             user = form.save(commit=False)
+
+            email = user.email
+
             user.is_active = False
-            user.username = user.email.split('@')[0] + str(random.randint(0,100000))
+            user.username = user.email.split('@')[0] +':' + str(random.randint(0,100000))
             user.save()
             current_site = get_current_site(request)
             subject = 'Activate Your TrustexUX Account'

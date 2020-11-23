@@ -12,7 +12,7 @@
 <br/>
 
 <form action="" method="post">{% csrf_token %}
-  <h2> {%if NewOrEdit == False %}Edit {% else %} New {% endif %} survey </h2>
+  <h2> {%if NewOrEdit == False %}Edit {% else %} New {% endif %} study </h2>
   <hr/><br/>
 
 {{ wizard.management_form }}
@@ -37,7 +37,7 @@
         {% endif %}
 
         {% if wizard.steps.step1 >= 4 %}
-        <button id='b4' class="multisteps-form__progress-btn js-active"  name="wizard_goto_step" type="submit" value="summar" >Step 4: Summary</button>
+        <button id='b4' class="multisteps-form__progress-btn js-active"  name="wizard_goto_step" type="submit" value="summary" >Step 4: Summary</button>
         {% else %}
         <button id='b2' class="multisteps-form__progress-btn" name="wizard_goto_step" type="submit" value="summary"  >Step 4: Summary</button>
         {% endif %}
