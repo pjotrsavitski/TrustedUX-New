@@ -13,6 +13,7 @@
   <title> TrustedUX</title>
   <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
   <!-- Bootstrap core CSS -->
+
   <link href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Raleway:100,300,400,500,700,900" rel="stylesheet">
 
@@ -130,10 +131,11 @@ a[aria-expanded='false'] > .expand_caret {
    		</button>
    <div class="navbar-nav-scroll">
       <ul class="navbar-nav bd-navbar-nav flex-row">
-        <li class='nav-item'><a class='nav-link'  href="{%url 'login'%}"> <span>Benefits</span></a></li>
-        <li class='nav-item'><a class='nav-link'  href="#how"> <span>How it works</span></a></li>
-        <li class='nav-item'><a class='nav-link'  href="{%url 'login'%}"> <span>Scientific background</span></a></li>
-        <li class='nav-item'><a class='nav-link'  href="#faqs"> <span>FAQ</span></a></li>
+        <li class='nav-item'><a class='nav-link'  href="{% url 'home' %}#features"> <span>Benefits</span></a></li>
+        <li class='nav-item'><a class='nav-link'  href="{% url 'home' %}#how"> <span>How it works</span></a></li>
+        <li class='nav-item'><a class='nav-link'  href="{% url 'home' %}#research"> <span>Scientific background</span></a></li>
+        <li class='nav-item'><a class='nav-link'  href="{% url 'home' %}#faqs"> <span>FAQ</span></a></li>
+        <li class='nav-item'><a class='nav-link'  href="{% url 'resources'%}"> <span>Resources</span></a></li>
       </ul>
     </div>
 
@@ -245,6 +247,18 @@ a[aria-expanded='false'] > .expand_caret {
 
   <!-- Global Init -->
   <script src="{% static 'assets/js/custom.js'%}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Readmore.js/2.0.2/readmore.min.js"></script>
+
+<script>
+$('article').readmore();
+
+if (window.location.hash === '#research') {
+
+  document.getElementById('ease_use').style.display = "none";
+  document.getElementById('research').style.display = "block";
+  document.getElementById('Visualization').style.display = "none";
+
+}</script>
 
   	<!-- ./Footer -->
 </body>

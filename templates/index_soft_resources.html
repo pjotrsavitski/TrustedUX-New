@@ -1,0 +1,223 @@
+{% extends 'base_soft.html'%}
+{% load static%}
+{%block content%}
+<style>
+  .author {
+    left: 275px;
+    top: 1127px;
+  border:2px solid #fff;
+
+  -moz-box-shadow: 20px -20px  #EBF5FF;
+;
+  -webkit-box-shadow: 20px -20px  #EBF5FF;
+  box-shadow: 20px -20px  #EBF5FF;
+  -moz-border-radius:15px;
+  -webkit-border-radius:15px;
+  border-radius:15px;
+}
+.table td {
+   text-align: center;
+}
+
+.card{
+border:none;
+border-radius:8px;
+
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+line-height: 32px;
+
+/* or 200% */
+letter-spacing: 0.2px;
+
+}
+.nav-tabs {
+  border-bottom: 0px solid transparent;
+}
+</style>
+<script>
+function showEase()
+{
+  document.getElementById('ease_use').style.display = "block";
+  document.getElementById('research').style.display = "none";
+  document.getElementById('Visualization').style.display = "none";
+
+}
+function showResearch()
+{
+  document.getElementById('ease_use').style.display = "none";
+  document.getElementById('research').style.display = "block";
+  document.getElementById('Visualization').style.display = "none";
+}
+function showVis()
+{
+  document.getElementById('ease_use').style.display = "none";
+  document.getElementById('research').style.display = "none";
+  document.getElementById('Visualization').style.display = "block";
+}
+
+</script>
+
+<!-- ***** Header Area End ***** -->
+
+
+<!-- ***** Welcome Area End ***** -->
+
+<!-- ***** Features Small Start ***** -->
+<section class="section resources min-vh-100" style="padding-bottom:0;margin-bottom:0;">
+    <div class="container-fluid">
+      <div class='container'>
+      <div class=" center-heading mt-5 pt-3">
+        <h4> Resources </h4><br/>
+        <p class='text-muted'>With the TrustedUX tool, you can easily undertsand how users rate their level of trustworthiness with your product or service. The online tool can support you in all the following scenarios.
+        </p>
+        <br/>
+
+          <nav>
+            <div class='d-flex justify-content-center'>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <a class="btn btn-outline-secondary active mr-5" style="border-radius:25px;" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Documentation</a>
+              <a class="btn btn-outline-secondary mr-5" style="border-radius:25px;"  id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Video tutorials</a>
+              <a class="btn btn-outline-secondary" style="border-radius:25px;"  id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Articles</a>
+            </div>
+            </div>
+          </nav>
+        </div>
+        </div>
+          <br/>
+          <br/>
+          <br/>
+
+          <div class="tab-content py-3 px-3 px-sm-0 mw-100 flex-grow-1" id="nav-tabContent" style='background:#EBF5FF;'>
+
+
+
+            <div class="tab-pane fade show active"  id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+
+              <div class='container'>
+
+
+
+                <div class="card  shadow-lg p-5">
+
+                  <div class='card-body'>
+                    <h4 class='card-title text-center'><b> How a trust score is obtained by TrustedUX </b></h4><br/>
+                  <p>  Even though a trust score is obtained automatically when you use TrustedUX, we also give you a “behind the scenes” look so you know how this score is obtained and also obtain the score manually should you wish to. </p>
+                  <br/>
+                  <p><b>Explanation</b><br/>
+                    The TrustedUX tool uses a set of twelve statements which when incorporated into a questionnaire will help you understand and measure the trust perception of your users  the perception of your users’ tow.</p>
+                    <br/>
+                  <p><b>How to use it</b><br/>
+                    1.      Reverse the scoring for the following items: <br/>
+                    a.      I believe that there could be negative consequences when using Homes for Life. <br/>
+                    b.     I feel I must be cautious when using Homes for Life. <br/>
+                    c.      It is risky to interact with Homes for Life. <br/><br/>
+
+                    2.      For example: if someone answered 4 for question a, then subtract 4 from 6 which yields a value of 2. Similarly, if someone answered 1, subtract 1 from 6 which yields a value of 5. Essentially, if someone answered 1 for these questions, transform it into 5, 2 to be transformed into 4 and so on.  (To make it easy please refer to table 1 to recode responses for these questions).
+                    </p>
+                      <br/>
+
+                    <table class="table table-bordered">
+
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>-></td>
+      <td>5</td>
+
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>-></td>
+      <td>4</td>
+
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>-></td>
+      <td>3</td>
+
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>-></td>
+      <td>2</td>
+
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>-></td>
+      <td>1</td>
+
+    </tr>
+  </tbody>
+</table>
+<p>3.      For all other questions, take the responses at face value (as is). <br/>
+
+4.      Please calculate the total responses of all questions (adding the survey responses). Maximum possible score would be 70 (14 questions multiplied by 5, which is the highest possible answer).
+<br/>
+5.      Convert the score into percentile. For instance, if the final score after adding possible responses is 60, percentage would be 60/70*100 which is roughly 86%.
+<br/></p>
+
+</div>
+
+                </div>
+                </div>
+
+
+              </div>
+
+
+            <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+              <div class='container'>
+                <div class='card shadow-lg p-5'>
+                  <div class='card-body'>
+                  <h4 class='card-title text-center'><b>Video tutorials </b></h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+              <div class='container'>
+                <div class='card shadow-lg p-5'>
+                  <div class='card-body'>
+                    <h4 class='card-title text-center'><b>Articles </b></h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+        </div>
+
+
+
+
+
+    </div>
+</section>
+<!-- ***** Features Small End ***** -->
+
+
+
+<!-- ***** Footer Start ***** -->
+<footer>
+    <div class="container">
+
+        <div class="d-flex">
+            <div class="p-3">
+                <p class="copyright">Copyright &copy; 2020 TrustedUX</p>
+            </div>
+
+            <div class="ml-auto p-2">
+                <img style="width:110px;height:37px;" src='{% static "assets/images/logo.png" %}'
+            </div>
+        </div>
+
+    </div>
+</footer>
+
+
+
+{% endblock%}

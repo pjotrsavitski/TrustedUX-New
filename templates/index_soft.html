@@ -36,6 +36,22 @@ function showVis()
   document.getElementById('research').style.display = "none";
   document.getElementById('Visualization').style.display = "block";
 }
+function showResearch()
+{
+  document.getElementById('ease_use').style.display = "none";
+  document.getElementById('research').style.display = "block";
+  document.getElementById('Visualization').style.display = "none";
+  document.getElementById('research').scrollIntoView();
+
+}
+console.log(window.location.hash);
+if (window.location.hash === '#research') {
+
+  document.getElementById('ease_use').style.display = "none";
+  document.getElementById('research').style.display = "block";
+  document.getElementById('Visualization').style.display = "none";
+
+}
 </script>
 
 <!-- ***** Header Area End ***** -->
@@ -60,7 +76,7 @@ function showVis()
 <!-- ***** Welcome Area End ***** -->
 
 <!-- ***** Features Small Start ***** -->
-<section class="section home-feature">
+<section id='features' class="section home-feature">
     <div class="container">
 
 
@@ -105,7 +121,7 @@ function showVis()
                             </div>
                             <h5 class="features-title">Visualizations</h5>
                             <p> Analyze your data in snap! Get quick insight with automatic charts and summaries </p>
-                            
+
                         </div>
                     </div>
                     <!-- ***** Features Small Item End ***** -->
