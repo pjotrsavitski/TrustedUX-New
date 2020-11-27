@@ -1,7 +1,21 @@
 {% extends 'base_soft.html'%}
 {% load static%}
 {%block content%}
+<style>
+  .author {
+    left: 275px;
+    top: 1127px;
+  border:2px solid #fff;
 
+  -moz-box-shadow: 20px -20px  #EBF5FF;
+;
+  -webkit-box-shadow: 20px -20px  #EBF5FF;
+  box-shadow: 20px -20px  #EBF5FF;
+  -moz-border-radius:15px;
+  -webkit-border-radius:15px;
+  border-radius:15px;
+}
+</style>
 <!-- ***** Header Area End ***** -->
 
 <!-- ***** Welcome Area Start ***** -->
@@ -91,7 +105,7 @@
             </div>
             <div class=" offset-lg-1 col-lg-10 col-md-12 col-sm-12 align-self-center  mobile-bottom-fix">
 
-              <nav>
+        <nav>
 					<div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
 						<a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Single Evaluation</a>
 						<a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Comparision A-B</a>
@@ -135,44 +149,212 @@
 					</div>
 
 				</div>
-
-
-              <!--
-              <ul class="nav nav-tabs nav-fill">
-                <li class="active"><a data-toggle="tab" href="#home">Single Evaluation</a></li>
-                <li><a data-toggle="tab" href="#menu1">Comparision A-B</a></li>
-                <li><a data-toggle="tab" href="#menu2">Multiple</a></li>
-
-              </ul>
-
-              <div class="tab-content">
-                <div id="home" class="tab-pane active">
-                  <div class='row'>
-                    <div class='col col-2'>
-                    </div>
-                    <div class='col col-10'>
-                      <br/>
-                      <h3> Single Evaluation </h3>
-                      <p>This type of study assesses each of the two different products separately and then compares them. You will be provided with an overview of how your customers perceive each of the products. You can decide whether both products are evaluated by the same test group, or whether product A and product B are evaluated by completely different test groups.</p>
-                    </div>
-                </div>
-                <div id="menu1" class="tab-pane fade">
-                  <h3>Comparision A-B</h3>
-                  <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                </div>
-                <div id="menu2" class="tab-pane fade">
-                  <h3>Multiple</h3>
-                  <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
-                </div>
-
-              </div>
-              -->
             </div>
           </div>
         </div>
 
       </section>
 <!-- ***** Features Big Item End ***** -->
+
+
+<!-- ***** Features Research 1Start ***** -->
+<section class="section padding-bottom-100">
+    <div class="container">
+        <div class="row">
+            <div class="offset-lg-1 col-lg-10 col-md-12 col-sm-12 align-self-center mobile-bottom-fix">
+                <div class="center-heading">
+                    <h2 class="section-title">Research-based</h2>
+                    <p>Take advantage of a robust scientifically developed scale for trust measurement. Our work has been reviewed and published in high level scientific venues. Be rest assured that the results which you get are a product of years of scientific work at the highest level!  </p>
+                </div>
+<br/>
+            </div>
+            <div class=" offset-lg-1 col-lg-10 col-md-12 col-sm-12 align-self-center  mobile-bottom-fix">
+
+        <nav>
+					<div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+						<a class="nav-item nav-link active" id="nav-home1-tab" data-toggle="tab" href="#nav-home1" role="tab" aria-controls="nav-home1" aria-selected="true">Work model</a>
+						<a class="nav-item nav-link" id="nav-profile1-tab" data-toggle="tab" href="#nav-profile1" role="tab" aria-controls="nav-profile1" aria-selected="false">Instrument of measurement</a>
+						<a class="nav-item nav-link" id="nav-contact1-tab" data-toggle="tab" href="#nav-contact1" role="tab" aria-controls="nav-contact1" aria-selected="false">Publications</a>
+            <a class="nav-item nav-link" id="nav-auth1-tab" data-toggle="tab" href="#nav-auth1" role="tab" aria-controls="nav-auth1" aria-selected="false">Authors</a>
+
+          </div>
+				</nav>
+				<div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
+					<div class="tab-pane fade show active" id="nav-home1" role="tabpanel" aria-labelledby="nav-home1-tab">
+            <br/>
+            <div class='row justify-content-center'>
+              <h3 class='easy_use_section pb-3'>  Work model </h3><br/>
+            <p class='easy_use_section_text'>This type of study assesses each of the two different products separately and then compares them. You will be provided with an overview of how your customers perceive each of the products. You can decide whether both products are evaluated by the same test group, or whether product A and product B are evaluated by completely different test groups.</p>
+            </div>
+
+            <div class='row'>
+              <img  src="{% static 'assets/images/work_model.png' %}" class="rounded img-fluid d-block mx-auto" alt="App">
+            </div>
+					</div>
+					<div class="tab-pane fade" id="nav-profile1" role="tabpanel" aria-labelledby="nav-profile1-tab">
+            <br/>
+            <div class='row justify-content-center'>
+              <h3 class='easy_use_section pb-3'> Instrument of measurement </h3><br/>
+            <p class='easy_use_section_text'>To measure trust, we use a set of 12 statements on a 5-point likert scale where 1 indicates strongly disagree and 5 indicates strongly agree. These 12 statements can be used by a UX practitioner to make a questionnaire when evaluating trust with a product or servce. Learn more about trust score in Documentation. </p>
+            </div>
+
+            <div class='row'>
+              <img  src="{% static 'assets/images/survey.png' %}" class="rounded img-fluid d-block mx-auto" alt="App">
+            </div>
+					</div>
+					<div class="tab-pane fade" id="nav-contact1" role="tabpanel" aria-labelledby="nav-contact1-tab">
+            <br/>
+            <div class='row justify-content-center'>
+
+
+              <h3 class='easy_use_section '>  Publications </h3>
+
+            </div>
+            <br/><br/>
+            <!-- article -->
+            <div class='row'>
+              <div class='col-lg-2 col-md-2 col-sm-2'>
+                <img  src="{% static 'assets/images/one.png' %}" class="rounded img-fluid d-block mx-auto" alt="App">
+             </div>
+             <div class='col'>
+               Siddharth Gulati, Sonia Sousa & David Lamas. 2019. Design, development and evaluation of a human-computer trust scale. Behaviour & Information Technology, 38:10, 1004-1015, DOI: 10.1080/0144929X.2019.1656779
+             </div>
+           </div>
+            <!-- end -->
+            <br/><br/>
+            <!-- article -->
+            <div class='row'>
+              <div class='col-lg-2 col-md-2 col-sm-2'>
+                <img  src="{% static 'assets/images/two.png' %}" class="rounded img-fluid d-block mx-auto" alt="App">
+             </div>
+             <div class='col'>
+               Siddharth Gulati, Sonia Sousa, and David Lamas. 2019. Towards an empirically developed scale for measuring trust. Proceedings of the 31st European Conference on Cognitive Ergonomics. Association for Computing Machinery, New York, NY, USA, 45–48. DOI:https://doi.org/10.1145/3335082.3335116
+             </div>
+           </div>
+            <!-- end -->
+            <br/>
+            <!-- article -->
+            <div class='row'>
+              <div class='col-lg-2 col-md-2 col-sm-2'>
+                <img  src="{% static 'assets/images/three.png' %}" class="rounded img-fluid d-block mx-auto" alt="App">
+             </div>
+             <div class='col'>
+               Siddharth Gulati, Sonia Sousa, and David Lamas. 2018. Modelling trust in human-like technologies. In Proceedings of the 9th Indian Conference on Human Computer Interaction (IndiaHCI'18). Association for Computing Machinery, New York, NY, USA, 1–10. DOI:https://doi.org/10.1145/3297121.3297124
+             </div>
+           </div>
+            <!-- end -->
+            <br/>
+            <!-- article -->
+            <div class='row'>
+              <div class='col-lg-2 col-md-2 col-sm-2'>
+                <img  src="{% static 'assets/images/four.png' %}" class="rounded img-fluid d-block mx-auto" alt="App">
+             </div>
+             <div class='col'>
+               Gulati S., Sousa S., Lamas D. 2017. Modelling Trust: An Empirical Assessment. In: Bernhaupt R., Dalvi G., Joshi A., K. Balkrishan D., O’Neill J., Winckler M. (eds) Human-Computer Interaction – INTERACT 2017. INTERACT 2017. Lecture Notes in Computer Science, vol 10516. Springer, Cham. https://doi.org/10.1007/978-3-319-68059-0_3
+ </div>
+           </div>
+            <!-- end -->
+
+
+
+
+					</div>
+
+          <div class="tab-pane fade" id="nav-auth1" role="tabpanel" aria-labelledby="nav-auth1-tab">
+						<div class='row'>
+              <div class='col col-3 mt-3' style='padding:5px;'>
+                <img class='img author' src="{% static 'assets/images/sid.png'%}"/>
+              </div>
+              <div class='col col-9'style="padding-left:94px;">
+              <b class='text-primary'>  Siddharth Nakul Gulati, Phd </b> <br/>
+						<p class='text-muted'>Sid is a Phd student and the focus of his research is to understand the role of trust in user engagement. His main goal is to develop evaluation frameworks in the form of empirical models or scales which can be used to monitor trust levels of users during their interactions with a technological artifact. This work stems from the motivation that despite repeated trust breaches in the online environment, there has been little change in the behavior of people. </p>
+            </div>
+            </div>
+            <br/>
+            <div class='row'>
+              <div class='col col-3 mt-3' style='padding:5px;'>
+                <img class='img author' src="{% static 'assets/images/sonia.png'%}"/>
+              </div>
+              <div class='col col-9'style="padding-left:94px;">
+              <b class='text-primary'>   Sónia Sousa, Associate Professor, Tallinn University </b> <br/>
+						<p class='text-muted'>Sónia is an Associate Professor and Researcher of Interaction Design. Since her post-doc projects in Tallinn University and Aberta University, she has been focusing on exploring the role of Trust in technologically enhanced contexts. Her research evolves around the Trust socio-technical model and Human-computer Interaction. She teaches multiple courses for the master program and supervises doctoral projects.  </p>
+            </div>
+            </div>
+            <br/>
+            <div class='row'>
+              <div class='col col-3 mt-3' style='padding:5px;'>
+                <img class='img author' src="{% static 'assets/images/david.png'%}"/>
+              </div>
+              <div class='col col-9'style="padding-left:94px;">
+                <b class='text-primary'>  David Lamas, Professor of Interaction Design, Head of HCI group, Tallinn University </b> <br/>
+						<p class='text-muted'>David Lamas main research interests are design theory and methodologies, and he has been designing organisations, communities and human technologies, systems and more since his post-doc at Michigan State University as a member of the MIND Labs network. He has done so in the USA, UK, Portugal, Cape Verde, and recently in Mozambique, Afghanistan and Estonia, developing through his experiences an acute understanding of how to shape and lead transformation processes. </p>
+            </div>
+            </div>
+					</div>
+
+
+				</div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+<!-- ***** Features Big Item End ***** -->
+
+
+<!-- ***** Features Visualizations Start ***** -->
+<section class="section padding-bottom-100">
+    <div class="container">
+        <div class="row">
+            <div class="offset-lg-1 col-lg-10 col-md-12 col-sm-12 align-self-center mobile-bottom-fix">
+                <div class="center-heading">
+                    <h2 class="section-title">Visualization</h2>
+                    <p>Survey results are presented in an easy to understand format. You can generate a report from the project menu in your dashboard. </p>
+                </div>
+<br/>
+            </div>
+            <div class=" offset-lg-1 col-lg-10 col-md-12 col-sm-12 align-self-center  mobile-bottom-fix">
+
+        <nav>
+					<div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+						<a class="nav-item nav-link active" id="nav-demo-tab" data-toggle="tab" href="#nav-demo" role="tab" aria-controls="nav-demo" aria-selected="true">Demographics</a>
+						<a class="nav-item nav-link" id="nav-vis-tab" data-toggle="tab" href="#nav-vis" role="tab" aria-controls="nav-vis" aria-selected="false">Visualizations</a>
+
+					</div>
+				</nav>
+				<div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
+					<div class="tab-pane fade show active" id="nav-demo" role="tabpanel" aria-labelledby="nav-demo-tab">
+            <div class='row'>
+              <div class='col col-3' style='padding:5px;'>
+                <img style="width:187px;height:219px;"  src="{% static 'assets/images/single1.jpg'%}"/>
+              </div>
+
+              <div class='col col-9' style="padding-left:94px;">
+              <h3 class='easy_use_section'>  Single Evaluation </h3><br/>
+						<p class='easy_use_section_text'>This type of study assesses each of the two different products separately and then compares them. You will be provided with an overview of how your customers perceive each of the products. You can decide whether both products are evaluated by the same test group, or whether product A and product B are evaluated by completely different test groups.</p>
+            </div>
+            </div>
+					</div>
+					<div class="tab-pane fade" id="nav-vis" role="tabpanel" aria-labelledby="nav-vis-tab">
+            <br/>
+            <div class='row justify-content-center'>
+              <h3 class='easy_use_section pb-3'> Visualization </h3><br/>
+            <p class='easy_use_section_text'>To measure trust, we use a set of 12 statements on a 5-point likert scale where 1 indicates strongly disagree and 5 indicates strongly agree. These 12 statements can be used by a UX practitioner to make a questionnaire when evaluating trust with a product or servce. Learn more about trust score in Documentation. </p>
+            </div>
+
+            <div class='row'>
+              <img  src="{% static 'assets/images/vis.png' %}" class="rounded img-fluid d-block mx-auto" alt="App">
+            </div>
+					</div>
+
+				</div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+<!-- ***** Features Big Item End ***** -->
+
 
 <!-- ***** Features Big Item Start ***** -->
 <section class="section " id='how'>
