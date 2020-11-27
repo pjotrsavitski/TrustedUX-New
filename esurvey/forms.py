@@ -275,11 +275,17 @@ class lastForm(forms.Form):
 class SurveyQuestion(forms.Form):
 
     # new code added
+    """
     age = forms.CharField(label='Age',required=False,widget=forms.Select(choices=age_choices,attrs={'class':'form-control mb-4'}))
     gender = forms.CharField(label='Gender',required=False,widget=forms.Select(choices=gen_choices,attrs={'class':'form-control mb-4'}))
     education = forms.CharField(label='Education',required=False,widget=forms.Select(choices=edu_choices,attrs={'class':'form-control mb-4'}))
     nationality = forms.CharField(label='Nationality',required=False,widget=forms.Select(choices=sort_countries,attrs={'class':'form-control mb-4'}))
+    """
 
+    age = forms.CharField(label='Age',required=False,widget=forms.HiddenInput())
+    gender = forms.CharField(label='Gender',required=False,widget=forms.HiddenInput())
+    education = forms.CharField(label='Education',required=False,widget=forms.HiddenInput())
+    nationality = forms.CharField(label='Nationality',required=False,widget=forms.HiddenInput())
 
     # end new code
 

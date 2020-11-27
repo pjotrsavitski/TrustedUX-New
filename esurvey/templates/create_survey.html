@@ -138,6 +138,15 @@
 {% endif %}
 
 </nav>
+{% if form.product_name2.errors%}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>Error</strong> You should check in on some of those fields below.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+
 <div class="tab-content bg-white py-3 px-3 px-sm-0" id="nav-tabContent">
   <div class="tab-pane fade show active p-5" id="nav-s1" role="tabpanel" aria-labelledby="nav-s1-tab">
 
@@ -381,12 +390,34 @@
 
 <button class="btn btn-outline-primary" formnovalidate="formnovalidate" name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" >{% trans "Back" %}</button>
 {% endif %}
-<input type="submit" class='btn btn-primary'  value="{% trans "Continue" %}" />
+<input id='submitButton' type="submit" class='btn btn-primary'  value="{% trans "Continue" %}" />
 
 </form>
 
 </div>
 <script>
+
+
+
+
+  $('#submitButton').click(function () {
+      $('input:invalid').each(function () {
+          // Find the tab-pane that this element is inside, and get the id
+          var $closest = $(this).closest('.tab-pane');
+          var id = $closest.attr('id');
+
+          // Find the link that corresponds to the pane and have it show
+          $('.nav a[href="#' + id + '"]').tab('show');
+
+          // Only want to do it once
+          return false;
+      });
+  });
+
+
+
+
+
   $(document).ready(function() {
     var d = new Date();
     var today = d.getFullYear() +"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+ ("0" + d.getDate()).slice(-2);

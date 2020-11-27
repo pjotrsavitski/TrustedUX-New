@@ -100,7 +100,7 @@ def register(request):
             subject = 'Activate Your TrustexUX Account'
             message = render_to_string('account_activation_email.html', {
                 'user': user,
-                'domain': 'trustedux.herokuapp.com', #current_site.domain,
+                'domain':  current_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': t.account_activation_token.make_token(user),
                 })

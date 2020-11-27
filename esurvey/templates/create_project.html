@@ -10,7 +10,9 @@
 
 {% block content %}
 <br/>
+<style>
 
+</style>
 <form action="" method="post">{% csrf_token %}
   <h2> {%if form.new.value == False %}Edit {% else %} New {% endif %} study </h2>
   <hr/><br/>
@@ -22,7 +24,7 @@
         {% if wizard.steps.step1 >= 1   %}
         <button id='b1' class="multisteps-form__progress-btn js-active" name="wizard_goto_step" type="submit" value="project">Step 1: General </button>
         {% else %}
-        <button id='b2' class="multisteps-form__progress-btn" type="button" name="wizard_goto_step" type="submit" value="project">Step 1: General </button>
+        <button id='b1' class="multisteps-form__progress-btn" type="button" name="wizard_goto_step" type="submit" value="project">Step 1: General </button>
         {% endif %}
 
         {% if wizard.steps.step1 >= 2  %}

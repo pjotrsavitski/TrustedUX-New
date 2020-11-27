@@ -125,10 +125,7 @@ a[aria-expanded='false'] > .expand_caret {
      <div class='container'>
 
    		<a class="navbar-brand" href="{% url 'home'%}"> Trusted<b>UX</b></a>
-   		<button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggler">
-   			<span class="navbar-toggler-icon"></span>
 
-   		</button>
    <div class="navbar-nav-scroll">
       <ul class="navbar-nav bd-navbar-nav flex-row">
         <li class='nav-item'><a class='nav-link'  href="{% url 'home' %}#features"> <span>Benefits</span></a></li>
@@ -139,6 +136,10 @@ a[aria-expanded='false'] > .expand_caret {
       </ul>
     </div>
 
+    <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggler">
+      <span class="navbar-toggler-icon"></span>
+
+    </button>
 
    	<!-- Collection of nav links, forms, and other content for toggling -->
    	<div id="navbarCollapse" class="collapse navbar-collapse justify-content-end ">
