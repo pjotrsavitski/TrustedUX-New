@@ -62,9 +62,8 @@
 {% else %}
 
 
-
 {{ form.q1 }}{{ form.q2 }}{{ form.q3 }}{{ form.q4 }}{{ form.q5 }}{{ form.q6 }}{{ form.q7 }}{{ form.q8 }}{{ form.q9 }}{{ form.q10 }}{{ form.q11}}{{ form.q12 }}{{ form.q13 }}{{ form.q14 }}
-
+{{form.age}}{{form.gender}}{{form.education}}{{form.nationality}}
 <div class='card bg-white'>
   <div class='card-body'>
     <div class='row pb-2'>
@@ -73,29 +72,63 @@
     <div class='row'>
       {% if anony_setting.age %}
       <div class='col'>
-        <p class='pb-2'>Please indicate your age group</p>
-        {{form.age}}
+        <div class="form-group">
+          <label for="exampleFormControlSelect1">Select your age group</label>
+          <select class="form-control" name="survey-age" required>
+            <option value="1">{% trans "17 or less"%}</option>
+            <option  value="2">18 - 27</option>
+            <option  value="3">28 - 37</option>
+            <option  value="4">38 - 47</option>
+            <option  value="5">48 - 57</option>
+            <option value="6">{%trans "58 or more" %}</option>
+          </select>
+        </div>
       </div>
       {% endif %}
 
       {% if anony_setting.gender %}
       <div class='col'>
-        <p class='pb-2'>What is your gender?</p>
-        {{form.gender}}
+        <div class="form-group">
+          <label for="exampleFormControlSelect1">What is your gender?</label>
+          <select class="form-control" name="survey-gender" required>
+            <option value="M">{% trans "Male"%}</option>
+            <option value="F">{%trans "Female" %}</option>
+            <option value="O">{%trans "Other" %}</option>
+
+          </select>
+        </div>
       </div>
       {% endif %}
 
       {% if anony_setting.education %}
       <div class='col'>
-        <p class='pb-2'>What is your education?</p>
-        {{form.education}}
+
+        <div class="form-group">
+          <label for="exampleFormControlSelect1">What is your education?</label>
+          <select class="form-control" name="survey-education" required>
+            <option value="1">{% trans "Primary"%}</option>
+            <option value="2">{%trans "Secondary" %}</option>
+            <option value="3">{%trans "Bachelor" %}</option>
+            <option value="4">{%trans "Master" %}</option>
+            <option value="5">{%trans "Doctorate" %}</option>
+
+          </select>
+        </div>
       </div>
       {% endif %}
 
       {% if anony_setting.nationality %}
       <div class='col'>
-        <p class='pb-2'>select your country</p>
-        {{form.nationality}}
+        <div class="form-group">
+          <label for="exampleFormControlSelect1">What is your nationality?</label>
+          <select class="form-control" name="survey-nationality" required>{{countries}}
+            {% for key,value in countries%}
+
+              <option value="{{key}}">{{value}} </option>
+
+            {% endfor %}
+          </select>
+        </div>
       </div>
       {% endif %}
 

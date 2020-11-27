@@ -298,11 +298,11 @@ class SurveyQuestion(forms.Form):
     q7  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput())
     q8  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput())
     q9  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput())
-    q10  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput())
-    q11  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput())
-    q12  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput())
-    q13  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput())
-    q14  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput())
+    q10  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput(),initial=0)
+    q11  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput(),initial=0)
+    q12  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput(),initial=0)
+    q13  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput(),initial=0)
+    q14  = forms.CharField(max_length=12,required=False,widget=forms.HiddenInput(),initial=0)
 
 
 class frontForm(forms.Form):

@@ -12,7 +12,7 @@ from django.shortcuts import redirect
 from django.db.models import Count
 from datetime import date
 from datetime import timedelta
-
+from .models import AnonyData, sort_countries, gen_choices, edu_choices, age_choices
 from .forms import contactforms
 from djqscsv import render_to_csv_response
 import urllib
@@ -33,7 +33,7 @@ SUBMISSION_FORM = (
     ("anony", AnonyForm)
 )
 
-SUBMISSION_TEMPLATE = {'survey':"survey_form.html","anony":"survey_anony.html"}
+PLATE = {'survey':"survey_form.html","anony":"survey_anony.html"}
 """
 
 
@@ -6505,8 +6505,15 @@ class CompleteForm(SessionWizardView):
             project.product_industry=all_data['product_industry']
             #project.project_status=all_data['project_status']
 
+            anony_settings = AnonyDataSetting.objects.get(project=project)
 
 
+            anony_settings.age = all_data['age']
+            anony_settings.gender=all_data['gender']
+            anony_settings.education=all_data['education']
+            anony_settings.nationality=all_data['nationality']
+
+            anony_settings.save()
 
             for k in range(surveys_count):
                 print('loop:',k)
@@ -6594,6 +6601,8 @@ class CompleteSubmissionForm(SessionWizardView):
             print('Product:',product,' ',)
             context.update({'survey': product,'product':product,'anony_setting':anony_setting})
             context.update({'all_data': self.get_all_cleaned_data(),'anony_setting':anony_setting})
+            context.update({'countries':sort_countries})
+            print(sort_countries)
             print(self.get_all_cleaned_data())
         return context
 

@@ -316,7 +316,7 @@ class Submission(models.Model):
 
 sort_countries = sorted(COUNTRIES.items(), key=operator.itemgetter(1))
 countries_choices = [(k, v) for k, v in COUNTRIES.items()]
-age_choices=[(1,_("17 or less")),(2,"18 - 27"),(3,"28 - 37"),(4,"38 - 47"),(5,_("48 - 57")),(5,_("58 or more"))]
+age_choices=[(1,_("17 or less")),(2,"18 - 27"),(3,"28 - 37"),(4,"38 - 47"),(5,_("48 - 57")),(6,_("58 or more"))]
 gen_choices=[("M",_("Male")),("F",_("Female")),("O",_("Other"))]
 edu_choices=[(1,_("Primary")),(2,_("Secondary")),(3,_("Bachelor")),(4,_("Master")),(5,_("Doctorate"))]
 
