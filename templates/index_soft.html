@@ -20,6 +20,9 @@
 function showEase()
 {
   document.getElementById('ease_use').style.display = "block";
+  document.getElementById('show_ease').style.border = "4px solid #51D197";
+  document.getElementById('show_vis').style.border = "None";
+  document.getElementById('show_research').style.border = "None";
   document.getElementById('research').style.display = "none";
   document.getElementById('Visualization').style.display = "none";
 
@@ -35,6 +38,10 @@ function showVis()
   document.getElementById('ease_use').style.display = "none";
   document.getElementById('research').style.display = "none";
   document.getElementById('Visualization').style.display = "block";
+
+  document.getElementById('show_ease').style.border = "None";
+  document.getElementById('show_vis').style.border =  "4px solid #51D197";
+  document.getElementById('show_research').style.border = "None";
 }
 function showResearch()
 {
@@ -43,6 +50,10 @@ function showResearch()
   document.getElementById('Visualization').style.display = "none";
   document.getElementById('research').scrollIntoView();
 
+  document.getElementById('show_ease').style.border =  "None";
+  document.getElementById('show_vis').style.border = "None";
+  document.getElementById('show_research').style.border = "4px solid #51D197";
+
 }
 console.log(window.location.hash);
 if (window.location.hash === '#research') {
@@ -50,6 +61,10 @@ if (window.location.hash === '#research') {
   document.getElementById('ease_use').style.display = "none";
   document.getElementById('research').style.display = "block";
   document.getElementById('Visualization').style.display = "none";
+
+  document.getElementById('show_ease').style.border =  "None";
+  document.getElementById('show_vis').style.border = "None";
+  document.getElementById('show_research').style.border = "4px solid #51D197";
 
 }
 </script>
@@ -86,8 +101,8 @@ if (window.location.hash === '#research') {
 
 
                     <!-- ***** Features Small Item Start ***** -->
-                    <div onclick="showEase()" id='show_ease' class="col-lg-4 col-md-6 col-sm-6 col-12" data-scroll-reveal="enter bottom move 50px over 0.6s after 0.4s">
-                        <div class="features-small-item">
+                    <div onclick="showEase()"  class="col-lg-4 col-md-6 col-sm-6 col-12" data-scroll-reveal="enter bottom move 50px over 0.6s after 0.4s">
+                        <div class="features-small-item" id='show_ease' style="4px solid #51D197">
                             <div class="icon">
                                 <img src='{% static "assets/images/user.jpg"%}'/>
                             </div>
@@ -99,8 +114,8 @@ if (window.location.hash === '#research') {
                     <!-- ***** Features Small Item End ***** -->
 
                     <!-- ***** Features Small Item Start ***** -->
-                    <div onclick="showResearch()" id='show_research' class="col-lg-4 col-md-6 col-sm-6 col-12" data-scroll-reveal="enter bottom move 50px over 0.6s after 0.2s">
-                        <div class="features-small-item">
+                    <div onclick="showResearch()" class="col-lg-4 col-md-6 col-sm-6 col-12" data-scroll-reveal="enter bottom move 50px over 0.6s after 0.2s">
+                        <div class="features-small-item" id='show_research' >
                             <div class="icon">
                               <img src='{% static "assets/images/notes.jpg"%}'/>
 
@@ -114,8 +129,8 @@ if (window.location.hash === '#research') {
                     <!-- ***** Features Small Item End ***** -->
 
                     <!-- ***** Features Small Item Start ***** -->
-                    <div onclick="showVis()" id='show_vis' class="col-lg-4 col-md-6 col-sm-6 col-12" data-scroll-reveal="enter bottom move 50px over 0.6s after 0.6s">
-                        <div class="features-small-item">
+                    <div onclick="showVis()"  class="col-lg-4 col-md-6 col-sm-6 col-12" data-scroll-reveal="enter bottom move 50px over 0.6s after 0.6s">
+                        <div class="features-small-item" id='show_vis'>
                             <div class="icon">
                                 <img src='{% static "assets/images/chat.jpg"%}'/>
                             </div>
@@ -364,24 +379,23 @@ if (window.location.hash === '#research') {
 				</nav>
 				<div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
 					<div class="tab-pane fade show active" id="nav-demo" role="tabpanel" aria-labelledby="nav-demo-tab">
-            <div class='row'>
-              <div class='col col-3' style='padding:5px;'>
-                <img style="width:187px;height:219px;"  src="{% static 'assets/images/single1.jpg'%}"/>
-              </div>
+            <br/>
 
-              <div class='col col-9' style="padding-left:94px;">
-              <h3 class='easy_use_section'>  Single Evaluation </h3><br/>
-						<p class='easy_use_section_text'>This type of study assesses each of the two different products separately and then compares them. You will be provided with an overview of how your customers perceive each of the products. You can decide whether both products are evaluated by the same test group, or whether product A and product B are evaluated by completely different test groups.</p>
-            </div>
+              <h3 class='easy_use_section text-center '> Demographics </h3><br/>
+            <p class='easy_use_section_text text-center'>Get a breakdown of participant demographics such as age, gender, nationality etc. </p>
+
+            <br/>
+            <div class='row'>
+              <img  src="{% static 'assets/images/demographics.png' %}" class="rounded img-fluid d-block mx-auto" alt="App">
             </div>
 					</div>
 					<div class="tab-pane fade" id="nav-vis" role="tabpanel" aria-labelledby="nav-vis-tab">
             <br/>
-            <div class='row justify-content-center'>
-              <h3 class='easy_use_section pb-3'> Visualization </h3><br/>
-            <p class='easy_use_section_text'>To measure trust, we use a set of 12 statements on a 5-point likert scale where 1 indicates strongly disagree and 5 indicates strongly agree. These 12 statements can be used by a UX practitioner to make a questionnaire when evaluating trust with a product or servce. Learn more about trust score in Documentation. </p>
-            </div>
 
+              <h3 class='easy_use_section text-center'> Trust measurement</h3><br/>
+            <p class='easy_use_section_text text-center'>Not only can you see an overall trust score, but we also break down survey results to different trust dimensions such as  competence, risk perception & benevolence. </p>
+
+            <br/>
             <div class='row'>
               <img  src="{% static 'assets/images/vis.png' %}" class="rounded img-fluid d-block mx-auto" alt="App">
             </div>

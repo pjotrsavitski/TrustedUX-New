@@ -6487,7 +6487,7 @@ class CompleteForm(SessionWizardView):
 
 
 
-            messages.success(self.request, 'Project created successfully !')
+            messages.success(self.request, 'Study is created successfully !')
         else:
             print('-------------------->',all_data['project_id'])
             project_id = int(all_data['project_id'])
@@ -6503,7 +6503,7 @@ class CompleteForm(SessionWizardView):
 
             project.product_type=all_data['project_type']
             project.product_industry=all_data['product_industry']
-            #project.project_status=all_data['project_status']
+            project.project_status=all_data['project_status']
 
             anony_settings = AnonyDataSetting.objects.get(project=project)
 
@@ -6577,7 +6577,7 @@ class CompleteForm(SessionWizardView):
 
             project.save()
 
-            messages.success(self.request,'Project is successfully updated')
+            messages.success(self.request,'Study is successfully updated')
 
         return redirect('project_home')
 
