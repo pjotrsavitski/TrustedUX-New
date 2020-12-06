@@ -210,7 +210,7 @@ STATIC_URL = os.path.join(SETTINGS_PATH, '/static/')
 
 # Rich text fields
 DJRICHTEXTFIELD_CONFIG = {
-    'js': ["//cdn.tinymce.com/4/tinymce.min.js"],
+    'js': ["//cdnjs.cloudflare.com/ajax/libs/tinymce/5.6.1/tinymce.min.js"],
     'init_template': 'djrichtextfield/init/tinymce.js',
     'settings': {
         'menubar': False,
