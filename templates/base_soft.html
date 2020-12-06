@@ -129,7 +129,7 @@ a[aria-expanded='false'] > .expand_caret {
    <div class="navbar-nav-scroll">
       <ul class="navbar-nav bd-navbar-nav flex-row">
         {% if request.user.is_authenticated  %}
-        <li class='nav-item'><a class='nav-link'  href="{% url 'project_home'%}"> <span style='color:white;'>My studies</span></a></li>
+        <li class='nav-item'><a class='nav-link'  href="{% url 'project_home'%}"> <span>My studies</span></a></li>
         {% endif %}
         <li class='nav-item'><a class='nav-link'  href="{% url 'home' %}#features"> <span>Benefits</span></a></li>
         <li class='nav-item'><a class='nav-link'  href="{% url 'home' %}#how"> <span>How it works</span></a></li>
