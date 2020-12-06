@@ -7,6 +7,13 @@
 
 {% language lang %}
 <style>
+@media (min-width: @screen-sm-min) {
+  .container {
+    flex-direction: column;
+  }
+}
+
+
   .first-cap::first-letter{
     text-transform: uppercase;
   }
@@ -71,7 +78,7 @@
     </div>
     <div class='row'>
       {% if anony_setting.age %}
-      <div class='col'>
+      <div class='col-12  col-sm-12 col-md-4 col-lg-4'>
         <div class="form-group">
           <label for="exampleFormControlSelect1">Select your age group</label>
           <select class="form-control" name="survey-age" required>
@@ -87,7 +94,7 @@
       {% endif %}
 
       {% if anony_setting.gender %}
-      <div class='col'>
+      <div class='col-12 col-sm-12 col-md-4 col-lg-4'>
         <div class="form-group">
           <label for="exampleFormControlSelect1">What is your gender?</label>
           <select class="form-control" name="survey-gender" required>
@@ -101,7 +108,7 @@
       {% endif %}
 
       {% if anony_setting.education %}
-      <div class='col'>
+      <div class='col-12 col-sm-12 col-md-4 col-lg-4'>
 
         <div class="form-group">
           <label for="exampleFormControlSelect1">What is your education?</label>
@@ -118,7 +125,7 @@
       {% endif %}
 
       {% if anony_setting.nationality %}
-      <div class='col'>
+      <div class='col-12 col-sm-12 col-md-4 col-lg-4'>
         <div class="form-group">
           <label for="exampleFormControlSelect1">What is your nationality?</label>
           <select class="form-control" name="survey-nationality" required>{{countries}}
