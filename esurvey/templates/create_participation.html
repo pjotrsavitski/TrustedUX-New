@@ -20,27 +20,28 @@
     <div class="col">
       <div class="multisteps-form__progress">
         {% if wizard.steps.step1 >= 1   %}
-        <button id='b1' class="multisteps-form__progress-btn js-active" name="wizard_goto_step" type="submit" value="project">Step 1: General </button>
+        <button id='b1' class="multisteps-form__progress-btn js-active" name="wizard_goto_step" type="submit" value="project" disabled>Step 1: General </button>
         {% else %}
-        <button id='b2' class="multisteps-form__progress-btn" type="button" name="wizard_goto_step" type="submit" value="project">Step 1: General </button>
+        <button id='b1' class="multisteps-form__progress-btn" type="button" name="wizard_goto_step" type="submit" value="project" disabled>Step 1: General </button>
         {% endif %}
 
         {% if wizard.steps.step1 >= 2  %}
-        <button id='b2' class="multisteps-form__progress-btn js-active" name="wizard_goto_step" type="submit"value="survey">Step 2: Survey settings</button>
+        <button id='b2' class="multisteps-form__progress-btn js-active" name="wizard_goto_step" type="submit"value="survey" disabled>Step 2: Survey settings</button>
         {% else %}
-        <button id='b2' class="multisteps-form__progress-btn" name="wizard_goto_step" type="submit" value="survey">Step 2: Survey settings</button>
+        <button id='b2' class="multisteps-form__progress-btn" name="wizard_goto_step" type="submit" value="survey" disabled>Step 2: Survey settings</button>
         {% endif %}
         {% if wizard.steps.step1 >= 3 %}
-        <button id='b3' class="multisteps-form__progress-btn js-active" name="wizard_goto_step" type="submit" value="participants" >Step 3: Participants</button>
+        <button id='b3' class="multisteps-form__progress-btn js-active" name="wizard_goto_step" type="submit" value="participants" disabled>Step 3: Participants</button>
         {% else %}
-        <button id='b2' class="multisteps-form__progress-btn" name="wizard_goto_step" type="submit" value="participants" >Step 3: Participants</button>
+        <button id='b2' class="multisteps-form__progress-btn" name="wizard_goto_step" type="submit" value="participants" disabled>Step 3: Participants</button>
         {% endif %}
 
         {% if wizard.steps.step1 >= 4 %}
-        <button id='b4' class="multisteps-form__progress-btn js-active"  name="wizard_goto_step" type="submit" value="summary" >Step 4: Summary</button>
+        <button id='b4' class="multisteps-form__progress-btn js-active"  name="wizard_goto_step" type="submit" value="summar" disabled>Step 4: Summary</button>
         {% else %}
-        <button id='b2' class="multisteps-form__progress-btn" name="wizard_goto_step" type="submit" value="summary"  >Step 4: Summary</button>
+        <button id='b2' class="multisteps-form__progress-btn" name="wizard_goto_step" type="submit" value="summary"  disabled>Step 4: Summary</button>
         {% endif %}
+
 
 
       </div>
