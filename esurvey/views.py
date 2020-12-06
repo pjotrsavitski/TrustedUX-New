@@ -6621,14 +6621,14 @@ class CompleteSubmissionForm(SessionWizardView):
         q7 = int(all_data['q7'])
         q8 = int(all_data['q8'])
         q9 = int(all_data['q9'])
-        q10 = int(all_data['q10'])
-        q11 = int(all_data['q7'])
-        q12 = int(all_data['q8'])
-        q13 = int(all_data['q9'])
-        q14 = int(all_data['q10'])
+        #q10 = int(all_data['q10'])
+        #q11 = int(all_data['q7'])
+        #q12 = int(all_data['q8'])
+        #q13 = int(all_data['q9'])
+        #q14 = int(all_data['q10'])
 
         link_obj = Link.objects.get(url=self.kwargs['link'])
-        submission = Submission.objects.create(link=link_obj,q1=q1,q2=q2,q3=q3,q4=q4,q5=q5,q6=q6,q7=q7,q8=q8,q9=q9,q10=q10,q11=q11,q12=q12,q13=q13,q14=q14)
+        submission = Submission.objects.create(link=link_obj,q1=q1,q2=q2,q3=q3,q4=q4,q5=q5,q6=q6,q7=q7,q8=q8,q9=q9,q10=0,q11=0,q12=0,q13=0,q14=0)
 
         print(all_data)
 
