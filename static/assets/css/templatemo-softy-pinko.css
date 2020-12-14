@@ -753,6 +753,121 @@ header
 }
 
 /*
+Welcome area-1
+*/
+.welcome-area1 {
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url(../images/aboutus.png);
+  background-position: center center;
+  background-size: cover;
+  height:80vh;
+  padding-top:79px;
+}
+
+.welcome-area1 .header-text {
+  position: absolute;
+  transform: translateY(-55%);
+  text-align: center;
+  width: 100%;
+}
+
+.welcome-area1 .header-text h1 {
+  font-weight: 500;
+  font-size: 36px;
+  line-height: 54px;
+  letter-spacing: 1.4px;
+  margin-bottom: 30px;
+  color: #fff;
+  text-align: center;
+}
+
+.welcome-area1 .header-text p {
+  font-weight: 500;
+  font-size: 20px;
+  color: #fff;
+  line-height: 30px;
+  letter-spacing: 0.3px;
+  margin-bottom: 10px;
+  position: relative;
+  text-align: center;
+}
+
+@media (max-width: 991px) {
+  .welcome-area1 .header-text {
+    top: 65% !important;
+    transform: perspective(1px) translateY(-60%) !important;
+    text-align: center;
+  }
+  .welcome-area1 .header-text h1 {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 15px;
+  }
+  .welcome-area1 .header-text h1 span {
+    color: #fff;
+  }
+  .welcome-area1 .header-text p {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 820px) {
+  .welcome-area1 .header-text {
+    top: 65% !important;
+    transform: perspective(1px) translateY(-60%) !important;
+  }
+   .welcome-area1 .header-text h1 {
+    font-size: 22px;
+    line-height: 30px;
+    margin-bottom: 15px;
+  }
+  .welcome-area1 .header-text p {
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 765px) {
+  .welcome-area1 {
+    margin-bottom: 100px;
+  }
+  .welcome-area1 .header-text {
+    top: 50% !important;
+    transform: perspective(1px) translateY(-50%) !important;
+    text-align: center;
+  }
+  .welcome-area1 .header-text .buttons {
+    display: none;
+  }
+  .welcome-area1 .header-text h1 {
+    font-weight: 600;
+    font-size: 24px !important;
+    line-height: 30px !important;
+    margin-bottom: 30px !important;
+  }
+  .welcome-area1 .header-text h1 span {
+    color: #fff;
+  }
+  .welcome-area1 .header-text p {
+    text-align: center;
+    color: #fff;
+    font-size: 14px;
+    line-height: 22px;
+    margin-bottom: 40px;
+  }
+}
+
+
+
+
+
+
+/*
 ---------------------------------------------
 welcome
 ---------------------------------------------
@@ -863,6 +978,12 @@ welcome
     margin-bottom: 40px;
   }
 }
+
+/*
+---------------------------------------------
+About us
+---------------------------------------------
+*/
 
 
 /*

@@ -24,6 +24,7 @@
   <link rel="stylesheet" type="text/css" href="{% static 'assets/css/font-awesome.css' %}">
 
   <link rel="stylesheet" href="{% static 'assets/css/templatemo-softy-pinko.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/trustedux.css' %}">
 
 
   <script src="{% static 'popper.min.js' %}"></script>
@@ -192,7 +193,7 @@ a[aria-expanded='false'] > .expand_caret {
 
 
          <li class='nav-item'><a class=' pr-4 '  href="{%url 'login'%}"><span>Login<span></a></li>
-         <li class='nav-item'><a class=' btn try_now_button'  href="{%url 'register'%}"> Try now</a></li>
+         <li class='nav-item'><a class=' btn try_now_button_small'  href="{%url 'register'%}"> Try now</a></li>
          {% endif %}
          <!-- Language code
          {% get_current_language as LANGUAGE_CODE %}
