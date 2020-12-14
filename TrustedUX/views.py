@@ -14,6 +14,11 @@ def resource(request):
     return render(request,'index_soft_resources.html',{})
 
 
+def aboutus(request):
+    return render(request,'index_soft_aboutus.html',{})
+
+
+
 def changLang(request,lang_code):
     translation.activate(lang_code)
     print('Language changed')

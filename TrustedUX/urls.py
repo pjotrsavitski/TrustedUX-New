@@ -38,6 +38,7 @@ urlpatterns = [
     path('logout/',v.logout,name='logout'),
     path('',views.index,name='home'),
     path('resources/',views.resource,name='resources'),
+    path('aboutus/',views.aboutus,name='aboutus'),
     path('publications/',views.publication,name='publication'),
     path('changeLang/<lang_code>',views.changLang,name='change_language'),
     path('accounts/', include('allauth.urls')),
