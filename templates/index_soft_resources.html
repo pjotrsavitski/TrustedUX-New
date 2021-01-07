@@ -2,6 +2,11 @@
 {% load static%}
 {%block content%}
 <style>
+  video {
+  /* override other styles to make responsive */
+  width: 100%    !important;
+  height: auto   !important;
+}
   .author {
     left: 275px;
     top: 1127px;
@@ -65,12 +70,12 @@ function showVis()
 <!-- ***** Welcome Area End ***** -->
 
 <!-- ***** Features Small Start ***** -->
-<section class="section resources min-vh-100" style="padding-bottom:0;margin-bottom:0;">
+<section class="section resources min-vh-100 mt-4" style="padding-bottom:0;margin-bottom:0;">
     <div class="container-fluid">
       <div class='container'>
       <div class=" center-heading mt-5 pt-3">
         <h4> Resources </h4><br/>
-        <p class='text-muted'>With the TrustedUX tool, you can easily undertsand how users rate their level of trustworthiness with your product or service. The online tool can support you in all the following scenarios.
+        <p class='text-muted'>Technical documentation and how to use videos to support usage of TrustedUX tool. <br/> Academic articles for an in-depth understanding of trust in technology.
         </p>
         <br/>
 
@@ -165,6 +170,7 @@ function showVis()
                     </article>
                 </div>
                 <!-- Start doc -->
+                <!--
                 <div class="card  shadow-lg p-5">
                   <article>
                     <div class='card-body'>
@@ -172,9 +178,9 @@ function showVis()
                     </div>
                   </article>
                 </div>
-                <!-- End doc -->
 
-                <!-- Start doc -->
+
+
                 <div class="card  shadow-lg p-5">
                   <article>
                     <div class='card-body'>
@@ -182,16 +188,14 @@ function showVis()
                     </div>
                   </article>
                 </div>
-                <!-- End doc -->
 
-                <!-- Start doc -->
                 <div class="card  shadow-lg p-5">
                   <article>
                     <div class='card-body'>
                       <h4 class='card-title text-center'><b> Sample report</b></h4><br/>
                     </div>
                   </article>
-                </div>
+                </div> -->
                 <!-- End doc -->
 
 
@@ -209,6 +213,13 @@ function showVis()
                 <div class='card shadow-lg p-5'>
                   <div class='card-body'>
                   <h4 class='card-title text-center'><b>Video tutorials </b></h4>
+                  <video controls>
+
+
+                    <source src={% static 'assets/images/trux.mp4'%} type="video/mp4">
+
+
+                  </video>
                   </div>
                 </div>
               </div>
@@ -217,7 +228,9 @@ function showVis()
               <div class='container'>
                 <div class='card shadow-lg p-5'>
                   <div class='card-body'>
-                    <h4 class='card-title text-center'><b>Articles </b></h4>
+                    <h4 class='card-title text-center'><b>Articles </b></h4>\
+                    <p> Articles will be added soon. </p>
+
                   </div>
                 </div>
               </div>

@@ -15,6 +15,23 @@
   -webkit-border-radius:15px;
   border-radius:15px;
 }
+
+@media (max-width: 991px) {
+  .author {
+    left: 75px;
+    top: 112px;
+  border:2px solid #fff;
+
+  -moz-box-shadow: 20px -20px  #EBF5FF;
+;
+  -webkit-box-shadow: 20px -20px  #EBF5FF;
+  box-shadow: 20px -20px  #EBF5FF;
+  -moz-border-radius:15px;
+  -webkit-border-radius:15px;
+  border-radius:15px;
+}
+}
+
 .table td {
    text-align: center;
 }
@@ -155,7 +172,7 @@ function showVis()
     <div class='col col-4 mt-3' style='padding:5px;'>
       <img class='img author' src="{% static 'assets/images/pankaj.jpg'%}"/> <br/>
       <b class='text-primary'>   Pankaj Chejara <br/> Developer </b>
-      <p class='text-muted'> A PhD student, <br/>Tallinn University</p>
+      <p class='text-muted'> PhD student, <br/>Tallinn University</p>
     </div>
 
     <div class='col col-4 mt-3' style='padding:5px;'>

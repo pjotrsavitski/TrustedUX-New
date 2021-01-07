@@ -117,6 +117,15 @@ a[aria-expanded='false'] > .expand_caret {
     font-size: 20px;
 }
 
+.nav-item a span {
+  font-size: 14px;
+  color: #373F41;
+}
+
+.nav-item a span:active{
+  color: #007EFF;
+}
+
 </style>
 
 </head>
@@ -134,7 +143,7 @@ a[aria-expanded='false'] > .expand_caret {
         {% endif %}
         <li class='nav-item'><a class='nav-link'  href="{% url 'home' %}#features"> <span>Benefits</span></a></li>
         <li class='nav-item'><a class='nav-link'  href="{% url 'home' %}#how"> <span>How it works</span></a></li>
-        <li class='nav-item'><a class='nav-link'  href="{% url 'home' %}#research"> <span>Scientific background</span></a></li>
+        <!-- <li class='nav-item'><a class='nav-link'  href="{% url 'home' %}#research"> <span>Scientific background</span></a></li> -->
         <li class='nav-item'><a class='nav-link'  href="{% url 'home' %}#faqs"> <span>FAQ</span></a></li>
         <li class='nav-item'><a class='nav-link'  href="{% url 'resources'%}"> <span>Resources</span></a></li>
         <li class='nav-item'><a class='nav-link'  href="{% url 'aboutus'%}"> <span>About Us</span></a></li>
