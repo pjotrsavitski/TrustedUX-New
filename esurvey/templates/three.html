@@ -1,0 +1,3223 @@
+{%block title%}  Project Report: Trust evaluation of {{productname | safe}}  {%endblock%}
+
+{% block content %}
+  <!-- Latest compiled and minified CSS -->
+
+   <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+
+
+  <style>
+    [data-toggle="collapse"]:after {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: inherit;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      content: "\f054";
+      transform: rotate(90deg) ;
+      transition: all linear 0.25s;
+      }
+    [data-toggle="collapse"].collapsed:after {
+      transform: rotate(0deg) ;
+    }
+</style>
+
+{% if survey1Counts > 0 or survey2Counts > 0  or survey3Counts > 0 %}
+
+<div class="accordion" id="accordionExample">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h2 class="mb-0">
+
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+
+           <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span> Participants
+        </button>
+      </h2>
+    </div>
+
+    <div id="collapseOne" class="collapse in">
+      <div class="card-body">
+       <!-- three by three column div to seperate survey1 from survey 2 in first row, second row overall respondents for survey1 and survey 2, final row for graphs for age and gender for each sruvey as nested div -->
+<!-- add a new dive here by replicating one of the baove for 3 survey or 4 or five and remove one of the div for one survey -->
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">survey 1</th>
+      <th scope="col">survey 2</th>
+      <th scope="col">survey 3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Overall participants  : {{survey1Counts}}</td>
+      <td>Overall participants  : {{survey2Counts}}</td>
+      <td>Overall participants  : {{survey3Counts}}</td>
+    </tr>
+
+
+    <tr>
+      <td>     <div class="col-sm w-auto p-3" style="width: 200px; height: 210px">
+Gender
+        <canvas id="gender1" ></canvas>
+    </div>
+  </td>
+      <td>     <div class="col-sm w-auto p-3" style="width: 200px; height: 210px">
+Gender
+        <canvas id="gender2" ></canvas>
+    </div></td>
+      <td>     <div class="col-sm w-auto p-3" style="width: 200px; height: 210px">
+Gender
+        <canvas id="gender3" ></canvas>
+    </div></td>
+    </tr>
+
+
+
+    <tr>
+      <td>       <div class="col-sm w-auto p-3" style="width: 200px; height: 210px">
+Age
+        <canvas id="age1"></canvas>
+    </div>
+     </td>
+      <td>       <div class="col-sm w-auto p-3" style="width: 200px; height: 210px">
+Age
+        <canvas id="age2"></canvas>
+    </div></td>
+      <td>       <div class="col-sm w-auto p-3" style="width: 200px; height: 210px">
+Age
+        <canvas id="age3"></canvas>
+    </div></td>
+    </tr>
+
+
+
+  </tbody>
+</table>
+
+
+</div>
+      </div>
+    </div>
+
+
+
+
+
+<!-- Overall trust measurement -->
+
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h2 class="mb-0">
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                     <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span> Overall Trust
+        </button>
+      </h2>
+    </div>
+    <div id="collapseTwo" class="collapse in">
+      <div class="card-body">
+
+  <table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Survey 1</th>
+      <th scope="col">Survey 2</th>
+      <th scope="col">Survey 3</th>
+      <!-- add a new th for a 3rd survey or etc -->
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <!-- suvey 1 overall trust -->
+      <td>
+      {% if OvrallTrustS1s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallTrustS1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallTrustS1s | safe}}% Poor </div>
+         </div>
+         All user's do NOT trust {{productname | safe}} and therefore Not acceptable.
+
+      {%  elif OvrallTrustS1s > 50 and  OvrallTrustS1s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallTrustS1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallTrustS1s | safe}}% Very Low </div>
+         </div>
+         Most user's have very low trust in {{productname | safe}} and therefore Not acceptable.
+
+      {%  elif OvrallTrustS1s > 60 and  OvrallTrustS1s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallTrustS1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallTrustS1s | safe}}% Low </div>
+         </div>
+         Most user's have Low trust in {{productname | safe}} and therefore Not acceptable.
+
+      {%  elif OvrallTrustS1s > 70 and  OvrallTrustS1s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{OvrallTrustS1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallTrustS1s | safe}}% Satisfactory </div>
+         </div>
+         Some user's trust, some do not trust {{productname | safe}}  and therefore marginally acceptable to some users.
+
+      {%  elif OvrallTrustS1s > 80 and  OvrallTrustS1s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallTrustS1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallTrustS1s | safe}}% High </div>
+         </div>
+         Most user's highly trust {{productname | safe}} and therefore acceptable to users.
+
+      {%  elif OvrallTrustS1s > 90 and  OvrallTrustS1s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallTrustS1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallTrustS1s | safe}}% Very High </div>
+         </div>
+         All user's highly trust {{productname | safe}} and therefore acceptable to users.
+
+      {% endif %}
+      </td>
+           <!-- suvey 2 overall trust -->
+      <td>
+      {% if OvrallTrustS2s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallTrustS2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallTrustS2s | safe}}% Poor </div>
+         </div>
+         All user's do NOT trust {{productname | safe}} and therefore Not acceptable.
+
+      {%  elif OvrallTrustS2s > 50 and  OvrallTrustS2s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallTrustS2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallTrustS2s | safe}}% Very Low </div>
+         </div>
+         Most user's have very low trust in {{productname | safe}} and therefore Not acceptable.
+
+      {%  elif OvrallTrustS2s > 60 and  OvrallTrustS2s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallTrustS2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallTrustS2s | safe}}% Low </div>
+         </div>
+         Most user's have Low trust in {{productname | safe}} and therefore Not acceptable.
+
+      {%  elif OvrallTrustS2s > 70 and  OvrallTrustS1s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{OvrallTrustS2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallTrustS2s | safe}}% Satisfactory </div>
+         </div>
+         Some user's trust, some do not trust {{productname | safe}}  and therefore marginally acceptable to some users.
+
+      {%  elif OvrallTrustS2s > 80 and  OvrallTrustS2s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallTrustS2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallTrustS2s | safe}}% High </div>
+         </div>
+         Most user's highly trust {{productname | safe}} and therefore acceptable to users.
+
+      {%  elif OvrallTrustS2s > 90 and  OvrallTrustS2s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallTrustS2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallTrustS2s | safe}}% Very High </div>
+         </div>
+         All user's highly trust {{productname | safe}} and therefore acceptable to users.
+
+      {% endif %}
+      </td>
+            <td>
+      {% if OvrallTrustS3s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallTrustS3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallTrustS3s | safe}}% Poor </div>
+         </div>
+         All user's do NOT trust {{productname | safe}} and therefore Not acceptable.
+
+      {%  elif OvrallTrustS3s > 50 and  OvrallTrustS3s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallTrustS3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallTrustS3s | safe}}% Very Low </div>
+         </div>
+         Most user's have very low trust in {{productname | safe}} and therefore Not acceptable.
+
+      {%  elif OvrallTrustS3s > 60 and  OvrallTrustS3s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallTrustS3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallTrustS3s | safe}}% Low </div>
+         </div>
+         Most user's have Low trust in {{productname | safe}} and therefore Not acceptable.
+
+      {%  elif OvrallTrustS3s > 70 and  OvrallTrustS1s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{OvrallTrustS3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallTrustS3s | safe}}% Satisfactory </div>
+         </div>
+         Some user's trust, some do not trust {{productname | safe}}  and therefore marginally acceptable to some users.
+
+      {%  elif OvrallTrustS3s > 80 and  OvrallTrustS3s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallTrustS3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallTrustS3s | safe}}% High </div>
+         </div>
+         Most user's highly trust {{productname | safe}} and therefore acceptable to users.
+
+      {%  elif OvrallTrustS3s > 90 and  OvrallTrustS3s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallTrustS3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallTrustS3s | safe}}% Very High </div>
+         </div>
+         All user's highly trust {{productname | safe}} and therefore acceptable to users.
+
+      {% endif %}
+      </td>
+      <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
+    </tr>
+    <tr>
+    {% if CrobanchAlphaS1 < 0.70%}
+      <th scope="row">Crobanch Alpha: {{CrobanchAlphaS1 | safe}} <br> Result is insignificant for any meaniningful conclussion, add more responses </th>
+      {% elif CrobanchAlphaS1 >= 0.70%}
+      <th scope="row">Crobanch Alpha: {{CrobanchAlphaS1 | safe}} <br> Result is significant for meaningful conclussion </th>
+      {% endif %}
+
+    {% if CrobanchAlphaS2 < 0.70%}
+      <th scope="row">Crobanch Alpha: {{CrobanchAlphaS2 | safe}} <br> Result is insignificant for any meaniningful conclussion, add more responses </th>
+      {% elif CrobanchAlphaS2 >= 0.70%}
+      <th scope="row">Crobanch Alpha: {{CrobanchAlphaS2 | safe}} <br> Result is significant for meaningful conclussion </th>
+      {% endif %}
+
+    {% if CrobanchAlphaS3 < 0.70%}
+      <th scope="row">Crobanch Alpha: {{CrobanchAlphaS3 | safe}} <br> Result is insignificant for any meaniningful conclussion, add more responses </th>
+      {% elif CrobanchAlphaS3 >= 0.70%}
+      <th scope="row">Crobanch Alpha: {{CrobanchAlphaS3 | safe}} <br> Result is significant for meaningful conclussion </th>
+      {% endif %}
+
+    </tr>
+  </tbody>
+</table>
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="card">
+    <div class="card-header" id="headingThree">
+      <h2 class="mb-0">
+        <button class="btn btn-primary"" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                   <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span> Trust Dimenssions
+        </button>
+      </h2>
+    </div>
+    <div id="collapseThree" class="collapse in">
+      <div class="card-body">
+    <p>
+
+
+      <span class="badge"> <label><input type="checkbox" aria-label="Checkbox for following text input" data-toggle="collapse" data-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample" checked="true">Risk</label></span>
+
+      <span class="badge"><label><input type="checkbox" aria-label="Checkbox for following text input" data-toggle="collapse" data-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample" checked="true">Benevolence</label></span>
+     <span class="badge"><label> <input type="checkbox" aria-label="Checkbox for following text input" data-toggle="collapse" data-target="#collapseExample3" aria-expanded="false" aria-controls="collapseExample" checked="true">Competence</label> </span>
+
+     <span class="badge"> <label> <input type="checkbox" aria-label="Checkbox for following text input" data-toggle="collapse" data-target="#collapseExample4" aria-expanded="false" aria-controls="collapseExample" checked="true">Reciprocity</label></span>
+
+     <span class="badge"> <label> <input type="checkbox" aria-label="Checkbox for following text input" data-toggle="collapse" data-target="#collapseExample5" aria-expanded="false" aria-controls="collapseExample" checked="true">General trust </label> </span>
+
+</p>
+<!-- risk -->
+<div class="collapse in" id="collapseExample1">
+  <div class="card card-body">
+ <table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col" colspan="2">Overall Risk Perception</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+      <th scope="col">Survey 1</th>
+      <th scope="col">Survey 2</th>
+      <th scope="col">Survey 3</th>
+      <!-- add a new th for a 3rd survey or etc -->
+    </tr>
+    <tr>
+      <td>
+      {% if OvrallRiskS1s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallRiskS1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallRiskS1s | safe}}% Not Risky (Poor) </div>
+         </div>
+         Most user's believe it is not risky to use {{productname | safe}}.
+
+      {%  elif OvrallRiskS1s > 50 and  OvrallRiskS1s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallRiskS1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallRiskS1s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that there is very low risk associated with the use of {{productname | safe}}.
+
+      {%  elif OvrallRiskS1s > 60 and  OvrallRiskS1s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallRiskS1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallRiskS1s | safe}}% Low </div>
+         </div>
+         Most user's believe there is low risk associated with the use of {{productname | safe}}.
+
+      {%  elif OvrallRiskS1s > 70 and  OvrallRiskS1s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{OvrallRiskS1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallRiskS1s | safe}}% Satisfactory (moderate) </div>
+         </div>
+         Most user's believe that there are moderate risk associated with the use of {{productname | safe}}.
+
+      {%  elif OvrallRiskS1s > 80 and  OvrallRiskS1s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallRiskS1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallRiskS1s | safe}}% High </div>
+         </div>
+         Most user's believe that there is high risk associated with the use of {{productname | safe}}.
+
+      {%  elif OvrallRiskS1s > 90 and  OvrallRiskS1s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallRiskS1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallRiskS1s | safe}}% Very High </div>
+         </div>
+         Most user's believe that there is very high risk associated with the use of {{productname | safe}} .
+
+      {% endif %}
+      </td>
+           <!-- suvey 2 overall trust -->
+      <td>
+      {% if OvrallRiskS2s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallRiskS2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallRiskS2s | safe}}% Not Risky (Poor) </div>
+         </div>
+         Most user's believe it is not risky to use {{productname | safe}}.
+
+      {%  elif OvrallRiskS2s > 50 and  OvrallRiskS2s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallRiskS2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallRiskS2s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that there is very low risk associated with the use of {{productname | safe}}.
+
+      {%  elif OvrallRiskS2s > 60 and  OvrallRiskS2s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallRiskS2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallRiskS2s | safe}}% Low </div>
+         </div>
+         Most user's believe there is low risk associated with the use of {{productname | safe}}.
+
+      {%  elif OvrallRiskS2s > 70 and  OvrallRiskS2s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{OvrallRiskS2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallRiskS2s | safe}}% Satisfactory (moderate) </div>
+         </div>
+         Most user's believe that there are moderate risk associated with the use of {{productname | safe}}.
+
+      {%  elif OvrallRiskS2s > 80 and  OvrallRiskS2s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallRiskS2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallRiskS2s | safe}}% High </div>
+         </div>
+         Most user's believe that there is high risk associated with the use of {{productname | safe}}.
+
+      {%  elif OvrallRiskS2s > 90 and  OvrallRiskS2s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallRiskS2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallRiskS2s | safe}}% Very High </div>
+         </div>
+         Most user's believe that there is very high risk associated with the use of {{productname | safe}} .
+
+      {% endif %}
+      </td>
+       <td>
+      {% if OvrallRiskS3s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallRiskS3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallRiskS3s | safe}}% Not Risky (Poor) </div>
+         </div>
+         Most user's believe it is not risky to use {{productname | safe}}.
+
+      {%  elif OvrallRiskS3s > 50 and  OvrallRiskS3s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallRiskS3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallRiskS3s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that there is very low risk associated with the use of {{productname | safe}}.
+
+      {%  elif OvrallRiskS3s > 60 and  OvrallRiskS3s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallRiskS3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallRiskS3s | safe}}% Low </div>
+         </div>
+         Most user's believe there is low risk associated with the use of {{productname | safe}}.
+
+      {%  elif OvrallRiskS3s > 70 and  OvrallRiskS3s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{OvrallRiskS3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallRiskS3s | safe}}% Satisfactory (moderate) </div>
+         </div>
+         Most user's believe that there are moderate risk associated with the use of {{productname | safe}}.
+
+      {%  elif OvrallRiskS3s > 80 and  OvrallRiskS3s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallRiskS3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallRiskS3s | safe}}% High </div>
+         </div>
+         Most user's believe that there is high risk associated with the use of {{productname | safe}}.
+
+      {%  elif OvrallRiskS3s > 90 and  OvrallRiskS3s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallRiskS3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallRiskS3s | safe}}% Very High </div>
+         </div>
+         Most user's believe that there is very high risk associated with the use of {{productname | safe}} .
+
+      {% endif %}
+      </td>
+      <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
+    </tr>
+  </tbody>
+</table>
+ </div>
+</div>
+
+<!-- Benevolence-->
+<div class="collapse in" id="collapseExample2">
+  <div class="card card-body">
+  <table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col" colspan="2">Overall Benevolence Perception</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+      <th scope="col">Survey 1</th>
+      <th scope="col">Survey 2</th>
+      <th scope="col">Survey 3</th>
+      <!-- add a new th for a 3rd survey or etc -->
+    </tr>
+    <tr>
+      <td>
+      {% if OvrallBenevolenceS1s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallBenevolenceS1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallBenevolenceS1s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} is not supportive(not benevolent).
+
+      {%  elif OvrallBenevolenceS1s > 50 and  OvrallBenevolenceS1s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallBenevolenceS1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallBenevolenceS1s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is very less supportive (very low benevolent).
+
+      {%  elif OvrallBenevolenceS1s > 60 and  OvrallBenevolenceS1s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallBenevolenceS1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallBenevolenceS1s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is less supportive (low benevolent).
+
+      {%  elif OvrallBenevolenceS1s > 70 and  OvrallBenevolenceS1s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{OvrallBenevolenceS1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallBenevolenceS1s | safe}}% Satisfactory</div>
+         </div>
+         Most user's believe that {{productname | safe}} moderately supportive (Average benevolent).
+
+      {%  elif OvrallBenevolenceS1s > 80 and  OvrallBenevolenceS1s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallBenevolenceS1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallBenevolenceS1s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} is highly supportive (highly benevolent).
+
+      {%  elif OvrallBenevolenceS1s > 90 and  OvrallBenevolenceS1s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallBenevolenceS1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallBenevolenceS1s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} is very highly supportive (highly benevolent) .
+
+      {% endif %}
+      </td>
+           <!-- suvey 2 overall trust -->
+      <td>
+      {% if OvrallBenevolenceS2s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallBenevolenceS2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallBenevolenceS2s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} is not supportive(not benevolent).
+
+      {%  elif OvrallBenevolenceS2s > 50 and  OvrallBenevolenceS2s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallBenevolenceS2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallBenevolenceS2s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is very less supportive (very low benevolent).
+
+      {%  elif OvrallBenevolenceS2s > 60 and  OvrallBenevolenceS2s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallBenevolenceS2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallBenevolenceS2s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is less supportive (low benevolent).
+
+      {%  elif OvrallBenevolenceS2s > 70 and  OvrallBenevolenceS2s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{OvrallBenevolenceS2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallBenevolenceS2s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} moderately supportive (Average benevolent).
+
+      {%  elif OvrallBenevolenceS2s > 80 and  OvrallBenevolenceS2s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallBenevolenceS2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallBenevolenceS2s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} is highly supportive (highly benevolent).
+
+      {%  elif OvrallBenevolenceS2s > 90 and  OvrallBenevolenceS2s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallBenevolenceS2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallBenevolenceS2s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} is very highly supportive (highly benevolent) .
+
+      {% endif %}
+      </td>
+            <td>
+      {% if OvrallBenevolenceS3s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallBenevolenceS3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallBenevolenceS3s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} is not supportive(not benevolent).
+
+      {%  elif OvrallBenevolenceS3s > 50 and  OvrallBenevolenceS3s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallBenevolenceS3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallBenevolenceS3s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is very less supportive (very low benevolent).
+
+      {%  elif OvrallBenevolenceS3s > 60 and  OvrallBenevolenceS3s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallBenevolenceS3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallBenevolenceS3s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is less supportive (low benevolent).
+
+      {%  elif OvrallBenevolenceS3s > 70 and  OvrallBenevolenceS3s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{OvrallBenevolenceS3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallBenevolenceS3s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} moderately supportive (Average benevolent).
+
+      {%  elif OvrallBenevolenceS3s > 80 and  OvrallBenevolenceS3s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallBenevolenceS3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallBenevolenceS3s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} is highly supportive (highly benevolent).
+
+      {%  elif OvrallBenevolenceS3s > 90 and  OvrallBenevolenceS3s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallBenevolenceS3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallBenevolenceS3s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} is very highly supportive (highly benevolent) .
+
+      {% endif %}
+      </td>
+      <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
+    </tr>
+  </tbody>
+</table>
+  </div>
+</div>
+
+<!-- Competence -->
+<div class="collapse in" id="collapseExample3">
+  <div class="card card-body">
+   <table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col" colspan="2">Overall Competence Perception</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+      <th scope="col">Survey 1</th>
+      <th scope="col">Survey 2</th>
+      <th scope="col">Survey 3</th>
+      <!-- add a new th for a 3rd survey or etc -->
+    </tr>
+    <tr>
+      <td>
+      {% if OvrallCompetenceS1s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallCompetenceS1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallCompetenceS1s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} is not Competent for performing the task which it was designed to accomplish.
+
+      {%  elif OvrallCompetenceS1s > 50 and  OvrallCompetenceS1s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallCompetenceS1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallCompetenceS1s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is very less Competent for performing the task which it was designed to accomplish.
+
+      {%  elif OvrallCompetenceS1s > 60 and  OvrallCompetenceS1s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallCompetenceS1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallCompetenceS1s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is less Competent for performing the task which it was designed to accomplish.
+
+      {%  elif OvrallCompetenceS1s > 70 and  OvrallCompetenceS1s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{OvrallCompetenceS1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallCompetenceS1s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} is less Competent for performing the task which it was designed to accomplish.
+
+      {%  elif OvrallCompetenceS1s > 80 and  OvrallCompetenceS1s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallCompetenceS1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallCompetenceS1s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} is highly Competent for performing the task which it was designed to accomplish.
+
+      {%  elif OvrallCompetenceS1s > 90 and  OvrallCompetenceS1s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallCompetenceS1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallCompetenceS1s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} is very highly Competent for performing the task which it was designed to accomplish.
+
+      {% endif %}
+      </td>
+           <!-- suvey 2 overall trust -->
+      <td>
+      {% if OvrallCompetenceS2s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallCompetenceS2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallCompetenceS2s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} is not Competent for performing the task which it was designed to accomplish.
+
+      {%  elif OvrallCompetenceS2s > 50 and  OvrallCompetenceS2s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallCompetenceS2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallCompetenceS2s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is very less Competent for performing the task which it was designed to accomplish.
+
+      {%  elif OvrallCompetenceS2s > 60 and  OvrallCompetenceS2s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallCompetenceS2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallCompetenceS2s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is less Competent for performing the task which it was designed to accomplish.
+
+      {%  elif OvrallCompetenceS2s > 70 and  OvrallCompetenceS2s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{OvrallCompetenceS2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallCompetenceS2s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} is less Competent for performing the task which it was designed to accomplish.
+
+      {%  elif OvrallCompetenceS2s > 80 and  OvrallCompetenceS2s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallCompetenceS2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallCompetenceS2s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} is highly Competent for performing the task which it was designed to accomplish.
+
+      {%  elif OvrallCompetenceS2s > 90 and  OvrallCompetenceS2s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallCompetenceS2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallCompetenceS2s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} is very highly Competent for performing the task which it was designed to accomplish.
+
+      {% endif %}
+      </td>
+            <td>
+      {% if OvrallCompetenceS3s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallCompetenceS3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallCompetenceS3s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} is not Competent for performing the task which it was designed to accomplish.
+
+      {%  elif OvrallCompetenceS3s > 50 and  OvrallCompetenceS3s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallCompetenceS3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallCompetenceS3s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is very less Competent for performing the task which it was designed to accomplish.
+
+      {%  elif OvrallCompetenceS3s > 60 and  OvrallCompetenceS3s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallCompetenceS3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallCompetenceS3s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is less Competent for performing the task which it was designed to accomplish.
+
+      {%  elif OvrallCompetenceS3s > 70 and  OvrallCompetenceS3s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{OvrallCompetenceS3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallCompetenceS3s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} is less Competent for performing the task which it was designed to accomplish.
+
+      {%  elif OvrallCompetenceS3s > 80 and  OvrallCompetenceS3s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallCompetenceS3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallCompetenceS3s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} is highly Competent for performing the task which it was designed to accomplish.
+
+      {%  elif OvrallCompetenceS3s > 90 and  OvrallCompetenceS3s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallCompetenceS3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallCompetenceS3s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} is very highly Competent for performing the task which it was designed to accomplish.
+
+      {% endif %}
+      </td>
+      <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
+    </tr>
+  </tbody>
+</table>
+ </div>
+</div>
+
+
+
+
+
+
+<!-- reciprocity -->
+<div class="collapse in" id="collapseExample4">
+  <div class="card card-body">
+   <table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col" colspan="2">Overall Reciprocity Perception</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+      <th scope="col">Survey 1</th>
+      <th scope="col">Survey 2</th>
+       <th scope="col">Survey 3</th>
+      <!-- add a new th for a 3rd survey or etc -->
+    </tr>
+    <tr>
+      <td>
+      {% if OvrallReciprocityS1s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallReciprocityS1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallReciprocityS1s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} does not provide relevant and appropriate feedback(Poor Reciprocity).
+
+      {%  elif OvrallReciprocityS1s > 50 and  OvrallReciprocityS1s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallReciprocityS1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallReciprocityS1s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} does provide very less relevant and appropriate feedback(Very low Reciprocity).
+
+      {%  elif OvrallReciprocityS1s > 60 and  OvrallReciprocityS1s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallReciprocityS1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallReciprocityS1s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} does provide less relevant and appropriate feedback(Low Reciprocity).
+
+      {%  elif OvrallReciprocityS1s > 70 and  OvrallReciprocityS1s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{OvrallReciprocityS1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallReciprocityS1s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} does provide moderate/few relevant and appropriate feedback(Moderate Reciprocity).
+
+      {%  elif OvrallReciprocityS1s > 80 and  OvrallReciprocityS1s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallReciprocityS1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallReciprocityS1s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} does provide much relevant and appropriate feedback(High Reciprocity).
+
+      {%  elif OvrallReciprocityS1s > 90 and  OvrallReciprocityS1s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallReciprocityS1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallReciprocityS1s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} does provide very much relevant and appropriate feedback(Very High Reciprocity)
+
+      {% endif %}
+      </td>
+           <!-- suvey 2 overall trust -->
+          <td>
+      {% if OvrallReciprocityS2s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallReciprocityS2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallReciprocityS2s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} does not provide relevant and appropriate feedback(Poor Reciprocity).
+
+      {%  elif OvrallReciprocityS2s > 50 and  OvrallReciprocityS2s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallReciprocityS2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallReciprocityS2s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} does provide very less relevant and appropriate feedback(Very low Reciprocity).
+
+      {%  elif OvrallReciprocityS2s > 60 and  OvrallReciprocityS2s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallReciprocityS2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallReciprocityS2s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} does provide less relevant and appropriate feedback(Low Reciprocity).
+
+      {%  elif OvrallReciprocityS2s > 70 and  OvrallReciprocityS2s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{OvrallReciprocityS2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallReciprocityS2s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} does provide moderate/few relevant and appropriate feedback(Moderate Reciprocity).
+
+      {%  elif OvrallReciprocityS2s > 80 and  OvrallReciprocityS2s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallReciprocityS2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallReciprocityS2s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} does provide much relevant and appropriate feedback(High Reciprocity).
+
+      {%  elif OvrallReciprocityS2s > 90 and  OvrallReciprocityS2s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallReciprocityS2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallReciprocityS2s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} does provide very much relevant and appropriate feedback(Very High Reciprocity)
+
+      {% endif %}
+      </td>
+            </td>
+           <!-- suvey 2 overall trust -->
+          <td>
+      {% if OvrallReciprocityS3s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallReciprocityS3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallReciprocityS3s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} does not provide relevant and appropriate feedback(Poor Reciprocity).
+
+      {%  elif OvrallReciprocityS3s > 50 and  OvrallReciprocityS3s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallReciprocityS3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallReciprocityS3s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} does provide very less relevant and appropriate feedback(Very low Reciprocity).
+
+      {%  elif OvrallReciprocityS3s > 60 and  OvrallReciprocityS3s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallReciprocityS3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallReciprocityS3s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} does provide less relevant and appropriate feedback(Low Reciprocity).
+
+      {%  elif OvrallReciprocityS3s > 70 and  OvrallReciprocityS3s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{OvrallReciprocityS3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallReciprocityS3s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} does provide moderate/few relevant and appropriate feedback(Moderate Reciprocity).
+
+      {%  elif OvrallReciprocityS3s > 80 and  OvrallReciprocityS3s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallReciprocityS3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallReciprocityS3s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} does provide much relevant and appropriate feedback(High Reciprocity).
+
+      {%  elif OvrallReciprocityS3s > 90 and  OvrallReciprocityS3s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallReciprocityS3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallReciprocityS3s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} does provide very much relevant and appropriate feedback(Very High Reciprocity)
+
+      {% endif %}
+      </td>
+      <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
+    </tr>
+  </tbody>
+</table>
+  </div>
+</div>
+
+
+
+<!-- Generatl trust -->
+<div class="collapse in" id="collapseExample5">
+  <div class="card card-body">
+   <table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col" colspan="2">Overall General Trust Perception</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+      <th scope="col">Survey 1</th>
+      <th scope="col">Survey 2</th>
+      <th scope="col">Survey 3</th>
+      <!-- add a new th for a 3rd survey or etc -->
+    </tr>
+    <tr>
+      <td>
+      {% if OvrallGeneralTrustS1s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallGeneralTrustS1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallGeneralTrustS1s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} is generally not trustworthy (Poor Trust).
+
+      {%  elif OvrallGeneralTrustS1s > 50 and  OvrallGeneralTrustS1s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallGeneralTrustS1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallGeneralTrustS1s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is generally very less trustworthy (Verly Low Trust).
+
+      {%  elif OvrallGeneralTrustS1s > 60 and  OvrallGeneralTrustS1s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallGeneralTrustS1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallGeneralTrustS1s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is generally less trustworthy(Low Trust).
+
+      {%  elif OvrallGeneralTrustS1s > 70 and  OvrallGeneralTrustS1s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{OvrallGeneralTrustS1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallGeneralTrustS1s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} is moderately trustworthy (Moderate trust).
+
+      {%  elif OvrallGeneralTrustS1s > 80 and  OvrallGeneralTrustS1s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallGeneralTrustS1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallGeneralTrustS1s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} is highly trustworthy (High Trust).
+
+      {%  elif OvrallGeneralTrustS1s > 90 and  OvrallGeneralTrustS1s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallGeneralTrustS1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallGeneralTrustS1s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} is very highly trustworthy (Very High Trust)
+
+      {% endif %}
+      </td>
+           <!-- suvey 2 overall trust -->
+      <td>
+      {% if OvrallGeneralTrustS2s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallGeneralTrustS2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallGeneralTrustS2s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} is generally not trustworthy (Poor Trust).
+
+      {%  elif OvrallGeneralTrustS2s > 50 and  OvrallGeneralTrustS2s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallGeneralTrustS2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallGeneralTrustS2s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is generally very less trustworthy (Verly Low Trust).
+
+      {%  elif OvrallGeneralTrustS2s > 60 and  OvrallGeneralTrustS2s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallGeneralTrustS2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallGeneralTrustS2s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is generally less trustworthy(Low Trust).
+
+      {%  elif OvrallGeneralTrustS2s > 70 and  OvrallGeneralTrustS2s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{OvrallGeneralTrustS2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallGeneralTrustS2s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} is moderately trustworthy (Moderate trust).
+
+      {%  elif OvrallGeneralTrustS2s > 80 and  OvrallGeneralTrustS2s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallGeneralTrustS2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallGeneralTrustS2s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} is highly trustworthy (High Trust).
+
+      {%  elif OvrallGeneralTrustS2s > 90 and  OvrallGeneralTrustS2s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallGeneralTrustS2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallGeneralTrustS2s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} is very highly trustworthy (Very High Trust)
+
+      {% endif %}
+      </td>
+            <td>
+      {% if OvrallGeneralTrustS3s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallGeneralTrustS3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallGeneralTrustS3s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} is generally not trustworthy (Poor Trust).
+
+      {%  elif OvrallGeneralTrustS3s > 50 and  OvrallGeneralTrustS3s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallGeneralTrustS3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallGeneralTrustS3s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is generally very less trustworthy (Verly Low Trust).
+
+      {%  elif OvrallGeneralTrustS3s > 60 and  OvrallGeneralTrustS3s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{OvrallGeneralTrustS3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallGeneralTrustS3s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is generally less trustworthy(Low Trust).
+
+      {%  elif OvrallGeneralTrustS3s > 70 and  OvrallGeneralTrustS3s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{OvrallGeneralTrustS3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallGeneralTrustS3s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} is moderately trustworthy (Moderate trust).
+
+      {%  elif OvrallGeneralTrustS3s > 80 and  OvrallGeneralTrustS3s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallGeneralTrustS3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallGeneralTrustS3s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} is highly trustworthy (High Trust).
+
+      {%  elif OvrallGeneralTrustS3s > 90 and  OvrallGeneralTrustS3s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{OvrallGeneralTrustS3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{OvrallGeneralTrustS3s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} is very highly trustworthy (Very High Trust)
+
+      {% endif %}
+      </td>
+      <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
+    </tr>
+  </tbody>
+</table>
+  </div>
+</div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Trust questions for each dimenssions -->
+ <div class="card">
+    <div class="card-header" id="headingThree">
+      <h2 class="mb-0">
+        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseThree12" aria-expanded="false" aria-controls="collapseThree12">
+                   <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span> Trust Dimenssions Questions
+        </button>
+      </h2>
+    </div>
+    <div id="collapseThree12" class="collapse in">
+      <div class="card-body">
+
+ <!-- risk questions  -->
+
+<div class="collapse in" id="collapseExample1">
+  <div class="card card-body">
+ <table class="table table-hover">
+ <!--   question one -->
+  <thead>
+    <tr>
+      <th scope="col" colspan="2">Risk Q1: I believe that there could be negative consequences from using {{ productname }}</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+      <th scope="col">Survey 1</th>
+      <th scope="col">Survey 2</th>
+      <th scope="col">Survey 3</th>
+      <!-- add a new th for a 3rd survey or etc -->
+    </tr>
+    <tr>
+      <td>
+      {% if RiskQ1S1s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ1S1s| safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ1S1s | safe}}% Not Risky (Poor) </div>
+         </div>
+         Most user's believe there is no negative consequences from using {{productname | safe}}.
+
+      {%  elif RiskQ1S1s > 50 and  RiskQ1S1s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ1S1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ1S1s | safe}}% Very Low </div>
+         </div>
+         Most user's believe there is very low negative consequences from using {{productname | safe}}.
+
+      {%  elif RiskQ1S1s > 60 and  RiskQ1S1s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ1S1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ1S1s | safe}}% Low </div>
+         </div>
+         Most user's believe there is low negative consequences from using {{productname | safe}}.
+
+      {%  elif RiskQ1S1s > 70 and  RiskQ1S1s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{RiskQ1S1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ1S1s | safe}}% Satisfactory (moderate) </div>
+         </div>
+         Most user's believe there is moderate negative consequences from using {{productname | safe}}.
+
+      {%  elif RiskQ1S1s > 80 and  RiskQ1S1s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{RiskQ1S1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ1S1s | safe}}% High </div>
+         </div>
+         Most user's believe there is high negative consequences from using {{productname | safe}}.
+
+      {%  elif RiskQ1S1s > 90 and  RiskQ1S1s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{RiskQ1S1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ1S1s | safe}}% Very High </div>
+         </div>
+         Most user's believe there is very high negative consequences from using {{productname | safe}}.
+
+      {% endif %}
+      </td>
+           <!-- suvey 2 overall trust -->
+      <td>
+      {% if RiskQ1S2s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ1S2s| safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ1S2s | safe}}% Not Risky (Poor) </div>
+         </div>
+         Most user's believe there is no negative consequences from using {{productname | safe}}.
+
+      {%  elif RiskQ1S2s > 50 and  RiskQ1S2s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ1S2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ1S2s | safe}}% Very Low </div>
+         </div>
+         Most user's believe there is very low negative consequences from using {{productname | safe}}.
+
+      {%  elif RiskQ1S2s > 60 and  RiskQ1S2s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ1S2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ1S2s | safe}}% Low </div>
+         </div>
+         Most user's believe there is low negative consequences from using {{productname | safe}}.
+
+      {%  elif RiskQ1S2s > 70 and  RiskQ1S2s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{RiskQ1S2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ1S2s | safe}}% Satisfactory (moderate) </div>
+         </div>
+         Most user's believe there is moderate negative consequences from using {{productname | safe}}.
+
+      {%  elif RiskQ1S2s > 80 and  RiskQ1S2s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{RiskQ1S2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ1S2s | safe}}% High </div>
+         </div>
+         Most user's believe there is high negative consequences from using {{productname | safe}}.
+
+      {%  elif RiskQ1S2s > 90 and  RiskQ1S2s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{RiskQ1S2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ1S2s | safe}}% Very High </div>
+         </div>
+         Most user's believe there is very high negative consequences from using {{productname | safe}}.
+
+      {% endif %}
+      </td>
+
+      <td>
+      {% if RiskQ1S3s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ1S3s| safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ1S3s | safe}}% Not Risky (Poor) </div>
+         </div>
+         Most user's believe there is no negative consequences from using {{productname | safe}}.
+
+      {%  elif RiskQ1S3s > 50 and  RiskQ1S3s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ1S3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ1S3s | safe}}% Very Low </div>
+         </div>
+         Most user's believe there is very low negative consequences from using {{productname | safe}}.
+
+      {%  elif RiskQ1S3s > 60 and  RiskQ1S3s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ1S3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ1S3s | safe}}% Low </div>
+         </div>
+         Most user's believe there is low negative consequences from using {{productname | safe}}.
+
+      {%  elif RiskQ1S3s > 70 and  RiskQ1S3s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{RiskQ1S3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ1S3s | safe}}% Satisfactory (moderate) </div>
+         </div>
+         Most user's believe there is moderate negative consequences from using {{productname | safe}}.
+
+      {%  elif RiskQ1S3s > 80 and  RiskQ1S3s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{RiskQ1S3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ1S3s | safe}}% High </div>
+         </div>
+         Most user's believe there is high negative consequences from using {{productname | safe}}.
+
+      {%  elif RiskQ1S3s > 90 and  RiskQ1S3s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{RiskQ1S3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ1S3s | safe}}% Very High </div>
+         </div>
+         Most user's believe there is very high negative consequences from using {{productname | safe}}.
+
+      {% endif %}
+      </td>
+      <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
+    </tr>
+  </tbody>
+   <!--   question two -->
+  <thead>
+    <tr>
+      <th scope="col" colspan="2">Risk Q2: I feel I must be cautious when using {{ productname }}</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+      <th scope="col">Survey 1</th>
+      <th scope="col">Survey 2</th>
+      <th scope="col">Survey 3</th>
+      <!-- add a new th for a 3rd survey or etc -->
+    </tr>
+    <tr>
+      <td>
+      {% if RiskQ2S1s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ2S1s| safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ2S1s | safe}}% Not Risky (Poor) </div>
+         </div>
+         Most user's believe there is no need to be cautious when using {{productname | safe}}.
+
+      {%  elif RiskQ2S1s > 50 and  RiskQ2S1s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ2S1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ2S1s | safe}}% Very Low </div>
+         </div>
+         Most user's believe there is need to exercise very low cautiousness when using {{productname | safe}}.
+
+      {%  elif RiskQ2S1s > 60 and  RiskQ2S1s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ2S1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ2S1s | safe}}% Low </div>
+         </div>
+         Most user's believe there is need to exercise low cautiousness when using {{productname | safe}}.
+
+      {%  elif RiskQ2S1s > 70 and  RiskQ2S1s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{RiskQ2S1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ2S1s | safe}}% Satisfactory (moderate) </div>
+         </div>
+         Most user's believe there is need to exercise moderate cautiousness when using {{productname | safe}}.
+
+      {%  elif RiskQ2S1s > 80 and  RiskQ2S1s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{RiskQ2S1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ2S1s | safe}}% High </div>
+         </div>
+         Most user's believe there is need to exercise high cautiousness when using {{productname | safe}}.
+
+      {%  elif RiskQ2S1s > 90 and  RiskQ2S1s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{RiskQ2S1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ2S1s | safe}}% Very High </div>
+         </div>
+         Most user's believe there is need to exercise very high cautiousness when using {{productname | safe}}.
+
+      {% endif %}
+      </td>
+           <!-- suvey 2 overall trust -->
+      <td>
+      {% if RiskQ2S2s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ2S2s| safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ2S2s | safe}}% Not Risky (Poor) </div>
+         </div>
+         Most user's believe there is no need to be cautious when using {{productname | safe}}.
+
+      {%  elif RiskQ2S2s > 50 and  RiskQ2S2s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ2S2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ2S2s | safe}}% Very Low </div>
+         </div>
+         Most user's believe there is need to exercise very low cautiousness when using {{productname | safe}}.
+
+      {%  elif RiskQ2S2s > 60 and  RiskQ2S2s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ2S2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ2S2s | safe}}% Low </div>
+         </div>
+         Most user's believe there is need to exercise low cautiousness when using {{productname | safe}}.
+
+      {%  elif RiskQ2S2s > 70 and  RiskQ2S2s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{RiskQ2S2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ2S2s | safe}}% Satisfactory (moderate) </div>
+         </div>
+         Most user's believe there is need to exercise moderate cautiousness when using {{productname | safe}}.
+
+      {%  elif RiskQ2S2s > 80 and  RiskQ2S2s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{RiskQ2S2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ2S2s | safe}}% High </div>
+         </div>
+         Most user's believe there is need to exercise high cautiousness when using {{productname | safe}}.
+
+      {%  elif RiskQ2S2s > 90 and  RiskQ2S2s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{RiskQ2S2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ2S2s | safe}}% Very High </div>
+         </div>
+         Most user's believe there is need to exercise very high cautiousness when using {{productname | safe}}.
+
+      {% endif %}
+      </td>
+            <td>
+      {% if RiskQ2S3s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ2S3s| safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ2S3s | safe}}% Not Risky (Poor) </div>
+         </div>
+         Most user's believe there is no need to be cautious when using {{productname | safe}}.
+
+      {%  elif RiskQ2S3s > 50 and  RiskQ2S3s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ2S3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ2S3s | safe}}% Very Low </div>
+         </div>
+         Most user's believe there is need to exercise very low cautiousness when using {{productname | safe}}.
+
+      {%  elif RiskQ2S3s > 60 and  RiskQ2S3s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ2S3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ2S3s | safe}}% Low </div>
+         </div>
+         Most user's believe there is need to exercise low cautiousness when using {{productname | safe}}.
+
+      {%  elif RiskQ2S3s > 70 and  RiskQ2S3s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{RiskQ2S3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ2S3s | safe}}% Satisfactory (moderate) </div>
+         </div>
+         Most user's believe there is need to exercise moderate cautiousness when using {{productname | safe}}.
+
+      {%  elif RiskQ2S3s > 80 and  RiskQ2S3s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{RiskQ2S3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ2S3s | safe}}% High </div>
+         </div>
+         Most user's believe there is need to exercise high cautiousness when using {{productname | safe}}.
+
+      {%  elif RiskQ2S3s > 90 and  RiskQ2S3s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{RiskQ2S3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ2S3s | safe}}% Very High </div>
+         </div>
+         Most user's believe there is need to exercise very high cautiousness when using {{productname | safe}}.
+
+      {% endif %}
+      </td>
+      <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
+    </tr>
+  </tbody>
+     <!--   question three -->
+  <thead>
+    <tr>
+      <th scope="col" colspan="2">Risk Q3: It is risky to interact with {{ productname }}</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+      <th scope="col">Survey 1</th>
+      <th scope="col">Survey 2</th>
+      <th scope="col">Survey 3</th>
+      <!-- add a new th for a 3rd survey or etc -->
+    </tr>
+    <tr>
+      <td>
+      {% if RiskQ3S1s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ3S1s| safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ3S1s | safe}}% Not Risky (Poor) </div>
+         </div>
+         Most user's experienced no risk while interacting with {{productname | safe}}.
+
+      {%  elif RiskQ3S1s > 50 and  RiskQ3S1s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ3S1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ3S1s | safe}}% Very Low </div>
+         </div>
+         Most user's experienced very low risk while interacting with {{productname | safe}}.
+
+      {%  elif RiskQ3S1s > 60 and  RiskQ3S1s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ3S1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ3S1s | safe}}% Low </div>
+         </div>
+         Most user's experienced low risk while interacting with {{productname | safe}}.
+
+      {%  elif RiskQ3S1s > 70 and  RiskQ3S1s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{RiskQ3S1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ3S1s | safe}}% Satisfactory (moderate) </div>
+         </div>
+         Most user's experienced moderate risk while interacting with {{productname | safe}}.
+
+      {%  elif RiskQ3S1s > 80 and  RiskQ3S1s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{RiskQ3S1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ3S1s | safe}}% High </div>
+         </div>
+         Most user's experienced high risk while interacting with {{productname | safe}}.
+
+      {%  elif RiskQ3S1s > 90 and  RiskQ3S1s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{RiskQ3S1s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ3S1s | safe}}% Very High </div>
+         </div>
+         Most user's experienced very high risk while interacting with {{productname | safe}}.
+
+      {% endif %}
+      </td>
+           <!-- suvey 2 overall trust -->
+      <td>
+      {% if RiskQ3S2s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ3S2s| safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ3S2s | safe}}% Not Risky (Poor) </div>
+         </div>
+         Most user's experienced no risk while interacting with {{productname | safe}}.
+
+      {%  elif RiskQ3S2s > 50 and  RiskQ3S2s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ3S2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ3S2s | safe}}% Very Low </div>
+         </div>
+         Most user's experienced very low risk while interacting with {{productname | safe}}.
+
+      {%  elif RiskQ3S2s > 60 and  RiskQ3S2s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ3S2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ3S2s | safe}}% Low </div>
+         </div>
+         Most user's experienced low risk while interacting with {{productname | safe}}.
+
+      {%  elif RiskQ3S2s > 70 and  RiskQ3S2s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{RiskQ3S2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ3S2s | safe}}% Satisfactory (moderate) </div>
+         </div>
+         Most user's experienced moderate risk while interacting with {{productname | safe}}.
+
+      {%  elif RiskQ3S2s > 80 and  RiskQ3S2s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{RiskQ3S2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ3S2s | safe}}% High </div>
+         </div>
+         Most user's experienced high risk while interacting with {{productname | safe}}.
+
+      {%  elif RiskQ3S2s > 90 and  RiskQ3S2s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{RiskQ3S2s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ3S2s | safe}}% Very High </div>
+         </div>
+         Most user's experienced very high risk while interacting with {{productname | safe}}.
+
+      {% endif %}
+      </td>
+            <td>
+      {% if RiskQ3S3s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ3S3s| safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ3S3s | safe}}% Not Risky (Poor) </div>
+         </div>
+         Most user's experienced no risk while interacting with {{productname | safe}}.
+
+      {%  elif RiskQ3S3s > 50 and  RiskQ3S3s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ3S3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ3S3s | safe}}% Very Low </div>
+         </div>
+         Most user's experienced very low risk while interacting with {{productname | safe}}.
+
+      {%  elif RiskQ3S3s > 60 and  RiskQ3S3s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{RiskQ3S3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ3S3s | safe}}% Low </div>
+         </div>
+         Most user's experienced low risk while interacting with {{productname | safe}}.
+
+      {%  elif RiskQ3S3s > 70 and  RiskQ3S3s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{RiskQ3S3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ3S3s | safe}}% Satisfactory (moderate) </div>
+         </div>
+         Most user's experienced moderate risk while interacting with {{productname | safe}}.
+
+      {%  elif RiskQ3S3s > 80 and  RiskQ3S3s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{RiskQ3S3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ3S3s | safe}}% High </div>
+         </div>
+         Most user's experienced high risk while interacting with {{productname | safe}}.
+
+      {%  elif RiskQ3S3s > 90 and  RiskQ3S3s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{RiskQ3S3s | safe}}%; color: black;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{RiskQ3S3s | safe}}% Very High </div>
+         </div>
+         Most user's experienced very high risk while interacting with {{productname | safe}}.
+
+      {% endif %}
+      </td>
+      <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
+    </tr>
+  </tbody>
+</table>
+  </div>
+</div>
+
+<!-- Benevolence Questions -->
+<div class="collapse in" id="collapseExample2">
+  <div class="card card-body">
+   <table class="table table-hover">
+     <!-- Quention 1 benevolence -->
+      <thead>
+    <tr>
+      <th scope="col" colspan="2">Benevolence Q1: I believe that a {{productname | safe}} will act in my best interest.</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+      <th scope="col">Survey 1</th>
+      <th scope="col">Survey 2</th>
+      <th scope="col">Survey 3</th>
+      <!-- add a new th for a 3rd survey or etc -->
+    </tr>
+    <tr>
+      <td>
+      {% if BenevlonceQ1S1s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ1S1s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} is not acting in their best interest.
+
+      {%  elif BenevlonceQ1S1s > 50 and  BenevlonceQ1S1s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ1S1s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is very less acting in their best interest.
+
+      {%  elif BenevlonceQ1S1s > 60 and  BenevlonceQ1S1s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ1S1s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is less acting in their best interest.
+
+      {%  elif BenevlonceQ1S1s > 70 and  BenevlonceQ1S1s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{BenevlonceQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ1S1s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} is moderately acting in their best interest.
+
+      {%  elif BenevlonceQ1S1s > 80 and  BenevlonceQ1S1s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{BenevlonceQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ1S1s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} is highly acting in their best interest.
+
+      {%  elif BenevlonceQ1S1s > 90 and  BenevlonceQ1S1s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{BenevlonceQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ1S1s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} is acting very highly in their best interest
+
+      {% endif %}
+      </td>
+           <!-- suvey 2 overall trust -->
+      <td>
+      {% if BenevlonceQ1S2s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ1S2s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} is not acting in their best interest.
+
+      {%  elif BenevlonceQ1S2s > 50 and  BenevlonceQ1S2s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ1S2s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is very less acting in their best interest.
+
+      {%  elif BenevlonceQ1S2s > 60 and  BenevlonceQ1S2s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ1S2s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is less acting in their best interest.
+
+      {%  elif BenevlonceQ1S2s > 70 and  BenevlonceQ1S2s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{BenevlonceQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ1S2s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} is moderately acting in their best interest.
+
+      {%  elif BenevlonceQ1S2s > 80 and  BenevlonceQ1S2s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{BenevlonceQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ1S2s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} is highly acting in their best interest.
+
+      {%  elif BenevlonceQ1S2s > 90 and  BenevlonceQ1S2s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{BenevlonceQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ1S2s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} is acting very highly in their best interest
+
+      {% endif %}
+      </td>
+           <td>
+      {% if BenevlonceQ1S3s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ1S3s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} is not acting in their best interest.
+
+      {%  elif BenevlonceQ1S3s > 50 and  BenevlonceQ1S3s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ1S3s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is very less acting in their best interest.
+
+      {%  elif BenevlonceQ1S3s > 60 and  BenevlonceQ1S3s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ1S3s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is less acting in their best interest.
+
+      {%  elif BenevlonceQ1S3s > 70 and  BenevlonceQ1S3s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{BenevlonceQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ1S3s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} is moderately acting in their best interest.
+
+      {%  elif BenevlonceQ1S3s > 80 and  BenevlonceQ1S3s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{BenevlonceQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ1S3s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} is highly acting in their best interest.
+
+      {%  elif BenevlonceQ1S3s > 90 and  BenevlonceQ1S3s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{BenevlonceQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ1S3s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} is acting very highly in their best interest
+
+      {% endif %}
+      </td>
+      <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
+    </tr>
+  </tbody>
+       <!-- Quention 2 benevolence -->
+      <thead>
+    <tr>
+      <th scope="col" colspan="2">Benevolence Q2: I believe that a {{productname | safe}} will do its best to help me if I need help. </th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+      <th scope="col">Survey 1</th>
+      <th scope="col">Survey 2</th>
+       <th scope="col">Survey 3</th>
+      <!-- add a new th for a 3rd survey or etc -->
+    </tr>
+    <tr>
+      <td>
+      {% if BenevlonceQ2S1s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ2S1s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} is not do its best to help when needed.
+
+      {%  elif BenevlonceQ2S1s > 50 and  BenevlonceQ2S1s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ2S1s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is very less likely do its best to help when needed.
+
+      {%  elif BenevlonceQ2S1s > 60 and  BenevlonceQ2S1s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ2S1s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is less likely to do its best to help when needed.
+
+      {%  elif BenevlonceQ2S1s > 70 and  BenevlonceQ2S1s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{BenevlonceQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ2S1s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} is moderately likely to do its best to help when needed.
+
+      {%  elif BenevlonceQ2S1s > 80 and  BenevlonceQ2S1s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{BenevlonceQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ2S1s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} is highly likely to do its best to help when needed.
+
+      {%  elif BenevlonceQ2S1s > 90 and  BenevlonceQ2S1s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{BenevlonceQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ2S1s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} is very highly likely to do its best to help when needed.
+
+      {% endif %}
+      </td>
+           <!-- suvey 2 overall trust -->
+      <td>
+      {% if BenevlonceQ2S2s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ2S2s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} is not do its best to help when needed.
+
+      {%  elif BenevlonceQ2S2s > 50 and  BenevlonceQ2S2s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ2S2s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is very less likely do its best to help when needed.
+
+      {%  elif BenevlonceQ2S2s > 60 and  BenevlonceQ2S2s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ2S2s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is less likely to do its best to help when needed.
+
+      {%  elif BenevlonceQ2S2s > 70 and  BenevlonceQ2S2s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{BenevlonceQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ2S2s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} is moderately likely to do its best to help when needed.
+
+      {%  elif BenevlonceQ2S2s > 80 and  BenevlonceQ2S2s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{BenevlonceQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ2S2s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} is highly likely to do its best to help when needed.
+
+      {%  elif BenevlonceQ2S2s > 90 and  BenevlonceQ2S2s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{BenevlonceQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ2S2s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} is very highly likely to do its best to help when needed.
+
+      {% endif %}
+      </td>
+            <td>
+      {% if BenevlonceQ2S3s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ2S3s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} is not do its best to help when needed.
+
+      {%  elif BenevlonceQ2S3s > 50 and  BenevlonceQ2S3s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ2S3s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is very less likely do its best to help when needed.
+
+      {%  elif BenevlonceQ2S3s > 60 and  BenevlonceQ2S3s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ2S3s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is less likely to do its best to help when needed.
+
+      {%  elif BenevlonceQ2S3s > 70 and  BenevlonceQ2S3s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{BenevlonceQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ2S3s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} is moderately likely to do its best to help when needed.
+
+      {%  elif BenevlonceQ2S3s > 80 and  BenevlonceQ2S3s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{BenevlonceQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ2S3s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} is highly likely to do its best to help when needed.
+
+      {%  elif BenevlonceQ2S3s > 90 and  BenevlonceQ2S3s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{BenevlonceQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ2S3s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} is very highly likely to do its best to help when needed.
+
+      {% endif %}
+      </td>
+      <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
+    </tr>
+  </tbody>
+         <!-- Quention 3 benevolence -->
+      <thead>
+    <tr>
+      <th scope="col" colspan="2">Benevolence Q3: I believe that a {{productname | safe}} is interested in understanding my needs and preferences.
+  </th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+      <th scope="col">Survey 1</th>
+      <th scope="col">Survey 2</th>
+      <th scope="col">Survey 3</th>
+      <!-- add a new th for a 3rd survey or etc -->
+    </tr>
+    <tr>
+      <td>
+      {% if BenevlonceQ3S1s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ3S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ3S1s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} is not interested in understanding their needs and prefference.
+
+      {%  elif BenevlonceQ3S1s > 50 and  BenevlonceQ3S1s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ3S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ3S1s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is very less interested in understanding their needs and prefference.
+
+      {%  elif BenevlonceQ3S1s > 60 and  BenevlonceQ3S1s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ3S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ3S1s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is less interested in understanding their needs and prefference.
+
+      {%  elif BenevlonceQ3S1s > 70 and  BenevlonceQ3S1s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{BenevlonceQ3S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ3S1s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} is moderately interested in understanding their needs and prefference.
+
+      {%  elif BenevlonceQ3S1s > 80 and  BenevlonceQ3S1s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{BenevlonceQ3S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ3S1s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} is highly interested in understanding their needs and prefference.
+
+      {%  elif BenevlonceQ3S1s > 90 and  BenevlonceQ3S1s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{BenevlonceQ3S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ3S1s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} is very highly interested in understanding their needs and prefference.
+
+      {% endif %}
+      </td>
+           <!-- suvey 2 overall trust -->
+      <td>
+      {% if BenevlonceQ3S2s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ3S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ3S2s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} is not interested in understanding their needs and prefference.
+
+      {%  elif BenevlonceQ3S2s > 50 and  BenevlonceQ3S2s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ3S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ3S2s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is very less interested in understanding their needs and prefference.
+
+      {%  elif BenevlonceQ3S2s > 60 and  BenevlonceQ3S2s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ3S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ3S2s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is less interested in understanding their needs and prefference.
+
+      {%  elif BenevlonceQ3S2s > 70 and  BenevlonceQ3S2s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{BenevlonceQ3S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ3S2s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} is moderately interested in understanding their needs and prefference.
+
+      {%  elif BenevlonceQ3S2s > 80 and  BenevlonceQ3S2s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{BenevlonceQ3S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ3S2s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} is highly interested in understanding their needs and prefference.
+
+      {%  elif BenevlonceQ3S2s > 90 and  BenevlonceQ3S2s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{BenevlonceQ3S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ3S2s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} is very highly interested in understanding their needs and prefference.
+
+      {% endif %}
+      </td>
+            <td>
+      {% if BenevlonceQ3S3s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ3S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ3S3s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} is not interested in understanding their needs and prefference.
+
+      {%  elif BenevlonceQ3S3s > 50 and  BenevlonceQ3S3s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ3S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ3S3s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is very less interested in understanding their needs and prefference.
+
+      {%  elif BenevlonceQ3S3s > 60 and  BenevlonceQ3S3s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{BenevlonceQ3S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ3S3s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is less interested in understanding their needs and prefference.
+
+      {%  elif BenevlonceQ3S3s > 70 and  BenevlonceQ3S3s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{BenevlonceQ3S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ3S3s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} is moderately interested in understanding their needs and prefference.
+
+      {%  elif BenevlonceQ3S3s > 80 and  BenevlonceQ3S3s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{BenevlonceQ3S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ3S3s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} is highly interested in understanding their needs and prefference.
+
+      {%  elif BenevlonceQ3S3s > 90 and  BenevlonceQ3S3s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{BenevlonceQ3S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{BenevlonceQ3S3s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} is very highly interested in understanding their needs and prefference.
+
+      {% endif %}
+      </td>
+      <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
+    </tr>
+  </tbody>
+</table>
+  </div>
+</div>
+
+
+<!-- competence questions -->
+<div class="collapse in" id="collapseExample3">
+  <div class="card card-body">
+      <table class="table table-hover">
+     <!-- Quention 1 benevolence -->
+      <thead>
+    <tr>
+      <th scope="col" colspan="2">Competence Q1: {{productname | safe}} is competent and effective in delivering its services.
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+      <th scope="col">Survey 1</th>
+      <th scope="col">Survey 2</th>
+      <th scope="col">Survey 3</th>
+      <!-- add a new th for a 3rd survey or etc -->
+    </tr>
+    <tr>
+      <td>
+      {% if CompetenceQ1S1s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ1S1s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} is not competent in delivering its services.
+
+      {%  elif CompetenceQ1S1s > 50 and  CompetenceQ1S1s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ1S1s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is very less competent in delivering its services
+
+      {%  elif CompetenceQ1S1s > 60 and  CompetenceQ1S1s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ1S1s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is less competent in delivering its services.
+
+      {%  elif CompetenceQ1S1s > 70 and  CompetenceQ1S1s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{CompetenceQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ1S1s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} is moderately competent in delivering its services.
+
+      {%  elif CompetenceQ1S1s > 80 and  CompetenceQ1S1s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{CompetenceQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ1S1s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} is highly competent in delivering its services.
+
+      {%  elif CompetenceQ1S1s > 90 and  CompetenceQ1S1s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{CompetenceQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ1S1s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} is very highly competent in delivering its services.
+
+      {% endif %}
+      </td>
+           <!-- suvey 2 overall trust -->
+      <td>
+      {% if CompetenceQ1S2s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ1S2s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} is not competent in delivering its services.
+
+      {%  elif CompetenceQ1S2s > 50 and  CompetenceQ1S2s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ1S2s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is very less competent in delivering its services
+
+      {%  elif CompetenceQ1S2s > 60 and  CompetenceQ1S2s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ1S2s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is less competent in delivering its services.
+
+      {%  elif CompetenceQ1S2s > 70 and  CompetenceQ1S2s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{CompetenceQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ1S2s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} is moderately competent in delivering its services.
+
+      {%  elif CompetenceQ1S2s > 80 and  CompetenceQ1S2s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{CompetenceQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ1S2s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} is highly competent in delivering its services.
+
+      {%  elif CompetenceQ1S2s > 90 and  CompetenceQ1S2s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{CompetenceQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ1S2s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} is very highly competent in delivering its services.
+
+      {% endif %}
+      </td>
+            <td>
+      {% if CompetenceQ1S3s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ1S3s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} is not competent in delivering its services.
+
+      {%  elif CompetenceQ1S3s > 50 and  CompetenceQ1S3s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ1S3s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is very less competent in delivering its services
+
+      {%  elif CompetenceQ1S3s > 60 and  CompetenceQ1S3s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ1S3s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} is less competent in delivering its services.
+
+      {%  elif CompetenceQ1S3s > 70 and  CompetenceQ1S3s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{CompetenceQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ1S3s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} is moderately competent in delivering its services.
+
+      {%  elif CompetenceQ1S3s > 80 and  CompetenceQ1S3s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{CompetenceQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ1S3s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} is highly competent in delivering its services.
+
+      {%  elif CompetenceQ1S3s > 90 and  CompetenceQ1S3s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{CompetenceQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ1S3s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} is very highly competent in delivering its services.
+
+      {% endif %}
+      </td>
+      <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
+    </tr>
+  </tbody>
+       <!-- Quention 2 Competence -->
+      <thead>
+    <tr>
+      <th scope="col" colspan="2">Competence Q2: I believe {{productname | safe}} has all the functionalities I would expect.
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+      <th scope="col">Survey 1</th>
+      <th scope="col">Survey 2</th>
+      <th scope="col">Survey 3</th>
+      <!-- add a new th for a 3rd survey or etc -->
+    </tr>
+    <tr>
+      <td>
+      {% if CompetenceQ2S1s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ2S1s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} does not have all the expected functionalities.
+
+      {%  elif CompetenceQ2S1s > 50 and  CompetenceQ2S1s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ2S1s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} have very few of the expected functionalities
+
+      {%  elif CompetenceQ2S1s > 60 and  CompetenceQ2S1s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ2S1s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} have few of the expected functionalities.
+
+      {%  elif CompetenceQ2S1s > 70 and  CompetenceQ2S1s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{CompetenceQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ2S1s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} have moderate expected functionalities.
+
+      {%  elif CompetenceQ2S1s > 80 and  CompetenceQ2S1s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{CompetenceQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ2S1s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} have much of the expected functionalities.
+
+      {%  elif CompetenceQ2S1s > 90 and  CompetenceQ2S1s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{CompetenceQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ2S1s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} have very much of the expected functionalities.
+
+      {% endif %}
+      </td>
+           <!-- suvey 2 overall trust -->
+      <td>
+      {% if CompetenceQ2S2s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ2S2s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} does not have all the expected functionalities.
+
+      {%  elif CompetenceQ2S2s > 50 and  CompetenceQ2S2s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ2S2s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} have very few of the expected functionalities
+
+      {%  elif CompetenceQ2S2s > 60 and  CompetenceQ2S2s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ2S2s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} have few of the expected functionalities.
+
+      {%  elif CompetenceQ2S2s > 70 and  CompetenceQ2S2s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{CompetenceQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ2S2s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} have moderate expected functionalities.
+
+      {%  elif CompetenceQ2S2s > 80 and  CompetenceQ2S2s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{CompetenceQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ2S2s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} have much of the expected functionalities.
+
+      {%  elif CompetenceQ2S2s > 90 and  CompetenceQ2S2s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{CompetenceQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ2S2s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} have very much of the expected functionalities.
+
+      {% endif %}
+      </td>
+            <td>
+      {% if CompetenceQ2S3s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ2S3s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} does not have all the expected functionalities.
+
+      {%  elif CompetenceQ2S3s > 50 and  CompetenceQ2S3s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ2S3s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} have very few of the expected functionalities
+
+      {%  elif CompetenceQ2S3s > 60 and  CompetenceQ2S3s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ2S3s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} have few of the expected functionalities.
+
+      {%  elif CompetenceQ2S3s > 70 and  CompetenceQ2S3s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{CompetenceQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ2S3s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} have moderate expected functionalities.
+
+      {%  elif CompetenceQ2S3s > 80 and  CompetenceQ2S3s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{CompetenceQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ2S3s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} have much of the expected functionalities.
+
+      {%  elif CompetenceQ2S3s > 90 and  CompetenceQ2S3s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{CompetenceQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ2S3s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} have very much of the expected functionalities.
+
+      {% endif %}
+      </td>
+      <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
+    </tr>
+  </tbody>
+         <!-- Quention 3 competence -->
+      <thead>
+    <tr>
+      <th scope="col" colspan="2">Competence Q3: {{productname | safe}} performs its role  very well.
+  </th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+      <th scope="col">Survey 1</th>
+      <th scope="col">Survey 2</th>
+       <th scope="col">Survey 3</th>
+      <!-- add a new th for a 3rd survey or etc -->
+    </tr>
+    <tr>
+      <td>
+      {% if CompetenceQ3S1s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ3S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ3S1s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} does not perform its role very well.
+
+      {%  elif CompetenceQ3S1s > 50 and  CompetenceQ3S1s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ3S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ3S1s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} perform its role  very poorly.
+
+      {%  elif CompetenceQ3S1s > 60 and  CompetenceQ3S1s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ3S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ3S1s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} perform its role poorly.
+
+      {%  elif CompetenceQ3S1s > 70 and  CompetenceQ3S1s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{CompetenceQ3S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ3S1s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} perform its role moderately.
+
+      {%  elif CompetenceQ3S1s > 80 and  CompetenceQ3S1s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{CompetenceQ3S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ3S1s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} perform its role well.
+
+      {%  elif CompetenceQ3S1s > 90 and  CompetenceQ3S1s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{CompetenceQ3S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ3S1s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} perform its role very well.
+
+      {% endif %}
+      </td>
+           <!-- suvey 2 overall trust -->
+      <td>
+      {% if CompetenceQ3S2s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ3S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ3S2s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} does not perform its role very well.
+
+      {%  elif CompetenceQ3S2s > 50 and  CompetenceQ3S2s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ3S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ3S2s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} perform its role  very poorly.
+
+      {%  elif CompetenceQ3S2s > 60 and  CompetenceQ3S2s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ3S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ3S2s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} perform its role poorly.
+
+      {%  elif CompetenceQ3S2s > 70 and  CompetenceQ3S2s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{CompetenceQ3S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ3S2s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} perform its role moderately.
+
+      {%  elif CompetenceQ3S2s > 80 and  CompetenceQ3S2s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{CompetenceQ3S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ3S2s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} perform its role well.
+
+      {%  elif CompetenceQ3S2s > 90 and  CompetenceQ3S2s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{CompetenceQ3S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ3S2s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} perform its role very well.
+
+      {% endif %}
+      </td>
+          <td>
+      {% if CompetenceQ3S3s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ3S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ3S3s | safe}}% Poor </div>
+         </div>
+         Most user's believe that {{productname | safe}} does not perform its role very well.
+
+      {%  elif CompetenceQ3S3s > 50 and  CompetenceQ3S3s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ3S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ3S3s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} perform its role  very poorly.
+
+      {%  elif CompetenceQ3S3s > 60 and  CompetenceQ3S3s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{CompetenceQ3S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ3S3s | safe}}% Low </div>
+         </div>
+         Most user's believe that {{productname | safe}} perform its role poorly.
+
+      {%  elif CompetenceQ3S3s > 70 and  CompetenceQ3S3s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{CompetenceQ3S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ3S3s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that {{productname | safe}} perform its role moderately.
+
+      {%  elif CompetenceQ3S3s > 80 and  CompetenceQ3S3s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{CompetenceQ3S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ3S3s | safe}}% High </div>
+         </div>
+         Most user's believe that {{productname | safe}} perform its role well.
+
+      {%  elif CompetenceQ3S3s > 90 and  CompetenceQ3S3s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{CompetenceQ3S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{CompetenceQ3S3s | safe}}% Very High </div>
+         </div>
+        Most user's believe that {{productname | safe}} perform its role very well.
+
+      {% endif %}
+      </td>
+      <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
+    </tr>
+  </tbody>
+</table>
+  </div>
+</div>
+
+
+
+
+<!-- reciprocity questions -->
+
+<div class="collapse in" id="collapseExample4">
+  <div class="card card-body">
+
+   <table class="table table-hover">
+     <!-- Quention 1 reciprocity-->
+      <thead>
+    <tr>
+      <th scope="col" colspan="2">Reciprocity Q1: When sharing something with {{productname | safe}}, I believe that I will get a response.
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+      <th scope="col">Survey 1</th>
+      <th scope="col">Survey 2</th>
+       <th scope="col">Survey 3</th>
+      <!-- add a new th for a 3rd survey or etc -->
+    </tr>
+    <tr>
+      <td>
+      {% if ReciprocityQ1S1s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{ReciprocityQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ1S1s | safe}}% Poor </div>
+         </div>
+         Most user's believe that they will not get any response from {{productname | safe}}.
+
+      {%  elif ReciprocityQ1S1s > 50 and  ReciprocityQ1S1s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{ReciprocityQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ1S1s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that they will very less likely get any response from {{productname | safe}}.
+
+      {%  elif ReciprocityQ1S1s > 60 and  ReciprocityQ1S1s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{ReciprocityQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ1S1s | safe}}% Low </div>
+         </div>
+         Most user's believe that they will less likely get any response from {{productname | safe}}.
+
+      {%  elif ReciprocityQ1S1s > 70 and  ReciprocityQ1S1s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{ReciprocityQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ1S1s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that they will get moderate response from {{productname | safe}}.
+
+      {%  elif ReciprocityQ1S1s > 80 and  ReciprocityQ1S1s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{ReciprocityQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ1S1s | safe}}% High </div>
+         </div>
+         Most user's believe that they will get high response from {{productname | safe}}.
+
+      {%  elif ReciprocityQ1S1s > 90 and  ReciprocityQ1S1s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{ReciprocityQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ1S1s | safe}}% Very High </div>
+         </div>
+        Most user's believe that they will get very high response from {{productname | safe}}.
+
+      {% endif %}
+      </td>
+           <!-- suvey 2 overall trust -->
+      <td>
+      {% if ReciprocityQ1S2s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{ReciprocityQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ1S2s | safe}}% Poor </div>
+         </div>
+         Most user's believe that they will not get any response from {{productname | safe}}.
+
+      {%  elif ReciprocityQ1S2s > 50 and  ReciprocityQ1S2s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{ReciprocityQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ1S2s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that they will very less likely get any response from {{productname | safe}}.
+
+      {%  elif ReciprocityQ1S2s > 60 and  ReciprocityQ1S2s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{ReciprocityQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ1S2s | safe}}% Low </div>
+         </div>
+         Most user's believe that they will less likely get any response from {{productname | safe}}.
+
+      {%  elif ReciprocityQ1S2s > 70 and  ReciprocityQ1S2s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{ReciprocityQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ1S2s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that they will get moderate response from {{productname | safe}}.
+
+      {%  elif ReciprocityQ1S2s > 80 and  ReciprocityQ1S2s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{ReciprocityQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ1S2s | safe}}% High </div>
+         </div>
+         Most user's believe that they will get high response from {{productname | safe}}.
+
+      {%  elif ReciprocityQ1S2s > 90 and  ReciprocityQ1S2s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{ReciprocityQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ1S2s | safe}}% Very High </div>
+         </div>
+        Most user's believe that they will get very high response from {{productname | safe}}.
+
+      {% endif %}
+      </td>
+            <td>
+      {% if ReciprocityQ1S3s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{ReciprocityQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ1S3s | safe}}% Poor </div>
+         </div>
+         Most user's believe that they will not get any response from {{productname | safe}}.
+
+      {%  elif ReciprocityQ1S3s > 50 and  ReciprocityQ1S3s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{ReciprocityQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ1S3s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that they will very less likely get any response from {{productname | safe}}.
+
+      {%  elif ReciprocityQ1S3s > 60 and  ReciprocityQ1S3s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{ReciprocityQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ1S3s | safe}}% Low </div>
+         </div>
+         Most user's believe that they will less likely get any response from {{productname | safe}}.
+
+      {%  elif ReciprocityQ1S3s > 70 and  ReciprocityQ1S3s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{ReciprocityQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ1S3s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that they will get moderate response from {{productname | safe}}.
+
+      {%  elif ReciprocityQ1S3s > 80 and  ReciprocityQ1S3s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{ReciprocityQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ1S3s | safe}}% High </div>
+         </div>
+         Most user's believe that they will get high response from {{productname | safe}}.
+
+      {%  elif ReciprocityQ1S3s > 90 and  ReciprocityQ1S3s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{ReciprocityQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ1S3s | safe}}% Very High </div>
+         </div>
+        Most user's believe that they will get very high response from {{productname | safe}}.
+
+      {% endif %}
+      </td>
+      <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
+    </tr>
+  </tbody>
+       <!-- Quention 2 reciprocity -->
+      <thead>
+    <tr>
+      <th scope="col" colspan="2">Reciprocity Q2: When sharing something with {{productname | safe}}, I expect to get back a meaningful &amp; knowledgeable response.
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+      <th scope="col">Survey 1</th>
+      <th scope="col">Survey 2</th>
+      <th scope="col">Survey 3</th>
+      <!-- add a new th for a 3rd survey or etc -->
+    </tr>
+    <tr>
+      <td>
+      {% if ReciprocityQ2S1s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{ReciprocityQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ2S1s | safe}}% Poor </div>
+         </div>
+         Most user's believe that will not get any meaningful and knowledgeable response from  {{productname | safe}}.
+
+      {%  elif ReciprocityQ2S1s > 50 and  ReciprocityQ2S1s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{ReciprocityQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ2S1s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that they will very less likely get any meaningful and knowledgeable response from  {{productname | safe}}.
+
+      {%  elif ReciprocityQ2S1s > 60 and  ReciprocityQ2S1s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{ReciprocityQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ2S1s | safe}}% Low </div>
+         </div>
+         Most user's believe that they will less likely get any meaningful and knowledgeable response from  {{productname | safe}}.
+
+      {%  elif ReciprocityQ2S1s > 70 and  ReciprocityQ2S1s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{ReciprocityQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ2S1s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that they will  get moderately meaningful and knowledgeable response from  {{productname | safe}}.
+
+      {%  elif ReciprocityQ2S1s > 80 and  ReciprocityQ2S1s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{ReciprocityQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ2S1s | safe}}% High </div>
+         </div>
+         Most user's believe that they will  get highly meaningful and knowledgeable response from  {{productname | safe}}.
+
+      {%  elif ReciprocityQ2S1s > 90 and  ReciprocityQ2S1s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{ReciprocityQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ2S1s | safe}}% Very High </div>
+         </div>
+        Most user's believe that they will  get very highly meaningful and knowledgeable response from  {{productname | safe}}.
+
+      {% endif %}
+      </td>
+           <!-- suvey 2 overall trust -->
+      <td>
+      {% if ReciprocityQ2S2s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{ReciprocityQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ2S2s | safe}}% Poor </div>
+         </div>
+         Most user's believe that will not get any meaningful and knowledgeable response from  {{productname | safe}}.
+
+      {%  elif ReciprocityQ2S2s > 50 and  ReciprocityQ2S2s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{ReciprocityQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ2S2s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that they will very less likely get any meaningful and knowledgeable response from  {{productname | safe}}.
+
+      {%  elif ReciprocityQ2S2s > 60 and  ReciprocityQ2S2s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{ReciprocityQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ2S2s | safe}}% Low </div>
+         </div>
+         Most user's believe that they will less likely get any meaningful and knowledgeable response from  {{productname | safe}}.
+
+      {%  elif ReciprocityQ2S2s > 70 and  ReciprocityQ2S2s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{ReciprocityQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ2S2s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that they will  get moderately meaningful and knowledgeable response from  {{productname | safe}}.
+
+      {%  elif ReciprocityQ2S2s > 80 and  ReciprocityQ2S2s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{ReciprocityQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ2S2s | safe}}% High </div>
+         </div>
+         Most user's believe that they will  get highly meaningful and knowledgeable response from  {{productname | safe}}.
+
+      {%  elif ReciprocityQ2S2s > 90 and  ReciprocityQ2S2s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{ReciprocityQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ2S2s | safe}}% Very High </div>
+         </div>
+        Most user's believe that they will  get very highly meaningful and knowledgeable response from  {{productname | safe}}.
+
+      {% endif %}
+      </td>
+            <td>
+      {% if ReciprocityQ2S3s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{ReciprocityQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ2S3s | safe}}% Poor </div>
+         </div>
+         Most user's believe that will not get any meaningful and knowledgeable response from  {{productname | safe}}.
+
+      {%  elif ReciprocityQ2S3s > 50 and  ReciprocityQ2S3s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{ReciprocityQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ2S3s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that they will very less likely get any meaningful and knowledgeable response from  {{productname | safe}}.
+
+      {%  elif ReciprocityQ2S3s > 60 and  ReciprocityQ2S3s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{ReciprocityQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ2S3s | safe}}% Low </div>
+         </div>
+         Most user's believe that they will less likely get any meaningful and knowledgeable response from  {{productname | safe}}.
+
+      {%  elif ReciprocityQ2S3s > 70 and  ReciprocityQ2S3s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{ReciprocityQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ2S3s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that they will  get moderately meaningful and knowledgeable response from  {{productname | safe}}.
+
+      {%  elif ReciprocityQ2S3s > 80 and  ReciprocityQ2S3s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{ReciprocityQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ2S3s | safe}}% High </div>
+         </div>
+         Most user's believe that they will  get highly meaningful and knowledgeable response from  {{productname | safe}}.
+
+      {%  elif ReciprocityQ2S3s > 90 and  ReciprocityQ2S3s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{ReciprocityQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{ReciprocityQ2S3s | safe}}% Very High </div>
+         </div>
+        Most user's believe that they will  get very highly meaningful and knowledgeable response from  {{productname | safe}}.
+
+      {% endif %}
+      </td>
+      <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
+    </tr>
+  </tbody>
+</table>
+
+  </div>
+</div>
+
+
+
+
+
+
+<!-- General trust questions -->
+<div class="collapse in" id="collapseExample5">
+  <div class="card card-body">
+     <table class="table table-hover">
+     <!-- Quention 1 general trust-->
+      <thead>
+    <tr>
+      <th scope="col" colspan="2">General Trust Q1: If I use {{productname | safe}}, I think I would be able to depend on it completely.
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+      <th scope="col">Survey 1</th>
+      <th scope="col">Survey 2</th>
+      <th scope="col">Survey 3</th>
+      <!-- add a new th for a 3rd survey or etc -->
+    </tr>
+    <tr>
+      <td>
+      {% if GtrustQ1S1s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ1S1s | safe}}% Poor </div>
+         </div>
+         Most user's believe that they can not completely depend on {{productname | safe}}.
+
+      {%  elif GtrustQ1S1s > 50 and  GtrustQ1S1s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ1S1s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that they will very less likely depend completely  on {{productname | safe}}.
+
+      {%  elif GtrustQ1S1s > 60 and  GtrustQ1S1s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ1S1s | safe}}% Low </div>
+         </div>
+         Most user's believe that they will less likely depend completely  on {{productname | safe}}.
+
+      {%  elif GtrustQ1S1s > 70 and  GtrustQ1S1s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{GtrustQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ1S1s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that they will moderately depend completely  on {{productname | safe}}.
+
+      {%  elif GtrustQ1S1s > 80 and  GtrustQ1S1s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{GtrustQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ1S1s | safe}}% High </div>
+         </div>
+         Most user's believe that they will highly depend completely  on {{productname | safe}}.
+
+      {%  elif GtrustQ1S1s > 90 and  GtrustQ1S1s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{GtrustQ1S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ1S1s | safe}}% Very High </div>
+         </div>
+        Most user's believe that they will very highly depend completely  on {{productname | safe}}.
+
+      {% endif %}
+      </td>
+           <!-- suvey 2 overall trust -->
+      <td>
+      {% if GtrustQ1S2s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ1S2s | safe}}% Poor </div>
+         </div>
+         Most user's believe that they can not completely depend on {{productname | safe}}.
+
+      {%  elif GtrustQ1S2s > 50 and  GtrustQ1S2s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ1S2s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that they will very less likely depend completely  on {{productname | safe}}.
+
+      {%  elif GtrustQ1S2s > 60 and  GtrustQ1S2s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ1S2s | safe}}% Low </div>
+         </div>
+         Most user's believe that they will less likely depend completely  on {{productname | safe}}.
+
+      {%  elif GtrustQ1S2s > 70 and  GtrustQ1S2s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{GtrustQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ1S2s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that they will moderately depend completely  on {{productname | safe}}.
+
+      {%  elif GtrustQ1S2s > 80 and  GtrustQ1S2s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{GtrustQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ1S2s | safe}}% High </div>
+         </div>
+         Most user's believe that they will highly depend completely  on {{productname | safe}}.
+
+      {%  elif GtrustQ1S2s > 90 and  GtrustQ1S2s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{GtrustQ1S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ1S2s | safe}}% Very High </div>
+         </div>
+        Most user's believe that they will very highly depend completely  on {{productname | safe}}.
+
+      {% endif %}
+      </td>
+            <td>
+      {% if GtrustQ1S3s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ1S3s | safe}}% Poor </div>
+         </div>
+         Most user's believe that they can not completely depend on {{productname | safe}}.
+
+      {%  elif GtrustQ1S3s > 50 and  GtrustQ1S3s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ1S3s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that they will very less likely depend completely  on {{productname | safe}}.
+
+      {%  elif GtrustQ1S3s > 60 and  GtrustQ1S3s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ1S3s | safe}}% Low </div>
+         </div>
+         Most user's believe that they will less likely depend completely  on {{productname | safe}}.
+
+      {%  elif GtrustQ1S3s > 70 and  GtrustQ1S3s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{GtrustQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ1S3s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that they will moderately depend completely  on {{productname | safe}}.
+
+      {%  elif GtrustQ1S3s > 80 and  GtrustQ1S3s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{GtrustQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ1S3s | safe}}% High </div>
+         </div>
+         Most user's believe that they will highly depend completely  on {{productname | safe}}.
+
+      {%  elif GtrustQ1S3s > 90 and  GtrustQ1S3s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{GtrustQ1S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ1S3s | safe}}% Very High </div>
+         </div>
+        Most user's believe that they will very highly depend completely  on {{productname | safe}}.
+
+      {% endif %}
+      </td>
+      <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
+    </tr>
+  </tbody>
+       <!-- Quention 2 general trust -->
+      <thead>
+    <tr>
+      <th scope="col" colspan="2">General Trust Q2: I can always rely on {{productname | safe}} for assistance.
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+      <th scope="col">Survey 1</th>
+      <th scope="col">Survey 2</th>
+       <th scope="col">Survey 3</th>
+      <!-- add a new th for a 3rd survey or etc -->
+    </tr>
+    <tr>
+      <td>
+      {% if GtrustQ2S1s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ2S1s | safe}}% Poor </div>
+         </div>
+         Most user's believe that can not always rely on {{productname | safe}} for assiatance.
+
+      {%  elif GtrustQ2S1s > 50 and  GtrustQ2S1s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ2S1s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that they will very less likely rely on {{productname | safe}} for assistance.
+
+      {%  elif GtrustQ2S1s > 60 and  GtrustQ2S1s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ2S1s | safe}}% Low </div>
+         </div>
+         Most user's believe that they will less likely rely on {{productname | safe}} for assistance.
+
+      {%  elif GtrustQ2S1s > 70 and  GtrustQ2S1s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{GtrustQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ2S1s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that they will moderately rely on {{productname | safe}} for assistance.
+
+      {%  elif GtrustQ2S1s > 80 and  GtrustQ2S1s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{GtrustQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ2S1s | safe}}% High </div>
+         </div>
+         Most user's believe that they will highly rely on {{productname | safe}} for assistance.
+
+      {%  elif GtrustQ2S1s > 90 and  GtrustQ2S1s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{GtrustQ2S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ2S1s | safe}}% Very High </div>
+         </div>
+        Most user's believe that they will very highly rely on {{productname | safe}} for assistance.
+
+      {% endif %}
+      </td>
+           <!-- suvey 2 overall trust -->
+      <td>
+      {% if GtrustQ2S2s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ2S2s | safe}}% Poor </div>
+         </div>
+         Most user's believe that can not always rely on {{productname | safe}} for assiatance.
+
+      {%  elif GtrustQ2S2s > 50 and  GtrustQ2S2s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ2S2s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that they will very less likely rely on {{productname | safe}} for assistance.
+
+      {%  elif GtrustQ2S2s > 60 and  GtrustQ2S2s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ2S2s | safe}}% Low </div>
+         </div>
+         Most user's believe that they will less likely rely on {{productname | safe}} for assistance.
+
+      {%  elif GtrustQ2S2s > 70 and  GtrustQ2S2s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{GtrustQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ2S2s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that they will moderately rely on {{productname | safe}} for assistance.
+
+      {%  elif GtrustQ2S2s > 80 and  GtrustQ2S2s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{GtrustQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ2S2s | safe}}% High </div>
+         </div>
+         Most user's believe that they will highly rely on {{productname | safe}} for assistance.
+
+      {%  elif GtrustQ2S2s > 90 and  GtrustQ2S2s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{GtrustQ2S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ2S2s | safe}}% Very High </div>
+         </div>
+        Most user's believe that they will very highly rely on {{productname | safe}} for assistance.
+
+      {% endif %}
+      </td>
+           <td>
+      {% if GtrustQ2S3s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ2S3s | safe}}% Poor </div>
+         </div>
+         Most user's believe that can not always rely on {{productname | safe}} for assiatance.
+
+      {%  elif GtrustQ2S3s > 50 and  GtrustQ2S3s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ2S3s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that they will very less likely rely on {{productname | safe}} for assistance.
+
+      {%  elif GtrustQ2S3s > 60 and  GtrustQ2S3s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ2S3s | safe}}% Low </div>
+         </div>
+         Most user's believe that they will less likely rely on {{productname | safe}} for assistance.
+
+      {%  elif GtrustQ2S3s > 70 and  GtrustQ2S3s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{GtrustQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ2S3s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that they will moderately rely on {{productname | safe}} for assistance.
+
+      {%  elif GtrustQ2S3s > 80 and  GtrustQ2S3s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{GtrustQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ2S3s | safe}}% High </div>
+         </div>
+         Most user's believe that they will highly rely on {{productname | safe}} for assistance.
+
+      {%  elif GtrustQ2S3s > 90 and  GtrustQ2S3s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{GtrustQ2S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ2S3s | safe}}% Very High </div>
+         </div>
+        Most user's believe that they will very highly rely on {{productname | safe}} for assistance.
+
+      {% endif %}
+      </td>
+      <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
+    </tr>
+  </tbody>
+         <!-- Quention 3 competence -->
+      <thead>
+    <tr>
+      <th scope="col" colspan="2">General Trust Q3: I can trust the information presented to me by {{productname | safe}}.
+  </th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+      <th scope="col">Survey 1</th>
+      <th scope="col">Survey 2</th>
+      <th scope="col">Survey 3</th>
+      <!-- add a new th for a 3rd survey or etc -->
+    </tr>
+    <tr>
+      <td>
+      {% if GtrustQ3S1s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ3S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ3S1s | safe}}% Poor </div>
+         </div>
+         Most user's believe that they can not trust the information provided by {{productname | safe}}.
+
+      {%  elif GtrustQ3S1s > 50 and  GtrustQ3S1s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ3S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ3S1s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that the information provided by {{productname | safe}} is very less trustworthy.
+
+      {%  elif GtrustQ3S1s > 60 and  GtrustQ3S1s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ3S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ3S1s | safe}}% Low </div>
+         </div>
+         Most user's believe that the information provided by {{productname | safe}} is less trustworthy.
+
+      {%  elif GtrustQ3S1s > 70 and  GtrustQ3S1s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{GtrustQ3S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ3S1s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that the information provided by {{productname | safe}} is moderately trustworthy.
+
+      {%  elif GtrustQ3S1s > 80 and  GtrustQ3S1s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{GtrustQ3S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ3S1s | safe}}% High </div>
+         </div>
+         Most user's believe that the information provided by {{productname | safe}} is highly trustworthy.
+
+      {%  elif GtrustQ3S1s > 90 and  GtrustQ3S1s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{GtrustQ3S1s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ3S1s | safe}}% Very High </div>
+         </div>
+        Most user's believe that the information provided by {{productname | safe}} is very highly trustworthy.
+
+      {% endif %}
+      </td>
+           <!-- suvey 2 overall trust -->
+      <td>
+      {% if GtrustQ3S2s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ3S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ3S2s | safe}}% Poor </div>
+         </div>
+         Most user's believe that they can not trust the information provided by {{productname | safe}}.
+
+      {%  elif GtrustQ3S2s > 50 and  GtrustQ3S2s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ3S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ3S2s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that the information provided by {{productname | safe}} is very less trustworthy.
+
+      {%  elif GtrustQ3S2s > 60 and  GtrustQ3S2s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ3S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ3S2s | safe}}% Low </div>
+         </div>
+         Most user's believe that the information provided by {{productname | safe}} is less trustworthy.
+
+      {%  elif GtrustQ3S2s > 70 and  GtrustQ3S2s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{GtrustQ3S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ3S2s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that the information provided by {{productname | safe}} is moderately trustworthy.
+
+      {%  elif GtrustQ3S2s > 80 and  GtrustQ3S2s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{GtrustQ3S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ3S2s | safe}}% High </div>
+         </div>
+         Most user's believe that the information provided by {{productname | safe}} is highly trustworthy.
+
+      {%  elif GtrustQ3S2s > 90 and  GtrustQ3S2s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{GtrustQ3S2s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ3S2s | safe}}% Very High </div>
+         </div>
+        Most user's believe that the information provided by {{productname | safe}} is very highly trustworthy.
+
+      {% endif %}
+      </td>
+            <td>
+      {% if GtrustQ3S3s <= 50  %}
+
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ3S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ3S3s | safe}}% Poor </div>
+         </div>
+         Most user's believe that they can not trust the information provided by {{productname | safe}}.
+
+      {%  elif GtrustQ3S3s > 50 and  GtrustQ3S3s <= 60  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ3S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ3S3s | safe}}% Very Low </div>
+         </div>
+         Most user's believe that the information provided by {{productname | safe}} is very less trustworthy.
+
+      {%  elif GtrustQ3S3s > 60 and  GtrustQ3S3s <= 70  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-danger" role="progressbar" style="width: {{GtrustQ3S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ3S3s | safe}}% Low </div>
+         </div>
+         Most user's believe that the information provided by {{productname | safe}} is less trustworthy.
+
+      {%  elif GtrustQ3S3s > 70 and  GtrustQ3S3s <= 80  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-warning" role="progressbar" style="width: {{GtrustQ3S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ3S3s | safe}}% Satisfactory </div>
+         </div>
+         Most user's believe that the information provided by {{productname | safe}} is moderately trustworthy.
+
+      {%  elif GtrustQ3S3s > 80 and  GtrustQ3S3s <= 90  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{GtrustQ3S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ3S3s | safe}}% High </div>
+         </div>
+         Most user's believe that the information provided by {{productname | safe}} is highly trustworthy.
+
+      {%  elif GtrustQ3S3s > 90 and  GtrustQ3S3s <= 100  %}
+          <div class="progress">
+         <div class="progress-bar progress-bar-success" role="progressbar" style="width: {{GtrustQ3S3s | safe}}%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{GtrustQ3S3s | safe}}% Very High </div>
+         </div>
+        Most user's believe that the information provided by {{productname | safe}} is very highly trustworthy.
+
+      {% endif %}
+      </td>
+      <!-- survey3..etc can be added by adding a a new td and making a copy of one of the above -->
+    </tr>
+  </tbody>
+</table>
+  </div>
+</div>
+
+
+      </div>
+    </div>
+  </div>
+
+
+</div>
+</div>
+
+
+<script type="text/javascript">
+
+// Bar chart
+new Chart(document.getElementById("age1"), {
+    type: 'bar',
+    data: {
+      labels: ["<17", "18-27", "28-37", "38-47", "48-57", "57 and above"],
+      datasets: [
+        {
+          label: "Age Distribution",
+          backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#c85840"],
+          data: {{S1CountAge | safe}}
+        }
+      ]
+    },
+    options: {
+      responsive:true,
+      maintainAspectRatio: true,
+    }
+});
+</script>
+
+
+<script type="text/javascript">
+
+// Bar chart
+new Chart(document.getElementById("age2"), {
+    type: 'bar',
+    data: {
+      labels: ["<17", "18-27", "28-37", "38-47", "48-57", "57 and above"],
+      datasets: [
+        {
+          label: "Age Distribution",
+          backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#c85840"],
+          data: {{S2CountAge | safe}}
+        }
+      ]
+    },
+    options: {
+      responsive:true,
+      maintainAspectRatio: true,
+    }
+});
+</script>
+
+<script type="text/javascript">
+
+// Bar chart
+new Chart(document.getElementById("age3"), {
+    type: 'bar',
+    data: {
+      labels: ["<17", "18-27", "28-37", "38-47", "48-57", "57 and above"],
+      datasets: [
+        {
+          label: "Age Distribution",
+          backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850","#c85840"],
+          data: {{S3CountAge | safe}}
+        }
+      ]
+    },
+    options: {
+      responsive:true,
+      maintainAspectRatio: true,
+    }
+});
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+
+new Chart(document.getElementById("gender1"), {
+    type: 'pie',
+    data: {
+      labels: ["Male", "Female", "Others"],
+      datasets: [{
+        label: "Gender Distribution",
+        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f"],
+        data: {{S1CountGender|safe}}
+      }]
+    },
+    options: {
+      responsive:true,
+      maintainAspectRatio: true,
+    }
+});
+</script>
+
+<script type="text/javascript">
+
+new Chart(document.getElementById("gender2"), {
+    type: 'pie',
+    data: {
+      labels: ["Male", "Female", "Others"],
+      datasets: [{
+        label: "Gender Distribution",
+        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f"],
+        data: {{S2CountGender|safe}}
+      }]
+    },
+    options: {
+      responsive:true,
+      maintainAspectRatio: true,
+    }
+});
+</script>
+
+</script>
+
+<script type="text/javascript">
+
+new Chart(document.getElementById("gender3"), {
+    type: 'pie',
+    data: {
+      labels: ["Male", "Female", "Others"],
+      datasets: [{
+        label: "Gender Distribution",
+        backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f"],
+        data: {{S3CountGender|safe}}
+      }]
+    },
+    options: {
+      responsive:true,
+      maintainAspectRatio: true,
+    }
+});
+</script>
+
+{% else  %}
+
+<div>
+
+<p> There is no data </p>
+</div>
+
+{% endif  %}
+
+{% endblock %}
