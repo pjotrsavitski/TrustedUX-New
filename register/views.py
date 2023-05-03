@@ -1,4 +1,3 @@
-from mailjet_rest import Client
 import os
 from django.shortcuts import render
 from .forms import RegisterForm
@@ -28,11 +27,9 @@ from django.contrib.auth.hashers import check_password
 
 
 from . import tokens as t
-from mailjet_rest import Client
-import os
-api_key = '55286d691dca3cf4cb8f0a6db87a5fe5'
-api_secret = 'e564414aef8ddc313372ed55c2d1c81a'
-mailjet = Client(auth=(api_key, api_secret), version='v3.1')
+from django.core.mail import send_mail
+from smtplib import SMTPException
+from django.conf import settings
 
 user_number = 1
 
@@ -90,14 +87,10 @@ def register(request):
         if form.is_valid():
             print('form is valid')
             user = form.save(commit=False)
-
-            email = user.email
-
             user.is_active = False
             user.username = user.email.split('@')[0] +':' + str(random.randint(0,100000))
             user.save()
             current_site = get_current_site(request)
-            subject = 'Activate Your TrustexUX Account'
             message = render_to_string('account_activation_email.html', {
                 'user': user,
                 'domain':  current_site.domain,
@@ -109,32 +102,18 @@ def register(request):
             print('user pk',user.pk)
             print('base64 code uid:',urlsafe_base64_encode(force_bytes(user.pk)))
             print(t.account_activation_token.make_token(user))
-            data = {
-              'Messages': [
-                {
-                  "From": {
-                    "Email": "pankajchejara23@gmail.com",
-                    "Name": "TrustedUX Team "
-                  },
-                  "To": [
-                    {
-                      "Email": user.email,
-                    }
-                  ],
-                  "Subject": "Activate your TrustedUX account.",
-                  "TextPart": message,
-                }
-              ]
-            }
 
-
-
-            result = mailjet.send.create(data=data)
-            if result.status_code == 200:
-
-                print('user saved')
-            print(result.status_code)
-            messages.info(request, 'An email with instructions to activate your account has been sent.')
+            try:
+                send_mail(
+                    subject='Activate your TrustedUX account.',
+                    message=message,
+                    from_email=settings.EMAIL_FROM_FULL,
+                    recipient_list=[user.email]
+                )
+            except SMTPException:
+                messages.error(request, 'An email with instructions to activate your account could not be sent! Please contact the administrator to resolve the issue and activate your account.')
+            else:
+                messages.info(request, 'An email with instructions to activate your account has been sent.')
 
             return redirect('login')
 
@@ -194,38 +173,24 @@ def password_reset_request(request):
                 print('user exists')
                 current_site = get_current_site(request)
                 for user in associated_users:
-
-
-                    subject = "TrustedUX Password Reset"
                     message = render_to_string('password_reset_email.html', {
                         'user': user,
-                        'domain': 'trustedux.herokuapp.com', #current_site.domain,
+                        'domain': current_site.domain,
                         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                         'token': default_token_generator.make_token(user),
                         'protocol': 'http'
                         })
                     try:
-                        data = {
-                          'Messages': [
-                            {
-                              "From": {
-                                "Email": "pankajchejara23@gmail.com",
-                                "Name": "TrustedUX Team "
-                              },
-                              "To": [
-                                {
-                                  "Email": user.email,
-                                }
-                              ],
-                              "Subject": "TrustedUX Password Reset",
-                              "TextPart": message,
-                            }
-                          ]
-                        }
-                        result = mailjet.send.create(data=data)
-                    except:
+                        send_mail(
+                            subject='TrustedUX Password Reset',
+                            message=message,
+                            from_email=settings.EMAIL_FROM_FULL,
+                            recipient_list=[user.email]
+                        )
+                    except SMTPException:
                         return HttpResponse('Error')
                     messages.info(request,'We have emailed you instructions for setting your password, if an account exists with the email you entered. You should receive them shortly. If you do not receive an email, please make sure you have entered the address you registered with, and check your spam folder.')
+
                     return redirect('login')
     else:
         password_reset_form = PasswordResetForm()

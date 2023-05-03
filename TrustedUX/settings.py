@@ -28,12 +28,16 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['trustedux.herokuapp.com','localhost','127.0.0.1']
 
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-EMAIL_BACKEND = 'django_mailjet.backends.MailjetBackend'
-MAILJET_API_KEY = '39b93cd219afa7bbfda355795fcf7b94'
-MAILJET_API_SECRET = 'f29eb65e1b46c83c577075c93612ba51'
-
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'mailhog'
+EMAIL_PORT = 1025
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = False
+EMAIL_FROM_TEXT = 'TrustedUX Team'
+EMAIL_FROM_ADDRESS = 'no-reply@trustux.org'
+EMAIL_FROM_FULL = f'{EMAIL_FROM_TEXT} <{EMAIL_FROM_ADDRESS}>'
 
 LOGIN_URL = '/login/'
 

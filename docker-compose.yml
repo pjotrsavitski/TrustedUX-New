@@ -6,3 +6,8 @@ services:
       - .:/code
     ports:
       - "8000:8000"
+  mailhog:
+    image: 'mailhog/mailhog'
+    ports:
+      - '${FORWARD_MAILHOG_PORT:-1025}:1025'
+      - '${FORWARD_MAILHOG_DASHBOARD_PORT:-8025}:8025'
