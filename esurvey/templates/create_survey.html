@@ -103,8 +103,13 @@
 {% else %}
 <div class="card bg-white">
   <div class="card-body">
-    <div class='row p-1'>Demographics</div><br/>
-    <div class='row '><div style="padding-left:10px"  class='col col-lg-2 col-md-2'>{{form.age}} {{form.age.label}} </div><div class='col col-lg-3 col-md-3'>{{form.gender}} {{form.gender.label}}</div><div  class='col col-lg-3 col-md-3'>{{form.education}} {{form.education.label}}</div><div class='col col-lg-3 col-md-3'>{{form.nationality}} {{form.nationality.label}}</div></div>
+    <div class='row p-1 mb-4'>Demographics</div>
+    <div class='row '>
+        <div class='col col-lg-2 col-md-2 pl-1'>{{form.age}} <label for="id_survey-age">{{form.age.label}}</label></div>
+        <div class='col col-lg-3 col-md-3'>{{form.gender}} <label for="id_survey-gender">{{form.gender.label}}</label></div>
+        <div class='col col-lg-3 col-md-3'>{{form.education}} <label for="id_survey-education">{{form.education.label}}</label></div>
+        <div class='col col-lg-3 col-md-3'>{{form.nationality}} <label for="id_survey-nationality">{{form.nationality.label}}</label></div>
+    </div>
   </div>
 </div>
 
@@ -353,7 +358,7 @@
       <!--Form end -->
   </div>
 
-  <div class="tab-pane fade show " id="nav-s5" role="tabpanel" aria-labelledby="nav-s5-tab">
+  <div class="tab-pane fade show p-5" id="nav-s5" role="tabpanel" aria-labelledby="nav-s5-tab">
 
 
       <!-- Form start -->
