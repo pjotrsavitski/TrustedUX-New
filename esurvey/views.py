@@ -21,7 +21,7 @@ from django.db.models import Q, F, Sum, Avg, FloatField, IntegerField,  Count
 from datetime import datetime
 import numpy as np
 import pandas as df
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import gettext, gettext_lazy as _
 import math
 
 

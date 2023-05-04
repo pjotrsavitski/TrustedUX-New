@@ -9,7 +9,7 @@ from django.utils.safestring import mark_safe
 from djrichtextfield.widgets import RichTextWidget
 from django_toggle_switch_widget.widgets import DjangoToggleSwitchWidget
 from .models import AnonyData, sort_countries, gen_choices, edu_choices, age_choices
-from django.utils.translation import  ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 setattr(Field, 'is_checkbox', lambda self: isinstance(self.widget, forms.CheckboxInput ))

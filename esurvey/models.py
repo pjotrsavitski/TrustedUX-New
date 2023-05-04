@@ -4,7 +4,7 @@ import uuid
 from django.contrib import admin
 import datetime
 import operator
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 COUNTRIES = {
     "AF": _("Afghanistan"),
@@ -263,6 +263,7 @@ lang_choices = [('En','English'),('Pt','Portugese'),('Est','Estonian')]
 
 # Create your models here.
 class Project(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     project_name = models.CharField(max_length=100)
     project_type = models.IntegerField()
@@ -276,8 +277,9 @@ class Project(models.Model):
 
 
 class Survey(models.Model):
+    id = models.AutoField(primary_key=True)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    language = models.CharField(choices=lang_choices,max_length=2)
+    language = models.CharField(choices=lang_choices, max_length=3)
     survey_name = models.CharField(max_length=100)
     deleted = models.BooleanField(default=False)
     start_date = models.DateField()
@@ -291,12 +293,14 @@ class Survey(models.Model):
 
 
 class Link(models.Model):
+    id = models.AutoField(primary_key=True)
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
     url = models.UUIDField(default=uuid.uuid4)
     sequence = models.IntegerField()
 
 
 class Submission(models.Model):
+    id = models.AutoField(primary_key=True)
     link = models.ForeignKey(Link,on_delete=models.CASCADE)
     sub_date = models.DateField(default=datetime.date.today)
     q1 = models.IntegerField()
@@ -321,13 +325,15 @@ gen_choices=[("M",_("Male")),("F",_("Female")),("O",_("Other"))]
 edu_choices=[(1,_("Primary")),(2,_("Secondary")),(3,_("Bachelor")),(4,_("Master")),(5,_("Doctorate"))]
 
 class AnonyData(models.Model):
-    link = models.ForeignKey(Link,on_delete=models.CASCADE)
-    age = models.IntegerField(choices=age_choices,blank=True)
-    gender = models.CharField(max_length=10,choices=gen_choices,blank=True)
-    education = models.IntegerField(choices=edu_choices,blank=True)
-    nationality = models.CharField(max_length=2, choices = sort_countries,blank=True)
+    id = models.AutoField(primary_key=True)
+    link = models.ForeignKey(Link, on_delete=models.CASCADE)
+    age = models.IntegerField(choices=age_choices, blank=True)
+    gender = models.CharField(max_length=10, choices=gen_choices, blank=True)
+    education = models.IntegerField(choices=edu_choices, blank=True)
+    nationality = models.CharField(max_length=2, choices=sort_countries, blank=True)
 
 class AnonyDataSetting(models.Model):
+    id = models.AutoField(primary_key=True)
     project = models.OneToOneField(Project,on_delete=models.CASCADE)
     age = models.BooleanField()
     gender = models.BooleanField()
