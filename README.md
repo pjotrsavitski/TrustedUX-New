@@ -7,6 +7,7 @@ The solution is based on [Quickstart: Compose and Django](https://github.com/doc
 tutorial with several simplifications.
 
 1. Command `docker compose up -d` should be used to start the containers.
+  - Command `docker compose build --no-cache` will rebuild containers ignoring any cached versions.
 2. Create a superuser account by running
 `docker compose exec web django-admin createsuperuser --username admin --email admin@example.com` and providing the
 password for that `admin` user account.
@@ -28,4 +29,4 @@ file. Once translation file has been changes use
 usable file.
 
 **!NB Please note that both commands ignore possible virtual environment directory and would also work with local
-installation! The container could be missing the `gettext` dependency.**
+installation!**
