@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-01 16:18+0000\n"
+"POT-Creation-Date: 2023-05-05 09:15+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,53 +18,22 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: TrustedUX/settings-1.py:127 TrustedUX/settings.py:185
+#: TrustedUX/settings-1.py:127 TrustedUX/settings.py:184
 msgid "English"
-msgstr ""
+msgstr "Inglise"
 
-#: TrustedUX/settings-1.py:127 TrustedUX/settings.py:185
+#: TrustedUX/settings-1.py:127 TrustedUX/settings.py:184
 msgid "Estonian"
-msgstr ""
+msgstr "Eesti"
 
-#: TrustedUX/settings-1.py:127 TrustedUX/settings.py:185
+#: TrustedUX/settings-1.py:127
 msgid "Portugese"
-msgstr ""
+msgstr "Portugali"
 
-#: esurvey/forms.py:208 esurvey/models.py:317
-msgid "Below 20"
-msgstr "alla 20"
-
-#: esurvey/forms.py:208 esurvey/models.py:317
-msgid "Above 50"
-msgstr "Üle 50"
-
-#: esurvey/forms.py:209 esurvey/models.py:318
-msgid "Male"
-msgstr "Mees"
-
-#: esurvey/forms.py:209 esurvey/models.py:318
-msgid "Female"
-msgstr "Naine"
-
-#: esurvey/forms.py:210 esurvey/models.py:319
-msgid "Primary"
-msgstr "Esmane"
-
-#: esurvey/forms.py:210 esurvey/models.py:319
-msgid "Secondary"
-msgstr "Sekundaarne"
-
-#: esurvey/forms.py:210 esurvey/models.py:319
-msgid "Bachelor"
-msgstr "Poissmees"
-
-#: esurvey/forms.py:210 esurvey/models.py:319
-msgid "Master"
-msgstr "Meister"
-
-#: esurvey/forms.py:210 esurvey/models.py:319
-msgid "Doctorate"
-msgstr "Doktorikraad"
+#: TrustedUX/settings.py:184
+#| msgid "Portugal"
+msgid "Portuguese"
+msgstr "Portugali"
 
 #: esurvey/models.py:10
 msgid "Afghanistan"
@@ -724,7 +693,7 @@ msgstr "Norfolk"
 
 #: esurvey/models.py:174
 msgid "North Macedonia"
-msgstr ""
+msgstr "Põhja-Makedoonia"
 
 #: esurvey/models.py:175
 msgid "Northern Mariana Islands"
@@ -1062,27 +1031,77 @@ msgstr "Zambia"
 msgid "Zimbabwe"
 msgstr "Zimbabwe"
 
+#: esurvey/models.py:324 esurvey/templates/survey_form_updated.html:85
+msgid "17 or less"
+msgstr "17 või vähem"
+
+#: esurvey/models.py:324 esurvey/templates/survey_form_updated.html:90
+msgid "58 or more"
+msgstr "58 või rohkem"
+
+#: esurvey/models.py:325 esurvey/templates/survey_form_updated.html:101
+msgid "Male"
+msgstr "Mees"
+
+#: esurvey/models.py:325 esurvey/templates/survey_form_updated.html:102
+msgid "Female"
+msgstr "Naine"
+
+#: esurvey/models.py:325 esurvey/templates/survey_form_updated.html:103
+msgid "Other"
+msgstr "Muu"
+
+#: esurvey/models.py:326 esurvey/templates/survey_form_updated.html:116
+msgid "Primary"
+msgstr "Põhiharidus"
+
+#: esurvey/models.py:326 esurvey/templates/survey_form_updated.html:117
+msgid "Secondary"
+msgstr "Keskharidus"
+
+#: esurvey/models.py:326 esurvey/templates/survey_form_updated.html:118
+msgid "Bachelor"
+msgstr "Dakalaureus"
+
+#: esurvey/models.py:326 esurvey/templates/survey_form_updated.html:119
+msgid "Master"
+msgstr "Magistrikraad"
+
+#: esurvey/models.py:326 esurvey/templates/survey_form_updated.html:120
+msgid "Doctorate"
+msgstr "Doktorikraad"
+
 #: esurvey/templates/anony_settings.html:97 esurvey/templates/create.html:148
-#: esurvey/templates/create_participation.html:91
-#: esurvey/templates/create_project.html:100
-#: esurvey/templates/create_survey.html:402 esurvey/templates/overview.html:155
+#: esurvey/templates/create_participation.html:98
+#: esurvey/templates/create_project.html:173
+#: esurvey/templates/create_survey.html:397 esurvey/templates/overview.html:180
+#: esurvey/templates/survey_form_updated.html:701
 msgid "Back"
-msgstr ""
+msgstr "Tagasi"
 
 #: esurvey/templates/anony_settings.html:99 esurvey/templates/create.html:150
-#: esurvey/templates/create_participation.html:93
-#: esurvey/templates/create_project.html:102
-#: esurvey/templates/create_survey.html:404
+#: esurvey/templates/create_participation.html:100
+#: esurvey/templates/create_project.html:175
+#: esurvey/templates/create_survey.html:399
 #: esurvey/templates/survey_form.html:184
+#: esurvey/templates/survey_preview.html:184
 msgid "Continue"
 msgstr "Jätka"
 
 #: esurvey/templates/anony_settings.html:100 esurvey/templates/create.html:151
-#: esurvey/templates/create_participation.html:94
-#: esurvey/templates/create_project.html:103
-#: esurvey/templates/create_survey.html:405 esurvey/templates/overview.html:163
+#: esurvey/templates/create_participation.html:95
+#: esurvey/templates/create_project.html:170
+#: esurvey/templates/create_survey.html:394 esurvey/templates/overview.html:177
 msgid "Cancel"
-msgstr ""
+msgstr "Katkesta"
+
+#: esurvey/templates/overview.html:183
+msgid "Create"
+msgstr "Loo"
+
+#: esurvey/templates/overview.html:185
+msgid "Update"
+msgstr "Uuenda"
 
 #: esurvey/templates/survey_anony.html:6
 msgid "Your details"
@@ -1091,7 +1110,7 @@ msgstr "Teie andmed"
 #: esurvey/templates/survey_anony.html:24
 #: esurvey/templates/survey_anony.html:39
 msgid "Age"
-msgstr "Aceita"
+msgstr "Vanus"
 
 #: esurvey/templates/survey_anony.html:27
 #: esurvey/templates/survey_anony.html:42
@@ -1109,56 +1128,85 @@ msgid "Nationality"
 msgstr "Rahvus"
 
 #: esurvey/templates/survey_anony.html:58
+#: esurvey/templates/survey_form_updated.html:703
+#: esurvey/templates/survey_form_updated.html:706
 msgid "Submit"
 msgstr "Esita"
 
 #: esurvey/templates/survey_form.html:31
+#: esurvey/templates/survey_form_updated.html:544
+#: esurvey/templates/survey_preview.html:31
 msgid "Strogly disagree"
 msgstr "Eriliselt ei nõustu"
 
 #: esurvey/templates/survey_form.html:32
+#: esurvey/templates/survey_form_updated.html:545
+#: esurvey/templates/survey_preview.html:32
 msgid "Disagree"
 msgstr "Pole nõus"
 
 #: esurvey/templates/survey_form.html:33
+#: esurvey/templates/survey_form_updated.html:546
+#: esurvey/templates/survey_preview.html:33
 msgid "Neutral"
 msgstr "Neutraalne"
 
 #: esurvey/templates/survey_form.html:34
+#: esurvey/templates/survey_form_updated.html:547
+#: esurvey/templates/survey_preview.html:34
 msgid "Agree"
 msgstr "Nõus"
 
 #: esurvey/templates/survey_form.html:35
+#: esurvey/templates/survey_form_updated.html:548
+#: esurvey/templates/survey_preview.html:35
 msgid "Strogly agree"
 msgstr "Nõustun kindlalt"
 
 #: esurvey/templates/survey_form.html:41
+#: esurvey/templates/survey_form_updated.html:554
+#: esurvey/templates/survey_preview.html:41
 #, python-format
 msgid ""
 " I believe that there could be negative consequences from using %(product)s"
 msgstr "Usun, et %(product)s kasutamisel võivad olla negatiivsed tagajärjed"
 
 #: esurvey/templates/survey_form.html:51
+#: esurvey/templates/survey_form_updated.html:184
+#: esurvey/templates/survey_form_updated.html:564
+#: esurvey/templates/survey_preview.html:51
 #, python-format
 msgid "I feel I must be cautious when using  %(product)s"
-msgstr "Ma arvan, et %(product) s kasutamisel pean olema ettevaatlik"
+msgstr "Ma arvan, et %(product)s kasutamisel pean olema ettevaatlik"
 
 #: esurvey/templates/survey_form.html:61
+#: esurvey/templates/survey_form_updated.html:211
+#: esurvey/templates/survey_form_updated.html:574
+#: esurvey/templates/survey_preview.html:61
 #, python-format
 msgid " It is risky to use  %(product)s"
 msgstr " %(product)s on riskantne kasutada"
 
 #: esurvey/templates/survey_form.html:71
+#: esurvey/templates/survey_form_updated.html:238
+#: esurvey/templates/survey_form_updated.html:584
+#: esurvey/templates/survey_preview.html:71
 #, python-format
 msgid " I believe %(product)s will act in my best interest"
 msgstr "Usun, et %(product)s toimib minu huvides "
 
 #: esurvey/templates/survey_form.html:81
+#: esurvey/templates/survey_form_updated.html:265
+#: esurvey/templates/survey_form_updated.html:594
+#: esurvey/templates/survey_preview.html:81
 #, python-format
 msgid "I believe that %(product)s will do its best to help me if I need help "
 msgstr "Usun, et %(product)s annab endast parima, kui mul abi vaja on"
 
 #: esurvey/templates/survey_form.html:90
+#: esurvey/templates/survey_form_updated.html:292
+#: esurvey/templates/survey_form_updated.html:603
+#: esurvey/templates/survey_preview.html:90
 #, python-format
 msgid ""
 "I believe that %(product)s is interested in understanding my needs and "
@@ -1167,6 +1215,8 @@ msgstr ""
 "Usun, et %(product) s on huvitatud minu vajaduste ja eelistuste mõistmisest"
 
 #: esurvey/templates/survey_form.html:99
+#: esurvey/templates/survey_form_updated.html:612
+#: esurvey/templates/survey_preview.html:99
 #, python-format
 msgid ""
 "%(product)s is competent and effective in providing personal care and  "
@@ -1174,6 +1224,8 @@ msgid ""
 msgstr "%(product)s on pädev ja tõhus isikliku hoolduse ja abi pakkumisel"
 
 #: esurvey/templates/survey_form.html:108
+#: esurvey/templates/survey_form_updated.html:621
+#: esurvey/templates/survey_preview.html:108
 #, python-format
 msgid ""
 "I believe %(product)s has all the functionalities I would expect from an "
@@ -1183,6 +1235,8 @@ msgstr ""
 "intelligentselt isiklikult assistendilt"
 
 #: esurvey/templates/survey_form.html:117
+#: esurvey/templates/survey_form_updated.html:630
+#: esurvey/templates/survey_preview.html:117
 #, python-format
 msgid ""
 " %(product)s performs its role as an intelligent personal assistant very "
@@ -1191,6 +1245,9 @@ msgstr ""
 "%(product)s täidab oma rolli intelligentse isikliku abistajana väga hästi"
 
 #: esurvey/templates/survey_form.html:126
+#: esurvey/templates/survey_form_updated.html:402
+#: esurvey/templates/survey_form_updated.html:639
+#: esurvey/templates/survey_preview.html:126
 #, python-format
 msgid ""
 "When sharing something with %(product)s I expect to get back a meaningful  "
@@ -1200,12 +1257,18 @@ msgstr ""
 "asjatundlik vastus hästi"
 
 #: esurvey/templates/survey_form.html:135
+#: esurvey/templates/survey_form_updated.html:429
+#: esurvey/templates/survey_form_updated.html:648
+#: esurvey/templates/survey_preview.html:135
 #, python-format
 msgid ""
 "When sharing something with %(product)s I believe that I will get an answer"
 msgstr "%(product)s midagi jagades usun, et saan vastuse"
 
 #: esurvey/templates/survey_form.html:144
+#: esurvey/templates/survey_form_updated.html:454
+#: esurvey/templates/survey_form_updated.html:657
+#: esurvey/templates/survey_preview.html:144
 #, python-format
 msgid ""
 "If I use %(product)s I think i would be able to depend on it completely "
@@ -1213,40 +1276,90 @@ msgstr ""
 "Kui kasutan %(product)s, arvan, et suudaksin sellest täielikult sõltuda"
 
 #: esurvey/templates/survey_form.html:153
+#: esurvey/templates/survey_form_updated.html:479
+#: esurvey/templates/survey_form_updated.html:666
+#: esurvey/templates/survey_preview.html:153
 #, python-format
 msgid "I can always rely on %(product)s for personal care and assistance "
 msgstr ""
 "Isikliku hoolduse ja abi saamiseks saan alati tugineda teenusele %(product)s"
 
 #: esurvey/templates/survey_form.html:162
+#: esurvey/templates/survey_form_updated.html:504
+#: esurvey/templates/survey_form_updated.html:675
+#: esurvey/templates/survey_preview.html:162
 #, python-format
 msgid "I can trust the information presented to me by %(product)s"
 msgstr "Ma võin usaldada %(product)s mulle esitatud teavet"
 
-#: esurvey/templates/survey_front.html:18
+#: esurvey/templates/survey_form_updated.html:157
+#, fuzzy, python-format
+#| msgid ""
+#| " I believe that there could be negative consequences from using "
+#| "%(product)s"
+msgid ""
+"  I believe that there could be negative consequences from using %(product)s"
+msgstr "Usun, et %(product)s kasutamisel võivad olla negatiivsed tagajärjed"
+
+#: esurvey/templates/survey_form_updated.html:319
+#, python-format
+msgid "I think that %(product)s is competent and effective "
+msgstr ""
+
+#: esurvey/templates/survey_form_updated.html:346
+#, fuzzy, python-format
+#| msgid ""
+#| "I believe %(product)s has all the functionalities I would expect from an "
+#| "intelligent personal assistant"
+msgid ""
+"I think that %(product)s has all the functionalities I would expect from it"
+msgstr ""
+"Usun, et %(product)s sisaldab kõiki funktsioone, mida ootaksin "
+"intelligentselt isiklikult assistendilt"
+
+#: esurvey/templates/survey_form_updated.html:373
+#, fuzzy, python-format
+#| msgid ""
+#| " %(product)s performs its role as an intelligent personal assistant very "
+#| "well "
+msgid " I think that %(product)s performs its role very well "
+msgstr ""
+"%(product)s täidab oma rolli intelligentse isikliku abistajana väga hästi"
+
+#: esurvey/templates/survey_front.html:22
 msgid ""
 "If you have any questions regarding this survey, contact the survey owner"
-msgstr "Kui teil on selle uuringu kohta küsimusi, võtke ühendust uuringu omanikuga"
+msgstr ""
+"Kui teil on selle uuringu kohta küsimusi, võtke ühendust uuringu omanikuga"
 
-#: esurvey/templates/survey_front.html:19
+#: esurvey/templates/survey_front.html:23
 msgid "Name"
 msgstr "Nimi"
 
-#: esurvey/templates/survey_front.html:20
+#: esurvey/templates/survey_front.html:24
 msgid "Email"
 msgstr "E-post"
 
-#: esurvey/templates/survey_front.html:22
-msgid "Start Survey"
-msgstr "Alusta uuringut"
+#: esurvey/templates/survey_front.html:39
+msgid "Next step"
+msgstr "Järgmine samm"
 
-#: esurvey/views.py:2754
+#: esurvey/views-backup.py:2773 esurvey/views.py:6649
 msgid "Successful Submission"
 msgstr "Edukas esitamine"
 
-#: esurvey/views.py:2754
+#: esurvey/views-backup.py:2773 esurvey/views.py:6649
 msgid "Your submissions are successfully saved. Thank you for your time."
 msgstr "Teie esildised on edukalt salvestatud. Täname teid teie aja eest."
+
+#~ msgid "Below 20"
+#~ msgstr "alla 20"
+
+#~ msgid "Above 50"
+#~ msgstr "Üle 50"
+
+#~ msgid "Start Survey"
+#~ msgstr "Alusta uuringut"
 
 #~ msgid "Brunei"
 #~ msgstr "Brunei"
